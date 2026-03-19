@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tradegenz_app/features/profile/screens/profile_screen.dart';
+import 'package:tradegenz_app/features/profile/screens/upgrade_screen.dart';
 import 'package:tradegenz_app/features/signals/screens/feed_screen.dart';
 import 'package:tradegenz_app/features/signals/screens/history_screen.dart';
+import 'package:tradegenz_app/features/signals/screens/signal_detail_screen.dart';
 import '../core/storage/secure_storage.dart';
 import '../features/auth/providers/auth_provider.dart';
 import '../features/auth/screens/login_screen.dart';
@@ -96,12 +98,12 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/signal/:id',
         builder: (context, state) {
           final id = state.pathParameters['id']!;
-          return _PlaceholderScreen('Signal Detail: $id');
+          return SignalDetailScreen(signalId: id);
         },
       ),
       GoRoute(
         path: '/upgrade',
-        builder: (context, state) => const _PlaceholderScreen('Upgrade'),
+        builder: (context, state) => const UpgradeScreen(),
       ),
     ],
   );
