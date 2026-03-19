@@ -28,4 +28,8 @@ class SecureStorage {
     final value = await _storage.read(key: _onboardingKey);
     return value == 'true';
   }
+
+  static Future<void> clearAll() async {
+    await _storage.deleteAll();
+  }
 }

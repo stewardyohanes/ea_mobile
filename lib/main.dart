@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tradegenz_app/app/router.dart';
+import 'package:tradegenz_app/core/storage/secure_storage.dart';
 import 'package:tradegenz_app/core/theme/app_colors.dart';
 
-void main() {
+void main() async {
+WidgetsFlutterBinding.ensureInitialized();
+
+  await SecureStorage.clearAll();
+
   runApp(const ProviderScope(child: TradeGenZApp()));
 }
 

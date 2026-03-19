@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:tradegenz_app/core/storage/secure_storage.dart';
 import 'package:tradegenz_app/features/auth/providers/auth_provider.dart';
 import 'package:tradegenz_app/features/auth/screens/login_screen.dart';
+import 'package:tradegenz_app/features/auth/screens/onboarding_screen.dart';
 import 'package:tradegenz_app/features/auth/screens/register_screen.dart';
 
 class _PlaceholderScreen extends StatelessWidget {
@@ -50,7 +51,7 @@ final routerProvider = Provider<GoRouter>((ref) {
     routes: [
       GoRoute(
         path: '/onboarding',
-        builder: (context, state) => const _PlaceholderScreen('Onboarding'),
+        builder: (context, state) => const OnboardingScreen(),
       ),
       GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
       GoRoute(
