@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tradegenz_app/features/profile/screens/profile_screen.dart';
 import 'package:tradegenz_app/features/signals/screens/feed_screen.dart';
 import 'package:tradegenz_app/features/signals/screens/history_screen.dart';
 import '../core/storage/secure_storage.dart';
@@ -87,7 +88,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           ),
           GoRoute(
             path: '/profile',
-            builder: (context, state) => const _PlaceholderScreen('Profile'),
+            builder: (context, state) => const ProfileScreen(),
           ),
         ],
       ),
