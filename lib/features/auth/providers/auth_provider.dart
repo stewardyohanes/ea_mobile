@@ -42,6 +42,37 @@ class AuthNotifier extends Notifier<AuthState> {
     }
   }
 
+  Future<void> register(String name, String email, String password) async {
+    state = state.copyWith(isLoading: true, error: null);
+    try {
+      final data = await AuthApi.register(
+        name: name,
+        email: email,
+        password: password,
+      );
+      final token = data['token'] as String;
+      final user = User.fromJson(data['user'] as Map<String, dynamic>);
+
+      await SecureStorage.saveToken(token);
+      state = state.copyWith(user: user, isLoading: false);
+    } catch (e) {
+      state = state.copyWith(error: e.toString(), isLoading: false);
+    }
+  }
+
+  Future<void> checkSession() async {
+    final token = await SecureStorage.getToken();
+    if (token == null) return;
+
+    state = state.copyWith(isLoading: true, error: null);
+    try {
+      final user = await AuthApi.getMe();
+      state = state.copyWith(user: user, isLoading: false);
+    } catch (e) {
+      state = state.copyWith(error: e.toString(), isLoading: false);
+    }
+  }
+
   Future<void> logout() async {
     await SecureStorage.deleteToken();
     state = const AuthState();

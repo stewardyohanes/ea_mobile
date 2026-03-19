@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tradegenz_app/core/storage/secure_storage.dart';
 import 'package:tradegenz_app/features/auth/providers/auth_provider.dart';
+import 'package:tradegenz_app/features/auth/screens/login_screen.dart';
+import 'package:tradegenz_app/features/auth/screens/register_screen.dart';
 
 class _PlaceholderScreen extends StatelessWidget {
   final String name;
@@ -50,13 +52,10 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/onboarding',
         builder: (context, state) => const _PlaceholderScreen('Onboarding'),
       ),
-      GoRoute(
-        path: '/login',
-        builder: (context, state) => const _PlaceholderScreen('Login'),
-      ),
+      GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
       GoRoute(
         path: '/register',
-        builder: (context, state) => const _PlaceholderScreen('Register'),
+        builder: (context, state) => const RegisterScreen(),
       ),
       GoRoute(
         path: '/disclaimer',
