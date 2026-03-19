@@ -1,3 +1,5 @@
+import 'package:dio/dio.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tradegenz_app/core/storage/secure_storage.dart';
 import 'package:tradegenz_app/features/auth/data/auth_api.dart';
@@ -31,14 +33,23 @@ class AuthNotifier extends Notifier<AuthState> {
     state = state.copyWith(isLoading: true, error: null);
     try {
       final data = await AuthApi.login(email: email, password: password);
+
       final token = data['token'] as String;
       final user = User.fromJson(data['user'] as Map<String, dynamic>);
 
       await SecureStorage.saveToken(token);
-
       state = state.copyWith(user: user, isLoading: false);
-    } catch (e) {
-      state = state.copyWith(error: e.toString(), isLoading: false);
+    } on DioException catch (e) {
+      final message =
+          e.response?.data['message'] as String? ??
+          e.response?.data['error'] as String? ??
+          'Something went wrong. Please try again.';
+      state = state.copyWith(isLoading: false, error: message);
+    } on Exception {
+      state = state.copyWith(
+        isLoading: false,
+        error: 'Something went wrong. Please try again.',
+      );
     }
   }
 
@@ -55,8 +66,17 @@ class AuthNotifier extends Notifier<AuthState> {
 
       await SecureStorage.saveToken(token);
       state = state.copyWith(user: user, isLoading: false);
-    } catch (e) {
-      state = state.copyWith(error: e.toString(), isLoading: false);
+    } on DioException catch (e) {
+      final message =
+          e.response?.data['message'] as String? ??
+          e.response?.data['error'] as String? ??
+          'Something went wrong. Please try again.';
+      state = state.copyWith(isLoading: false, error: message);
+    } on Exception {
+      state = state.copyWith(
+        isLoading: false,
+        error: 'Something went wrong. Please try again.',
+      );
     }
   }
 
@@ -68,8 +88,17 @@ class AuthNotifier extends Notifier<AuthState> {
     try {
       final user = await AuthApi.getMe();
       state = state.copyWith(user: user, isLoading: false);
-    } catch (e) {
-      state = state.copyWith(error: e.toString(), isLoading: false);
+    } on DioException catch (e) {
+      final message =
+          e.response?.data['message'] as String? ??
+          e.response?.data['error'] as String? ??
+          'Something went wrong. Please try again.';
+      state = state.copyWith(isLoading: false, error: message);
+    } on Exception {
+      state = state.copyWith(
+        isLoading: false,
+        error: 'Something went wrong. Please try again.',
+      );
     }
   }
 

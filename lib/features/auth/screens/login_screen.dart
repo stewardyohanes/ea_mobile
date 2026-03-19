@@ -32,6 +32,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     if (email.isEmpty || password.isEmpty) return;
 
     await ref.read(authProvider.notifier).login(email, password);
+    final authState = ref.read(authProvider);
+    if (authState.isAuthenticated && mounted) {
+      context.go('/');
+    }
   }
 
   @override

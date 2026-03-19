@@ -1,53 +1,62 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tradegenz_app/core/storage/secure_storage.dart';
-import 'package:tradegenz_app/features/auth/providers/auth_provider.dart';
-import 'package:tradegenz_app/features/auth/screens/login_screen.dart';
-import 'package:tradegenz_app/features/auth/screens/onboarding_screen.dart';
-import 'package:tradegenz_app/features/auth/screens/register_screen.dart';
+import '../core/storage/secure_storage.dart';
+import '../features/auth/providers/auth_provider.dart';
+import '../features/auth/screens/login_screen.dart';
+import '../features/auth/screens/onboarding_screen.dart';
+import '../features/auth/screens/register_screen.dart';
 
-class _PlaceholderScreen extends StatelessWidget {
-  final String name;
-  const _PlaceholderScreen(this.name);
+// RouterNotifier = jembatan antara Riverpod dan GoRouter
+// GoRouter butuh ChangeNotifier untuk tahu kapan harus re-evaluate redirect
+// Riverpod tidak bisa langsung dipakai di GoRouter, jadi kita buat wrapper ini
+class RouterNotifier extends ChangeNotifier {
+  final Ref _ref;
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Text(name, style: const TextStyle(color: Colors.white)),
-      ),
-    );
+  RouterNotifier(this._ref) {
+    // ref.listen = watch tapi dari luar widget tree
+    // Setiap kali authProvider berubah → notifyListeners()
+    // → GoRouter re-evaluate redirect
+    _ref.listen(authProvider, (_, __) => notifyListeners());
+  }
+
+  Future<String?> redirect(BuildContext context, GoRouterState state) async {
+    // ref.read (bukan watch) karena ini dipanggil di luar widget
+    final authState = _ref.read(authProvider);
+    final isLoggedIn = authState.isAuthenticated;
+    final isOnboardingDone = await SecureStorage.isOnboardingDone();
+    final currentPath = state.uri.path;
+
+    if (!isOnboardingDone && currentPath != '/onboarding') {
+      return '/onboarding';
+    }
+
+    final protectedRoutes = ['/', '/history', '/analytics', '/profile'];
+    if (!isLoggedIn && protectedRoutes.contains(currentPath)) {
+      return '/login';
+    }
+
+    if (isLoggedIn &&
+        (currentPath == '/login' ||
+            currentPath == '/register' ||
+            currentPath == '/onboarding')) {
+      return '/';
+    }
+
+    return null;
   }
 }
 
 final routerProvider = Provider<GoRouter>((ref) {
-  final authState = ref.watch(authProvider);
+  // Buat notifier sekali, simpan di provider
+  final notifier = RouterNotifier(ref);
 
   return GoRouter(
     initialLocation: '/',
-    redirect: (context, state) async {
-      final isLoggedIn = authState.isAuthenticated;
-      final isOnboardingDone = await SecureStorage.isOnboardingDone();
-
-      final currentPath = state.uri.path;
-
-      if (!isOnboardingDone && currentPath != '/onboarding') {
-        return '/onboarding';
-      }
-
-      final protectedRoutes = ['/', '/history', 'analytics', '/profile'];
-      if (!isLoggedIn && protectedRoutes.contains(currentPath)) {
-        return '/login';
-      }
-
-      if (isLoggedIn &&
-          (currentPath == '/login' || currentPath == '/onboarding')) {
-        return '/';
-      }
-
-      return null;
-    },
+    // refreshListenable = GoRouter akan re-evaluate redirect
+    // setiap kali notifier.notifyListeners() dipanggil
+    refreshListenable: notifier,
+    redirect: notifier.redirect,
     routes: [
       GoRoute(
         path: '/onboarding',
@@ -62,7 +71,6 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/disclaimer',
         builder: (context, state) => const _PlaceholderScreen('Disclaimer'),
       ),
-
       ShellRoute(
         builder: (context, state, child) => _TabShell(child: child),
         routes: [
@@ -84,7 +92,6 @@ final routerProvider = Provider<GoRouter>((ref) {
           ),
         ],
       ),
-
       GoRoute(
         path: '/signal/:id',
         builder: (context, state) {
@@ -100,6 +107,20 @@ final routerProvider = Provider<GoRouter>((ref) {
   );
 });
 
+class _PlaceholderScreen extends StatelessWidget {
+  final String name;
+  const _PlaceholderScreen(this.name);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Text(name, style: const TextStyle(color: Colors.white)),
+      ),
+    );
+  }
+}
+
 class _TabShell extends StatelessWidget {
   final Widget child;
   const _TabShell({required this.child});
@@ -108,7 +129,7 @@ class _TabShell extends StatelessWidget {
     if (location.startsWith('/history')) return 1;
     if (location.startsWith('/analytics')) return 2;
     if (location.startsWith('/profile')) return 3;
-    return 0; // default to feed
+    return 0;
   }
 
   @override
@@ -116,7 +137,7 @@ class _TabShell extends StatelessWidget {
     final location = GoRouterState.of(context).uri.path;
 
     return Scaffold(
-      body: child, // konten screen yang aktif
+      body: child,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _locationToIndex(location),
         backgroundColor: const Color(0xFF0D1F3C),

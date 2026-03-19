@@ -5,7 +5,7 @@ import 'package:tradegenz_app/core/storage/secure_storage.dart';
 import 'package:tradegenz_app/core/theme/app_colors.dart';
 
 void main() async {
-WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
 
   await SecureStorage.clearAll();
 
