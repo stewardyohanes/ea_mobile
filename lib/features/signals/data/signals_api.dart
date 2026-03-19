@@ -1,3 +1,4 @@
+import 'package:flutter/rendering.dart';
 import 'package:tradegenz_app/core/network/dio_client.dart';
 import 'package:tradegenz_app/features/signals/models/signal_model.dart';
 
@@ -16,7 +17,7 @@ class SignalsApi {
       queryParameters: {'page': page, 'limit': limit, 'direction': ?direction},
     );
 
-    final List data = response.data['data'] as List;
+    final List data = response.data['data'] as List? ?? [];
     return data.map((json) => Signal.fromJson(json)).toList();
   }
 

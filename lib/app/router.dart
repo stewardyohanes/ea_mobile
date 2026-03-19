@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tradegenz_app/features/signals/screens/feed_screen.dart';
 import '../core/storage/secure_storage.dart';
 import '../features/auth/providers/auth_provider.dart';
 import '../features/auth/screens/login_screen.dart';
@@ -74,10 +75,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       ShellRoute(
         builder: (context, state, child) => _TabShell(child: child),
         routes: [
-          GoRoute(
-            path: '/',
-            builder: (context, state) => const _PlaceholderScreen('Feed'),
-          ),
+          GoRoute(path: '/', builder: (context, state) => const FeedScreen()),
           GoRoute(
             path: '/history',
             builder: (context, state) => const _PlaceholderScreen('History'),
