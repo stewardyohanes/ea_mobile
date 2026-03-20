@@ -1,22 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tradegenz_app/app/router.dart';
-import 'package:tradegenz_app/core/storage/secure_storage.dart';
 import 'package:tradegenz_app/core/theme/app_colors.dart';
+import 'package:tradegenz_app/features/auth/providers/auth_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await SecureStorage.clearAll();
-
   runApp(const ProviderScope(child: TradeGenZApp()));
 }
 
-class TradeGenZApp extends ConsumerWidget {
+class TradeGenZApp extends ConsumerStatefulWidget {
   const TradeGenZApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<TradeGenZApp> createState() => _TradeGenZAppState();
+}
+
+class _TradeGenZAppState extends ConsumerState<TradeGenZApp> {
+  @override
+  void initState() {
+    super.initState();
+
+    Future.microtask(() {
+      ref.read(authProvider.notifier).checkSession();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final router = ref.watch(routerProvider);
 
     return MaterialApp.router(

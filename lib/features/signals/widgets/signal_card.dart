@@ -44,7 +44,12 @@ class SignalCard extends ConsumerWidget {
     );
 
     return GestureDetector(
-      onTap: () => context.push('/signal/${signal.id}'),
+      onTap: () => {
+        if (isPremium)
+          {context.push('/signals/${signal.id}')}
+        else
+          {context.push('/upgrade')},
+      },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
         padding: const EdgeInsets.all(16),
