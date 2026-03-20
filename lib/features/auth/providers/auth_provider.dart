@@ -88,24 +88,14 @@ class AuthNotifier extends Notifier<AuthState> {
     if (token == null) return;
 
     state = state.copyWith(isLoading: true, error: null);
+
     try {
       final user = await AuthApi.getMe();
       state = state.copyWith(user: user, isLoading: false);
-
-      if (user.isPremium) {
-        await FcmService.initialize();
-      }
-    } on DioException catch (e) {
-      final message =
-          e.response?.data['message'] as String? ??
-          e.response?.data['error'] as String? ??
-          'Something went wrong. Please try again.';
-      state = state.copyWith(isLoading: false, error: message);
+      if (user.isPremium) await FcmService.initialize();
     } on Exception {
-      state = state.copyWith(
-        isLoading: false,
-        error: 'Something went wrong. Please try again.',
-      );
+      await SecureStorage.deleteToken();
+      state = const AuthState();
     }
   }
 

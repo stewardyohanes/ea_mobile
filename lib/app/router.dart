@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tradegenz_app/features/auth/screens/disclaimer_screen.dart';
 import 'package:tradegenz_app/features/calculator/screens/calculator_screen.dart';
 import 'package:tradegenz_app/features/profile/screens/profile_screen.dart';
 import 'package:tradegenz_app/features/profile/screens/upgrade_screen.dart';
 import 'package:tradegenz_app/features/signals/screens/feed_screen.dart';
 import 'package:tradegenz_app/features/signals/screens/history_screen.dart';
 import 'package:tradegenz_app/features/signals/screens/signal_detail_screen.dart';
+import 'package:tradegenz_app/shared/widgets/network_banner.dart';
 import '../core/storage/secure_storage.dart';
 import '../features/auth/providers/auth_provider.dart';
 import '../features/auth/screens/login_screen.dart';
@@ -31,10 +33,15 @@ class RouterNotifier extends ChangeNotifier {
     final authState = _ref.read(authProvider);
     final isLoggedIn = authState.isAuthenticated;
     final isOnboardingDone = await SecureStorage.isOnboardingDone();
+    final isDisclaimerAccepted = await SecureStorage.isDisclaimerAccepted();
     final currentPath = state.uri.path;
 
     if (!isOnboardingDone && currentPath != '/onboarding') {
       return '/onboarding';
+    }
+
+    if (isLoggedIn && !isDisclaimerAccepted && currentPath != '/disclaimer') {
+      return '/disclaimer';
     }
 
     final protectedRoutes = ['/', '/history', '/calculator', '/profile'];
@@ -75,7 +82,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/disclaimer',
-        builder: (context, state) => const _PlaceholderScreen('Disclaimer'),
+        builder: (context, state) => const DisclaimerScreen(),
       ),
       ShellRoute(
         builder: (context, state, child) => _TabShell(child: child),
@@ -140,7 +147,12 @@ class _TabShell extends StatelessWidget {
     final location = GoRouterState.of(context).uri.path;
 
     return Scaffold(
-      body: child,
+      body: Column(
+        children: [
+          const NetworkBanner(),
+          Expanded(child: child),
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _locationToIndex(location),
         backgroundColor: const Color(0xFF0D1F3C),
