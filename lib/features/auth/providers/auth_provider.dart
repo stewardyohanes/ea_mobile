@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tradegenz_app/core/notifications/fcm_service.dart';
 import 'package:tradegenz_app/core/storage/secure_storage.dart';
 import 'package:tradegenz_app/features/auth/data/auth_api.dart';
 import 'package:tradegenz_app/shared/models/user_model.dart';
@@ -32,12 +33,15 @@ class AuthNotifier extends Notifier<AuthState> {
     state = state.copyWith(isLoading: true, error: null);
     try {
       final data = await AuthApi.login(email: email, password: password);
-
       final token = data['token'] as String;
       final user = User.fromJson(data['user'] as Map<String, dynamic>);
 
       await SecureStorage.saveToken(token);
       state = state.copyWith(user: user, isLoading: false);
+
+      if (user.isPremium) {
+        await FcmService.initialize();
+      }
     } on DioException catch (e) {
       final message =
           e.response?.data['message'] as String? ??
@@ -87,6 +91,10 @@ class AuthNotifier extends Notifier<AuthState> {
     try {
       final user = await AuthApi.getMe();
       state = state.copyWith(user: user, isLoading: false);
+
+      if (user.isPremium) {
+        await FcmService.initialize();
+      }
     } on DioException catch (e) {
       final message =
           e.response?.data['message'] as String? ??
@@ -103,6 +111,7 @@ class AuthNotifier extends Notifier<AuthState> {
 
   Future<void> logout() async {
     await SecureStorage.deleteToken();
+    await FcmService.deleteToken();
     state = const AuthState();
   }
 }
