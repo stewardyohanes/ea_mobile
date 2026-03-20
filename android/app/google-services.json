@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "725280691375",
+    "project_id": "tradegenz-app",
+    "storage_bucket": "tradegenz-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:725280691375:android:f60c232082c6bc4eaab05a",
+        "android_client_info": {
+          "package_name": "com.tradegenz.tradegenz_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDWyut5tHyFhPnX8zv6sfNCR_9FLq2VfR4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

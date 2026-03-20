@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tradegenz_app/features/calculator/screens/calculator_screen.dart';
 import 'package:tradegenz_app/features/profile/screens/profile_screen.dart';
 import 'package:tradegenz_app/features/profile/screens/upgrade_screen.dart';
 import 'package:tradegenz_app/features/signals/screens/feed_screen.dart';
@@ -36,7 +37,7 @@ class RouterNotifier extends ChangeNotifier {
       return '/onboarding';
     }
 
-    final protectedRoutes = ['/', '/history', '/analytics', '/profile'];
+    final protectedRoutes = ['/', '/history', '/calculator', '/profile'];
     if (!isLoggedIn && protectedRoutes.contains(currentPath)) {
       return '/login';
     }
@@ -85,8 +86,8 @@ final routerProvider = Provider<GoRouter>((ref) {
             builder: (context, state) => const HistoryScreen(),
           ),
           GoRoute(
-            path: '/analytics',
-            builder: (context, state) => const _PlaceholderScreen('Analytics'),
+            path: '/calculator',
+            builder: (context, state) => const CalculatorScreen(),
           ),
           GoRoute(
             path: '/profile',
@@ -129,7 +130,7 @@ class _TabShell extends StatelessWidget {
 
   int _locationToIndex(String location) {
     if (location.startsWith('/history')) return 1;
-    if (location.startsWith('/analytics')) return 2;
+    if (location.startsWith('/calculator')) return 2;
     if (location.startsWith('/profile')) return 3;
     return 0;
   }
@@ -155,7 +156,7 @@ class _TabShell extends StatelessWidget {
               context.go('/history');
               break;
             case 2:
-              context.go('/analytics');
+              context.go('/calculator');
               break;
             case 3:
               context.go('/profile');
@@ -169,8 +170,8 @@ class _TabShell extends StatelessWidget {
           ),
           BottomNavigationBarItem(icon: Icon(Icons.history), label: 'History'),
           BottomNavigationBarItem(
-            icon: Icon(Icons.analytics),
-            label: 'Analytics',
+            icon: Icon(Icons.calculate_outlined),
+            label: 'Calculator',
           ),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
