@@ -21,9 +21,9 @@ class DioClient {
       ),
     );
 
-    // dio.interceptors.add(
-    //   LogInterceptor(requestBody: true, responseBody: true, error: true),
-    // );
+    dio.interceptors.add(
+      LogInterceptor(requestBody: true, responseBody: true, error: true),
+    );
 
     dio.interceptors.add(_AuthInterceptor());
 

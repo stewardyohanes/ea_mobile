@@ -97,10 +97,10 @@ class _DetailContent extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header — pair + badges
+          // Header — symbol + badges
           Row(
             children: [
-              Text(signal.pair, style: AppTextStyles.h1),
+              Text(signal.symbol, style: AppTextStyles.h1),
               const SizedBox(width: 12),
               _Badge(label: signal.direction, color: _directionColor),
               const Spacer(),
@@ -113,19 +113,27 @@ class _DetailContent extends StatelessWidget {
           // Timestamp
           Text('Created: ${signal.createdAt}', style: AppTextStyles.caption),
 
-          if (signal.closedAt != null)
-            Text('Closed: ${signal.closedAt}', style: AppTextStyles.caption),
-
           const SizedBox(height: 24),
 
-          // R:R Ratio
-          if (signal.riskRewardRatio != null) ...[
+          // Trend + R:R Ratio
+          Row(
+            children: [
+              if (signal.trend.isNotEmpty) ...[
+                Text('Trend', style: AppTextStyles.label),
+                const Spacer(),
+                Text(signal.trend, style: AppTextStyles.h3),
+              ],
+            ],
+          ),
+          if (signal.trend.isNotEmpty) const SizedBox(height: 12),
+
+          if (signal.riskReward != null) ...[
             Row(
               children: [
                 Text('Risk/Reward', style: AppTextStyles.label),
                 const Spacer(),
                 Text(
-                  '1 : ${signal.riskRewardRatio}',
+                  '1 : ${signal.riskReward!.toStringAsFixed(2)}',
                   style: AppTextStyles.h3.copyWith(color: AppColors.gold),
                 ),
               ],
@@ -186,21 +194,6 @@ class _DetailContent extends StatelessWidget {
             ),
           ],
 
-          // Notes
-          if (signal.notes != null) ...[
-            const SizedBox(height: 24),
-            Text('Notes', style: AppTextStyles.label),
-            const SizedBox(height: 8),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: AppColors.surface,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Text(signal.notes!, style: AppTextStyles.body),
-            ),
-          ],
 
           const SizedBox(height: 32),
         ],

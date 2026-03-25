@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tradegenz_app/app/router.dart';
+import 'package:tradegenz_app/core/notifications/fcm_service.dart';
 import 'package:tradegenz_app/core/theme/app_colors.dart';
 import 'package:tradegenz_app/features/auth/providers/auth_provider.dart';
 import 'package:tradegenz_app/firebase_options.dart';
@@ -26,8 +27,15 @@ class _TradeGenZAppState extends ConsumerState<TradeGenZApp> {
   void initState() {
     super.initState();
 
-    Future.microtask(() {
-      ref.read(authProvider.notifier).checkSession();
+    Future.microtask(() async {
+      await ref.read(authProvider.notifier).checkSession();
+
+      // Set navigasi saat notifikasi di-tap → buka detail signal
+      FcmService.onNotificationTap = (signalId) {
+        ref.read(routerProvider).push('/signal/$signalId');
+      };
+
+      await FcmService.initialize();
     });
   }
 

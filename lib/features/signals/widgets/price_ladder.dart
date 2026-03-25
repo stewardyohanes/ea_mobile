@@ -9,101 +9,68 @@ class PriceLadder extends StatelessWidget {
 
   const PriceLadder({required this.signal, required this.isPremium, super.key});
 
-  // Susun level harga sesuai direction
   List<_PriceLevel> get _levels {
     final levels = <_PriceLevel>[];
 
     if (signal.isBuy) {
       // BUY: TP di atas, SL di bawah
-      if (signal.takeProfit3 != null) {
-        levels.add(
-          _PriceLevel(
-            label: 'TP 3',
-            value: signal.takeProfit3!,
-            color: AppColors.success,
-            type: _LevelType.tp,
-          ),
-        );
-      }
-      if (signal.takeProfit2 != null) {
-        levels.add(
-          _PriceLevel(
-            label: 'TP 2',
-            value: signal.takeProfit2!,
-            color: AppColors.success,
-            type: _LevelType.tp,
-          ),
-        );
-      }
-      levels.add(
-        _PriceLevel(
-          label: 'TP 1',
-          value: signal.takeProfit1,
+      if (signal.tp != null) {
+        levels.add(_PriceLevel(
+          label: 'Take Profit',
+          value: signal.tp!,
           color: AppColors.success,
           type: _LevelType.tp,
-        ),
-      );
-      levels.add(
-        _PriceLevel(
-          label: 'Entry',
-          value: signal.entryPrice,
+        ));
+      }
+      if (signal.entry2 != null) {
+        levels.add(_PriceLevel(
+          label: 'Entry 2',
+          value: signal.entry2!,
           color: AppColors.primary,
           type: _LevelType.entry,
-        ),
-      );
-      levels.add(
-        _PriceLevel(
-          label: 'Stop Loss',
-          value: signal.stopLoss,
-          color: AppColors.error,
-          type: _LevelType.sl,
-        ),
-      );
+        ));
+      }
+      levels.add(_PriceLevel(
+        label: 'Entry 1',
+        value: signal.entry1,
+        color: AppColors.primary,
+        type: _LevelType.entry,
+      ));
+      levels.add(_PriceLevel(
+        label: 'Stop Loss',
+        value: signal.sl,
+        color: AppColors.error,
+        type: _LevelType.sl,
+      ));
     } else {
       // SELL: SL di atas, TP di bawah
-      levels.add(
-        _PriceLevel(
-          label: 'Stop Loss',
-          value: signal.stopLoss,
-          color: AppColors.error,
-          type: _LevelType.sl,
-        ),
-      );
-      levels.add(
-        _PriceLevel(
-          label: 'Entry',
-          value: signal.entryPrice,
+      levels.add(_PriceLevel(
+        label: 'Stop Loss',
+        value: signal.sl,
+        color: AppColors.error,
+        type: _LevelType.sl,
+      ));
+      if (signal.entry2 != null) {
+        levels.add(_PriceLevel(
+          label: 'Entry 2',
+          value: signal.entry2!,
           color: AppColors.primary,
           type: _LevelType.entry,
-        ),
-      );
-      levels.add(
-        _PriceLevel(
-          label: 'TP 1',
-          value: signal.takeProfit1,
+        ));
+      }
+      levels.add(_PriceLevel(
+        label: 'Entry 1',
+        value: signal.entry1,
+        color: AppColors.primary,
+        type: _LevelType.entry,
+      ));
+      if (signal.tp != null) {
+        levels.add(_PriceLevel(
+          label: 'Take Profit',
+          value: signal.tp!,
           color: AppColors.success,
           type: _LevelType.tp,
-        ),
-      );
-      if (signal.takeProfit2 != null) {
-        levels.add(
-          _PriceLevel(
-            label: 'TP 2',
-            value: signal.takeProfit2!,
-            color: AppColors.success,
-            type: _LevelType.tp,
-          ),
-        );
-      }
-      if (signal.takeProfit3 != null) {
-        levels.add(
-          _PriceLevel(
-            label: 'TP 3',
-            value: signal.takeProfit3!,
-            color: AppColors.success,
-            type: _LevelType.tp,
-          ),
-        );
+        ));
       }
     }
 
@@ -162,7 +129,6 @@ class _PriceLevelRow extends StatelessWidget {
     required this.isPremium,
   });
 
-  // Entry selalu tampil, TP/SL hanya untuk premium
   bool get _isLocked => !isPremium && level.type != _LevelType.entry;
 
   @override
@@ -170,12 +136,11 @@ class _PriceLevelRow extends StatelessWidget {
     return IntrinsicHeight(
       child: Row(
         children: [
-          // Connector line + dot kiri
+          // Connector line + dot
           SizedBox(
             width: 24,
             child: Column(
               children: [
-                // Line atas (tidak tampil di baris pertama)
                 Expanded(
                   child: Center(
                     child: Container(
@@ -184,7 +149,6 @@ class _PriceLevelRow extends StatelessWidget {
                     ),
                   ),
                 ),
-                // Dot
                 Container(
                   width: 12,
                   height: 12,
@@ -193,7 +157,6 @@ class _PriceLevelRow extends StatelessWidget {
                     shape: BoxShape.circle,
                   ),
                 ),
-                // Line bawah (tidak tampil di baris terakhir)
                 Expanded(
                   child: Center(
                     child: isLast
@@ -240,8 +203,6 @@ class _PriceLevelRow extends StatelessWidget {
                         )
                       : Text(
                           level.value.toStringAsFixed(
-                            // Pair seperti XAUUSD pakai 2 desimal,
-                            // forex pair pakai 4-5 desimal
                             level.value > 100 ? 2 : 5,
                           ),
                           style: AppTextStyles.price.copyWith(

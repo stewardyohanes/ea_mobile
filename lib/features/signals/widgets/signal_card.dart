@@ -6,7 +6,6 @@ import '../../auth/providers/auth_provider.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 
-// Ubah ke ConsumerWidget agar bisa watch authProvider
 class SignalCard extends ConsumerWidget {
   final Signal signal;
   const SignalCard({required this.signal, super.key});
@@ -38,7 +37,6 @@ class SignalCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Cek plan user — free atau premium
     final isPremium = ref.watch(
       authProvider.select((s) => s.user?.isPremium ?? false),
     );
@@ -46,7 +44,7 @@ class SignalCard extends ConsumerWidget {
     return GestureDetector(
       onTap: () => {
         if (isPremium)
-          {context.push('/signals/${signal.id}')}
+          {context.push('/signal/${signal.id}')}
         else
           {context.push('/upgrade')},
       },
@@ -60,12 +58,16 @@ class SignalCard extends ConsumerWidget {
         ),
         child: Column(
           children: [
-            // Row 1: Pair + Direction + Status
+            // Row 1: Symbol + Direction + Status
             Row(
               children: [
-                Text(signal.pair, style: AppTextStyles.h3),
+                Text(signal.symbol, style: AppTextStyles.h3),
                 const SizedBox(width: 8),
                 _Badge(label: signal.direction, color: _directionColor),
+                if (signal.trend.isNotEmpty) ...[
+                  const SizedBox(width: 6),
+                  _Badge(label: signal.trend, color: AppColors.textMuted),
+                ],
                 const Spacer(),
                 _Badge(label: _statusLabel, color: _statusColor),
               ],
@@ -84,7 +86,6 @@ class SignalCard extends ConsumerWidget {
   }
 }
 
-// Harga lengkap — untuk premium user
 class _PriceRow extends StatelessWidget {
   final Signal signal;
   const _PriceRow({required this.signal});
@@ -95,25 +96,27 @@ class _PriceRow extends StatelessWidget {
       children: [
         _PriceColumn(
           label: 'Entry',
-          value: signal.entryPrice.toStringAsFixed(2),
+          value: signal.entry1.toStringAsFixed(2),
           color: AppColors.textPrimary,
         ),
         const SizedBox(width: 16),
         _PriceColumn(
           label: 'Stop Loss',
-          value: signal.stopLoss.toStringAsFixed(2),
+          value: signal.sl.toStringAsFixed(2),
           color: AppColors.error,
         ),
-        const SizedBox(width: 16),
-        _PriceColumn(
-          label: 'Take Profit',
-          value: signal.takeProfit1.toStringAsFixed(2),
-          color: AppColors.success,
-        ),
+        if (signal.tp != null) ...[
+          const SizedBox(width: 16),
+          _PriceColumn(
+            label: 'Take Profit',
+            value: signal.tp!.toStringAsFixed(2),
+            color: AppColors.success,
+          ),
+        ],
         const Spacer(),
-        if (signal.riskRewardRatio != null)
+        if (signal.riskReward != null)
           Text(
-            '1:${signal.riskRewardRatio}',
+            '1:${signal.riskReward!.toStringAsFixed(2)}',
             style: AppTextStyles.label.copyWith(color: AppColors.gold),
           ),
       ],
@@ -121,7 +124,6 @@ class _PriceRow extends StatelessWidget {
   }
 }
 
-// Harga terkunci — untuk free user
 class _LockedPriceRow extends StatelessWidget {
   final VoidCallback onTap;
   const _LockedPriceRow({required this.onTap});
@@ -157,7 +159,6 @@ class _LockedPriceRow extends StatelessWidget {
   }
 }
 
-// Badge widget
 class _Badge extends StatelessWidget {
   final String label;
   final Color color;
@@ -182,7 +183,6 @@ class _Badge extends StatelessWidget {
   }
 }
 
-// Price column widget
 class _PriceColumn extends StatelessWidget {
   final String label;
   final String value;
