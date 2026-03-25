@@ -34,9 +34,11 @@ class AuthNotifier extends Notifier<AuthState> {
     try {
       final data = await AuthApi.login(email: email, password: password);
       final token = data['token'] as String;
+      final refreshToken = data['refresh_token'] as String;
       final user = User.fromJson(data['user'] as Map<String, dynamic>);
 
       await SecureStorage.saveToken(token);
+      await SecureStorage.saveRefreshToken(refreshToken);
       state = state.copyWith(user: user, isLoading: false);
 
       if (user.isPremium) {
@@ -101,6 +103,7 @@ class AuthNotifier extends Notifier<AuthState> {
 
   Future<void> logout() async {
     await SecureStorage.deleteToken();
+    await SecureStorage.deleteRefreshToken();
     await FcmService.deleteToken();
     state = const AuthState();
   }

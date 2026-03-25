@@ -30,6 +30,14 @@ class AuthApi {
     return response.data as Map<String, dynamic>;
   }
 
+  static Future<Map<String, dynamic>> refresh(String refreshToken) async {
+    final response = await _dio.post(
+      '/auth/refresh',
+      data: {'refresh_token': refreshToken},
+    );
+    return response.data as Map<String, dynamic>;
+  }
+
   static Future<User> getMe() async {
     final response = await _dio.get('/auth/me');
     return User.fromJson(response.data as Map<String, dynamic>);

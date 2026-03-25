@@ -6,6 +6,7 @@ class SecureStorage {
   static const _storage = FlutterSecureStorage();
 
   static const _tokenKey = 'jwt_token';
+  static const _refreshTokenKey = 'refresh_token';
   static const _onboardingKey = 'onboarding_done';
   static const _disclaimerKey = 'disclaimer_accepted';
 
@@ -19,6 +20,18 @@ class SecureStorage {
 
   static Future<void> deleteToken() async {
     await _storage.delete(key: _tokenKey);
+  }
+
+  static Future<void> saveRefreshToken(String token) async {
+    await _storage.write(key: _refreshTokenKey, value: token);
+  }
+
+  static Future<String?> getRefreshToken() async {
+    return await _storage.read(key: _refreshTokenKey);
+  }
+
+  static Future<void> deleteRefreshToken() async {
+    await _storage.delete(key: _refreshTokenKey);
   }
 
   static Future<void> setOnboardingDone() async {
