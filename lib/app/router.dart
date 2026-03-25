@@ -14,6 +14,7 @@ import '../features/auth/providers/auth_provider.dart';
 import '../features/auth/screens/forgot_password_screen.dart';
 import '../features/auth/screens/login_screen.dart';
 import '../features/auth/screens/onboarding_screen.dart';
+import '../features/auth/screens/otp_verification_screen.dart';
 import '../features/auth/screens/register_screen.dart';
 import '../features/auth/screens/reset_password_screen.dart';
 
@@ -91,10 +92,20 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const ForgotPasswordScreen(),
       ),
       GoRoute(
-        path: '/reset-password',
+        path: '/otp-verification',
         builder: (context, state) {
           final email = state.extra as String? ?? '';
-          return ResetPasswordScreen(email: email);
+          return OtpVerificationScreen(email: email);
+        },
+      ),
+      GoRoute(
+        path: '/reset-password',
+        builder: (context, state) {
+          final extra = state.extra as Map<String, String>? ?? {};
+          return ResetPasswordScreen(
+            email: extra['email'] ?? '',
+            otp: extra['otp'] ?? '',
+          );
         },
       ),
       ShellRoute(
@@ -129,20 +140,6 @@ final routerProvider = Provider<GoRouter>((ref) {
     ],
   );
 });
-
-class _PlaceholderScreen extends StatelessWidget {
-  final String name;
-  const _PlaceholderScreen(this.name);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Text(name, style: const TextStyle(color: Colors.white)),
-      ),
-    );
-  }
-}
 
 class _TabShell extends StatelessWidget {
   final Widget child;

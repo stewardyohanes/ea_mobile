@@ -7,15 +7,19 @@ import 'package:tradegenz_app/features/auth/data/auth_api.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
   final String email;
+  final String otp;
 
-  const ResetPasswordScreen({super.key, required this.email});
+  const ResetPasswordScreen({
+    super.key,
+    required this.email,
+    required this.otp,
+  });
 
   @override
   State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
 }
 
 class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
-  final _otpController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
@@ -26,26 +30,24 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
   @override
   void dispose() {
-    _otpController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
   }
 
   Future<void> _onReset() async {
-    final otp = _otpController.text.trim();
     final password = _passwordController.text;
     final confirm = _confirmPasswordController.text;
 
-    if (otp.isEmpty || password.isEmpty || confirm.isEmpty) return;
+    if (password.isEmpty || confirm.isEmpty) return;
 
     if (password != confirm) {
-      setState(() => _error = 'Passwords do not match');
+      setState(() => _error = 'Password tidak sama');
       return;
     }
 
     if (password.length < 8) {
-      setState(() => _error = 'Password must be at least 8 characters');
+      setState(() => _error = 'Password minimal 8 karakter');
       return;
     }
 
@@ -57,14 +59,14 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     try {
       await AuthApi.resetPassword(
         email: widget.email,
-        otp: otp,
+        otp: widget.otp,
         newPassword: password,
       );
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Password updated successfully'),
+            content: Text('Password berhasil diubah'),
             backgroundColor: AppColors.success,
           ),
         );
@@ -72,10 +74,10 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       }
     } on DioException catch (e) {
       final message =
-          e.response?.data['error'] as String? ?? 'Invalid or expired OTP';
+          e.response?.data['error'] as String? ?? 'Kode OTP tidak valid atau sudah kadaluarsa';
       setState(() => _error = message);
     } catch (_) {
-      setState(() => _error = 'Something went wrong. Please try again.');
+      setState(() => _error = 'Terjadi kesalahan. Coba lagi.');
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -100,36 +102,22 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
             children: [
               const SizedBox(height: 16),
 
-              Text('Reset Password', style: AppTextStyles.h1),
+              Text('Password Baru', style: AppTextStyles.h1),
               const SizedBox(height: 8),
               Text(
-                'Enter the OTP sent to ${widget.email} and your new password.',
+                'Buat password baru untuk akun kamu.',
                 style: AppTextStyles.body.copyWith(color: AppColors.textMuted),
               ),
 
               const SizedBox(height: 40),
 
-              _inputLabel('OTP Code'),
-              const SizedBox(height: 8),
-              TextField(
-                controller: _otpController,
-                keyboardType: TextInputType.number,
-                maxLength: 6,
-                style: AppTextStyles.body,
-                decoration: _inputDecoration('Enter 6-digit OTP').copyWith(
-                  counterText: '',
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              _inputLabel('New Password'),
+              _inputLabel('Password Baru'),
               const SizedBox(height: 8),
               TextField(
                 controller: _passwordController,
                 obscureText: _obscurePassword,
                 style: AppTextStyles.body,
-                decoration: _inputDecoration('Enter new password').copyWith(
+                decoration: _inputDecoration('Masukkan password baru').copyWith(
                   suffixIcon: IconButton(
                     icon: Icon(
                       _obscurePassword
@@ -145,13 +133,14 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
               const SizedBox(height: 20),
 
-              _inputLabel('Confirm Password'),
+              _inputLabel('Konfirmasi Password'),
               const SizedBox(height: 8),
               TextField(
                 controller: _confirmPasswordController,
                 obscureText: _obscureConfirm,
                 style: AppTextStyles.body,
-                decoration: _inputDecoration('Confirm new password').copyWith(
+                decoration:
+                    _inputDecoration('Konfirmasi password baru').copyWith(
                   suffixIcon: IconButton(
                     icon: Icon(
                       _obscureConfirm
@@ -196,7 +185,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           ),
                         )
                       : const Text(
-                          'Reset Password',
+                          'Simpan Password',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 16,

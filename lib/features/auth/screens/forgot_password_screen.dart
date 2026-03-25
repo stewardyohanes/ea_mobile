@@ -15,7 +15,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final _emailController = TextEditingController();
   bool _isLoading = false;
   bool _otpSent = false;
-  bool _isResending = false;
   String? _error;
 
   @override
@@ -45,33 +44,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     }
   }
 
-  Future<void> _resendOTP() async {
-    final email = _emailController.text.trim();
-    if (email.isEmpty) return;
-
-    setState(() {
-      _isResending = true;
-      _error = null;
-    });
-
-    try {
-      await AuthApi.forgotPassword(email);
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('OTP berhasil dikirim ulang'),
-            backgroundColor: AppColors.success,
-          ),
-        );
-      }
-    } catch (_) {
-      if (mounted) {
-        setState(() => _error = 'Gagal mengirim ulang OTP. Coba lagi.');
-      }
-    } finally {
-      if (mounted) setState(() => _isResending = false);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -228,11 +200,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
         const SizedBox(height: 32),
 
-        // Tombol utama: lanjut ke reset password
+        // Tombol utama: lanjut ke OTP verification
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
-            onPressed: () => context.push('/reset-password', extra: email),
+            onPressed: () => context.push('/otp-verification', extra: email),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,
               padding: const EdgeInsets.symmetric(vertical: 16),
@@ -241,46 +213,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               ),
             ),
             child: const Text(
-              'Sudah Terima OTP',
+              'Masukkan Kode OTP',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
               ),
             ),
-          ),
-        ),
-
-        const SizedBox(height: 16),
-
-        // Tombol resend
-        SizedBox(
-          width: double.infinity,
-          child: OutlinedButton(
-            onPressed: _isResending ? null : _resendOTP,
-            style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              side: const BorderSide(color: AppColors.divider),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            child: _isResending
-                ? const SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: AppColors.primary,
-                    ),
-                  )
-                : Text(
-                    'Kirim Ulang OTP',
-                    style: AppTextStyles.body.copyWith(
-                      color: AppColors.textMuted,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
           ),
         ),
       ],
