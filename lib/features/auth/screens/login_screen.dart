@@ -97,6 +97,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
               ),
 
+              // Forgot Password Link
+              Align(
+                alignment: Alignment.centerRight,
+                child: GestureDetector(
+                  onTap: () => context.push('/forgot-password'),
+                  child: Text(
+                    'Forgot Password?',
+                    style: AppTextStyles.body.copyWith(
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+
               // Error Message
               if (authState.error != null) ...[
                 const SizedBox(height: 16),

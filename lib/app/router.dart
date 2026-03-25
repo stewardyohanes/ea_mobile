@@ -11,9 +11,11 @@ import 'package:tradegenz_app/features/signals/screens/signal_detail_screen.dart
 import 'package:tradegenz_app/shared/widgets/network_banner.dart';
 import '../core/storage/secure_storage.dart';
 import '../features/auth/providers/auth_provider.dart';
+import '../features/auth/screens/forgot_password_screen.dart';
 import '../features/auth/screens/login_screen.dart';
 import '../features/auth/screens/onboarding_screen.dart';
 import '../features/auth/screens/register_screen.dart';
+import '../features/auth/screens/reset_password_screen.dart';
 
 // RouterNotifier = jembatan antara Riverpod dan GoRouter
 // GoRouter butuh ChangeNotifier untuk tahu kapan harus re-evaluate redirect
@@ -83,6 +85,17 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/disclaimer',
         builder: (context, state) => const DisclaimerScreen(),
+      ),
+      GoRoute(
+        path: '/forgot-password',
+        builder: (context, state) => const ForgotPasswordScreen(),
+      ),
+      GoRoute(
+        path: '/reset-password',
+        builder: (context, state) {
+          final email = state.extra as String? ?? '';
+          return ResetPasswordScreen(email: email);
+        },
       ),
       ShellRoute(
         builder: (context, state, child) => _TabShell(child: child),
