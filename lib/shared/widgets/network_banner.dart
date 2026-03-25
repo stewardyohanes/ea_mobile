@@ -15,7 +15,7 @@ class NetworkBanner extends ConsumerWidget {
     // Kalau masih loading atau online → tidak tampilkan apapun
     return networkAsync.when(
       loading: () => const SizedBox.shrink(),
-      error: (_, __) => const SizedBox.shrink(),
+      error: (_, _) => const SizedBox.shrink(),
       data: (isOnline) {
         if (isOnline) return const SizedBox.shrink();
 

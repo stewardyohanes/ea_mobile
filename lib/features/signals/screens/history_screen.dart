@@ -73,7 +73,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
     if (state.isLoading) {
       return ListView.builder(
         itemCount: 6,
-        itemBuilder: (_, __) => const SkeletonCard(),
+        itemBuilder: (_, _) => const SkeletonCard(),
       );
     }
 
@@ -89,7 +89,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
             Text(
               _activeFilter == 'ALL'
                   ? 'No signals yet'
-                  : 'No ${_activeFilter} signals found',
+                  : 'No $_activeFilter signals found',
               style: AppTextStyles.label,
             ),
           ],

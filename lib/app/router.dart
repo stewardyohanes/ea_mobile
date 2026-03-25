@@ -27,7 +27,7 @@ class RouterNotifier extends ChangeNotifier {
     // ref.listen = watch tapi dari luar widget tree
     // Setiap kali authProvider berubah → notifyListeners()
     // → GoRouter re-evaluate redirect
-    _ref.listen(authProvider, (_, __) => notifyListeners());
+    _ref.listen(authProvider, (_, _) => notifyListeners());
   }
 
   Future<String?> redirect(BuildContext context, GoRouterState state) async {

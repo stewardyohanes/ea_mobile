@@ -14,6 +14,8 @@ class ForgotPasswordScreen extends StatefulWidget {
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final _emailController = TextEditingController();
   bool _isLoading = false;
+  bool _otpSent = false;
+  bool _isResending = false;
   String? _error;
 
   @override
@@ -22,7 +24,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     super.dispose();
   }
 
-  Future<void> _onSend() async {
+  Future<void> _sendOTP() async {
     final email = _emailController.text.trim();
     if (email.isEmpty) return;
 
@@ -33,17 +35,41 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
     try {
       await AuthApi.forgotPassword(email);
-      if (mounted) {
-        context.push('/reset-password', extra: email);
-      }
+      if (mounted) setState(() => _otpSent = true);
     } catch (_) {
-      // Backend always returns 200 for forgot password
-      // So this only triggers on network errors
       if (mounted) {
-        context.push('/reset-password', extra: email);
+        setState(() => _error = 'Gagal mengirim OTP. Periksa koneksi internet kamu.');
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _resendOTP() async {
+    final email = _emailController.text.trim();
+    if (email.isEmpty) return;
+
+    setState(() {
+      _isResending = true;
+      _error = null;
+    });
+
+    try {
+      await AuthApi.forgotPassword(email);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('OTP berhasil dikirim ulang'),
+            backgroundColor: AppColors.success,
+          ),
+        );
+      }
+    } catch (_) {
+      if (mounted) {
+        setState(() => _error = 'Gagal mengirim ulang OTP. Coba lagi.');
+      }
+    } finally {
+      if (mounted) setState(() => _isResending = false);
     }
   }
 
@@ -55,79 +81,209 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: AppColors.textPrimary),
-          onPressed: () => context.pop(),
+          onPressed: () {
+            if (_otpSent) {
+              setState(() => _otpSent = false);
+            } else {
+              context.pop();
+            }
+          },
         ),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 16),
+          child: _otpSent ? _buildOTPSentView() : _buildEmailView(),
+        ),
+      ),
+    );
+  }
 
-              Text('Forgot Password', style: AppTextStyles.h1),
-              const SizedBox(height: 8),
-              Text(
-                'Enter your email and we\'ll send you an OTP to reset your password.',
-                style: AppTextStyles.body.copyWith(color: AppColors.textMuted),
+  // State 1: input email
+  Widget _buildEmailView() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 16),
+        Text('Forgot Password', style: AppTextStyles.h1),
+        const SizedBox(height: 8),
+        Text(
+          'Masukkan email kamu dan kami akan mengirimkan kode OTP untuk reset password.',
+          style: AppTextStyles.body.copyWith(color: AppColors.textMuted),
+        ),
+        const SizedBox(height: 40),
+        _inputLabel('Email'),
+        const SizedBox(height: 8),
+        TextField(
+          controller: _emailController,
+          keyboardType: TextInputType.emailAddress,
+          style: AppTextStyles.body,
+          decoration: _inputDecoration('Masukkan email kamu'),
+        ),
+        if (_error != null) ...[
+          const SizedBox(height: 16),
+          Text(
+            _error!,
+            style: AppTextStyles.body.copyWith(color: AppColors.error),
+          ),
+        ],
+        const SizedBox(height: 32),
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: _isLoading ? null : _sendOTP,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
               ),
-
-              const SizedBox(height: 40),
-
-              _inputLabel('Email'),
-              const SizedBox(height: 8),
-              TextField(
-                controller: _emailController,
-                keyboardType: TextInputType.emailAddress,
-                style: AppTextStyles.body,
-                decoration: _inputDecoration('Enter your email'),
-              ),
-
-              if (_error != null) ...[
-                const SizedBox(height: 16),
-                Text(
-                  _error!,
-                  style: AppTextStyles.body.copyWith(color: AppColors.error),
-                ),
-              ],
-
-              const SizedBox(height: 32),
-
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _isLoading ? null : _onSend,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+            ),
+            child: _isLoading
+                ? const SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.white,
+                    ),
+                  )
+                : const Text(
+                    'Kirim OTP',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
-                  child: _isLoading
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.white,
-                          ),
-                        )
-                      : const Text(
-                          'Send OTP',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // State 2: OTP sudah dikirim, tunggu user konfirmasi
+  Widget _buildOTPSentView() {
+    final email = _emailController.text.trim();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 16),
+        Text('Cek Email Kamu', style: AppTextStyles.h1),
+        const SizedBox(height: 8),
+        Text(
+          'Kode OTP telah dikirim ke',
+          style: AppTextStyles.body.copyWith(color: AppColors.textMuted),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          email,
+          style: AppTextStyles.body.copyWith(
+            color: AppColors.textPrimary,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        const SizedBox(height: 40),
+
+        // Info card
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: AppColors.divider),
+          ),
+          child: Column(
+            children: [
+              const Icon(Icons.mark_email_read_outlined,
+                  color: AppColors.success, size: 40),
+              const SizedBox(height: 12),
+              Text(
+                'OTP terkirim!',
+                style: AppTextStyles.body.copyWith(
+                  color: AppColors.textPrimary,
+                  fontWeight: FontWeight.w600,
                 ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                'Buka email kamu dan salin kode 6 digit yang kami kirimkan. Kode berlaku selama 15 menit.',
+                style:
+                    AppTextStyles.body.copyWith(color: AppColors.textMuted),
+                textAlign: TextAlign.center,
               ),
             ],
           ),
         ),
-      ),
+
+        if (_error != null) ...[
+          const SizedBox(height: 16),
+          Text(
+            _error!,
+            style: AppTextStyles.body.copyWith(color: AppColors.error),
+          ),
+        ],
+
+        const SizedBox(height: 32),
+
+        // Tombol utama: lanjut ke reset password
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: () => context.push('/reset-password', extra: email),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            child: const Text(
+              'Sudah Terima OTP',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ),
+
+        const SizedBox(height: 16),
+
+        // Tombol resend
+        SizedBox(
+          width: double.infinity,
+          child: OutlinedButton(
+            onPressed: _isResending ? null : _resendOTP,
+            style: OutlinedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              side: const BorderSide(color: AppColors.divider),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            child: _isResending
+                ? const SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: AppColors.primary,
+                    ),
+                  )
+                : Text(
+                    'Kirim Ulang OTP',
+                    style: AppTextStyles.body.copyWith(
+                      color: AppColors.textMuted,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+          ),
+        ),
+      ],
     );
   }
 

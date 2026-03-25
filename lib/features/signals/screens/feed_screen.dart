@@ -74,7 +74,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
     if (state.isLoading) {
       return ListView.builder(
         itemCount: 5,
-        itemBuilder: (_, __) => const SkeletonCard(),
+        itemBuilder: (_, _) => const SkeletonCard(),
       );
     }
 
