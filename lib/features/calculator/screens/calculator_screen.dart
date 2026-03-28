@@ -127,11 +127,19 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Lot Calculator'),
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.terminal, size: 20),
+            const SizedBox(width: 8),
+            const Text('Lot Size Calculator'),
+          ],
+        ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh_rounded),
+            icon: const Icon(Icons.restart_alt_rounded),
             onPressed: _reset,
+            tooltip: 'Reset',
           ),
         ],
       ),
@@ -250,6 +258,56 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                       ),
                     ),
                   ).animate().fadeIn(delay: 250.ms, duration: 400.ms),
+
+                  const SizedBox(height: 24),
+
+                  // CALCULATE POSITION button
+                  Container(
+                    width: double.infinity,
+                    height: 56,
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [AppColors.primary, AppColors.primaryContainer],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(14),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.primary.withValues(alpha: 0.25),
+                          blurRadius: 16,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        HapticFeedback.mediumImpact();
+                        _calculate();
+                      },
+                      icon: const Icon(
+                        Icons.calculate_outlined,
+                        color: AppColors.onPrimary,
+                        size: 20,
+                      ),
+                      label: Text(
+                        'CALCULATE POSITION',
+                        style: AppTextStyles.label.copyWith(
+                          color: AppColors.onPrimary,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 1.5,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.transparent,
+                        shadowColor: Colors.transparent,
+                        disabledBackgroundColor: Colors.transparent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                      ),
+                    ),
+                  ).animate().fadeIn(delay: 300.ms, duration: 400.ms),
 
                   const SizedBox(height: 24),
                 ],

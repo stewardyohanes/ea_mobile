@@ -83,7 +83,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
               const SizedBox(height: 48),
 
-              _InputLabel('Full Name'),
+              _inputLabel('Full Name'),
               const SizedBox(height: 8),
               TextField(
                 controller: _nameController,
@@ -93,7 +93,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
               const SizedBox(height: 20),
 
-              _InputLabel('Email'),
+              _inputLabel('Email'),
               const SizedBox(height: 8),
               TextField(
                 controller: _emailController,
@@ -104,7 +104,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
               const SizedBox(height: 20),
 
-              _InputLabel('Password'),
+              _inputLabel('Password'),
               const SizedBox(height: 8),
               TextField(
                 controller: _passwordController,
@@ -126,7 +126,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
               const SizedBox(height: 20),
 
-              _InputLabel('Confirm Password'),
+              _inputLabel('Confirm Password'),
               const SizedBox(height: 8),
               TextField(
                 controller: _confirmPasswordController,
@@ -202,7 +202,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     );
   }
 
-  Widget _InputLabel(String text) {
+  Widget _inputLabel(String text) {
     return Text(text, style: AppTextStyles.label);
   }
 

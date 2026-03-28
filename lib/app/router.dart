@@ -165,10 +165,6 @@ class _TabShell extends StatelessWidget {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _locationToIndex(location),
-        backgroundColor: const Color(0xFF0D1F3C),
-        selectedItemColor: const Color(0xFF2979FF),
-        unselectedItemColor: const Color(0xFF7A88A8),
-        type: BottomNavigationBarType.fixed,
         onTap: (index) {
           switch (index) {
             case 0:

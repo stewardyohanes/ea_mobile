@@ -22,7 +22,7 @@ class FilterTabBar extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
-        children: ['ALL', 'BUY', 'SELL'].map((filter) {
+        children: ['ALL', 'TP HIT', 'SL HIT'].map((filter) {
           final isActive = activeFilter == filter;
           return Expanded(
             child: GestureDetector(

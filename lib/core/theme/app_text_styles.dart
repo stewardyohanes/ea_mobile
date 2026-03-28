@@ -1,58 +1,81 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
 
+/// Typography menggunakan Inter (font utama Stitch design system).
+/// Semua style adalah getter (bukan const) karena GoogleFonts tidak bisa const.
 class AppTextStyles {
   AppTextStyles._();
 
-  static const TextStyle h1 = TextStyle(
+  static TextStyle get h1 => GoogleFonts.inter(
     fontSize: 28,
-    fontWeight: FontWeight.bold,
+    fontWeight: FontWeight.w800,
     color: AppColors.textPrimary,
     letterSpacing: -0.5,
   );
 
-  static const TextStyle h2 = TextStyle(
+  static TextStyle get h2 => GoogleFonts.inter(
     fontSize: 22,
-    fontWeight: FontWeight.bold,
+    fontWeight: FontWeight.w700,
     color: AppColors.textPrimary,
+    letterSpacing: -0.3,
   );
 
-  static const TextStyle h3 = TextStyle(
+  static TextStyle get h3 => GoogleFonts.inter(
     fontSize: 18,
     fontWeight: FontWeight.w600,
     color: AppColors.textPrimary,
   );
 
-  static const TextStyle body = TextStyle(
+  static TextStyle get h4 => GoogleFonts.inter(
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+    color: AppColors.textPrimary,
+  );
+
+  static TextStyle get body => GoogleFonts.inter(
     fontSize: 14,
-    fontWeight: FontWeight.normal,
+    fontWeight: FontWeight.w400,
     color: AppColors.textPrimary,
     height: 1.5,
   );
 
-  static const TextStyle bodySmall = TextStyle(
-    fontSize: 13,
-    fontWeight: FontWeight.normal,
+  static TextStyle get bodyMedium => GoogleFonts.inter(
+    fontSize: 14,
+    fontWeight: FontWeight.w500,
     color: AppColors.textPrimary,
   );
 
-  static const TextStyle label = TextStyle(
-    fontSize: 12,
-    fontWeight: FontWeight.w500,
-    color: AppColors.textMuted,
+  static TextStyle get bodySmall => GoogleFonts.inter(
+    fontSize: 13,
+    fontWeight: FontWeight.w400,
+    color: AppColors.textPrimary,
   );
 
-  static const TextStyle caption = TextStyle(
-    fontSize: 11,
-    fontWeight: FontWeight.normal,
+  static TextStyle get label => GoogleFonts.inter(
+    fontSize: 12,
+    fontWeight: FontWeight.w500,
     color: AppColors.textMuted,
     letterSpacing: 0.3,
   );
 
-  static const TextStyle price = TextStyle(
+  static TextStyle get caption => GoogleFonts.inter(
+    fontSize: 11,
+    fontWeight: FontWeight.w400,
+    color: AppColors.textMuted,
+    letterSpacing: 0.3,
+  );
+
+  /// Untuk angka/harga — monospace supaya tidak bergeser
+  static TextStyle get price => GoogleFonts.jetBrainsMono(
     fontSize: 16,
     fontWeight: FontWeight.w600,
     color: AppColors.textPrimary,
-    fontFeatures: [FontFeature.tabularFigures()],
+  );
+
+  static TextStyle get priceLarge => GoogleFonts.jetBrainsMono(
+    fontSize: 22,
+    fontWeight: FontWeight.w700,
+    color: AppColors.textPrimary,
   );
 }

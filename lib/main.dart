@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tradegenz_app/app/router.dart';
 import 'package:tradegenz_app/core/notifications/fcm_service.dart';
-import 'package:tradegenz_app/core/theme/app_colors.dart';
+import 'package:tradegenz_app/core/theme/app_theme.dart';
 import 'package:tradegenz_app/features/auth/providers/auth_provider.dart';
 import 'package:tradegenz_app/firebase_options.dart';
 
@@ -47,31 +47,7 @@ class _TradeGenZAppState extends ConsumerState<TradeGenZApp> {
       title: 'TradeGenZ',
       debugShowCheckedModeBanner: false,
       routerConfig: router,
-      theme: ThemeData(
-        useMaterial3: true,
-        scaffoldBackgroundColor: AppColors.background,
-        colorScheme: const ColorScheme.dark(
-          primary: AppColors.primary,
-          surface: AppColors.surface,
-          error: AppColors.error,
-        ),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: AppColors.background,
-          elevation: 0,
-          centerTitle: false,
-          titleTextStyle: TextStyle(
-            color: AppColors.textPrimary,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-          iconTheme: IconThemeData(color: AppColors.textPrimary),
-        ),
-        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-          backgroundColor: AppColors.surface,
-          selectedItemColor: AppColors.primary,
-          unselectedItemColor: AppColors.textMuted,
-        ),
-      ),
+      theme: AppTheme.dark,
     );
   }
 }

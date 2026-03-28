@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../widgets/plan_card_item.dart';
 import '../../../core/theme/app_colors.dart';
@@ -47,11 +48,57 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text('Choose Your Plan', style: AppTextStyles.h2),
-            const SizedBox(height: 8),
-            Text(
-              'Unlock full access to all trading signals',
-              style: AppTextStyles.body.copyWith(color: AppColors.textMuted),
+            // Header banner — "Proprietary Alpha Access"
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    AppColors.primaryContainer.withValues(alpha: 0.2),
+                    AppColors.primary.withValues(alpha: 0.08),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: AppColors.primary.withValues(alpha: 0.2),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.bolt,
+                        color: AppColors.tertiary,
+                        size: 18,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        'PROPRIETARY ALPHA ACCESS',
+                        style: GoogleFonts.inter(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.tertiary,
+                          letterSpacing: 1.5,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Text('Upgrade to Premium', style: AppTextStyles.h2),
+                  const SizedBox(height: 6),
+                  Text(
+                    'Unlock high-velocity data execution and algorithmic signals built for the next generation of quants.',
+                    style: AppTextStyles.body.copyWith(
+                      color: AppColors.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
             ),
 
             const SizedBox(height: 24),

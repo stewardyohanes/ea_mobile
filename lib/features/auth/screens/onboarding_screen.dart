@@ -1,24 +1,13 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lottie/lottie.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:tradegenz_app/core/storage/secure_storage.dart';
 import 'package:tradegenz_app/core/theme/app_colors.dart';
 import 'package:tradegenz_app/core/theme/app_text_styles.dart';
-
-class _OnboardingPage {
-  final String lottieAsset;
-  final String title;
-  final String subtitle;
-  final Color accentColor;
-
-  const _OnboardingPage({
-    required this.lottieAsset,
-    required this.title,
-    required this.subtitle,
-    required this.accentColor,
-  });
-}
+import 'package:tradegenz_app/features/auth/widgets/onboarding_feature_item.dart';
+import 'package:tradegenz_app/features/auth/widgets/onboarding_hero.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -28,249 +17,235 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
-  final _pageController = PageController();
-  int _currentPage = 0;
-
-  final List<_OnboardingPage> _pages = const [
-    _OnboardingPage(
-      lottieAsset: 'assets/animations/business-sales-profit.json',
-      title: 'Professional\nTrading Signals',
-      subtitle:
-          'Get real-time forex signals from\nprofessional Expert Advisors',
-      accentColor: AppColors.primary,
-    ),
-    _OnboardingPage(
-      lottieAsset: 'assets/animations/business-win.json',
-      title: 'Proven Track\nRecord',
-      subtitle: 'Join 10,000+ traders with\nan average 80% win rate',
-      accentColor: AppColors.success,
-    ),
-    _OnboardingPage(
-      lottieAsset: 'assets/animations/phone-notification.json',
-      title: 'Real-Time\nAlerts',
-      subtitle: 'Never miss a signal with\ninstant push notifications',
-      accentColor: AppColors.gold,
-    ),
-    _OnboardingPage(
-      lottieAsset: 'assets/animations/rocket.json',
-      title: 'Start Trading\nSmarter Today',
-      subtitle: 'Free plan available.\nUpgrade anytime for full access.',
-      accentColor: AppColors.purple,
-    ),
-  ];
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
   Future<void> _onGetStarted() async {
     await SecureStorage.setOnboardingDone();
     if (mounted) context.go('/login');
   }
 
-  void _nextPage() {
-    _pageController.nextPage(
-      duration: const Duration(milliseconds: 400),
-      curve: Curves.easeInOut,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    final isLastPage = _currentPage == _pages.length - 1;
-    final currentAccent = _pages[_currentPage].accentColor;
-
     return Scaffold(
-      body: AnimatedContainer(
-        duration: const Duration(milliseconds: 400),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              currentAccent.withValues(alpha: 0.15),
-              AppColors.background,
-            ],
-          ),
-        ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              // Skip Button
-              Align(
-                alignment: Alignment.topRight,
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 16, top: 8),
-                  child: TextButton(
-                    onPressed: _onGetStarted,
-                    child: Text(
-                      'Skip',
-                      style: AppTextStyles.body.copyWith(
-                        color: AppColors.textMuted,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-
-              // PageView
-              Expanded(
-                child: PageView.builder(
-                  controller: _pageController,
-                  itemCount: _pages.length,
-                  onPageChanged: (index) {
-                    setState(() => _currentPage = index);
-                  },
-                  itemBuilder: (context, index) {
-                    return _PageContent(
-                      page: _pages[index],
-                      key: ValueKey(index),
-                    );
-                  },
-                ),
-              ),
-
-              // Dot indicator + button
-              Padding(
-                padding: const EdgeInsets.fromLTRB(32, 0, 32, 40),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(
-                        _pages.length,
-                        (index) => _Dot(
-                          isActive: index == _currentPage,
-                          color: currentAccent,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 32),
-
-              SizedBox(
-                width: double.infinity,
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
-                  child: ElevatedButton(
-                    onPressed: isLastPage ? _onGetStarted : _nextPage,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: currentAccent,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                    ),
-                    child: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 300),
-                      child: Text(
-                        isLastPage ? 'Get Started 🚀' : 'Next',
-                        key: ValueKey(isLastPage),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _PageContent extends StatelessWidget {
-  final _OnboardingPage page;
-  const _PageContent({required this.page, super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 32),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      body: Stack(
         children: [
-          // Lottie animation
-          SizedBox(
-                width: 280,
-                height: 280,
-                child: Lottie.asset(
-                  page.lottieAsset,
-                  fit: BoxFit.contain,
-                  repeat: true,
+          // Ambient glow — kiri atas
+          Positioned(
+            top: -80,
+            left: -80,
+            child: _GlowBlob(
+              color: AppColors.primary.withValues(alpha: 0.08),
+              size: 320,
+            ),
+          ),
+          // Ambient glow — kanan tengah
+          Positioned(
+            bottom: MediaQuery.of(context).size.height * 0.25,
+            right: -80,
+            child: _GlowBlob(
+              color: AppColors.secondaryContainer.withValues(alpha: 0.05),
+              size: 220,
+            ),
+          ),
+
+          // Main layout: header (fixed) + scrollable content + footer CTA (fixed)
+          SafeArea(
+            child: Column(
+              children: [
+                // Header: terminal icon + TRADEGENZ
+                Padding(
+                  padding: const EdgeInsets.only(top: 24, bottom: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.terminal,
+                        color: AppColors.primary,
+                        size: 28,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        'TRADEGENZ',
+                        style: GoogleFonts.inter(
+                          fontSize: 26,
+                          fontWeight: FontWeight.w900,
+                          color: AppColors.primary,
+                          letterSpacing: -1.0,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              )
-              .animate()
-              .fadeIn(duration: 500.ms)
-              .scale(
-                begin: const Offset(0.8, 0.8),
-                end: const Offset(1.0, 1.0),
-                duration: 500.ms,
-                curve: Curves.easeOut,
-              ),
 
-          const SizedBox(height: 40),
+                // Scrollable content
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
+                    child: Column(
+                      children: [
+                        // Hero visual: Lottie + glass chip
+                        const OnboardingHero(),
 
-          // Title — slide up + fade, delay 200ms
-          Text(page.title, style: AppTextStyles.h1, textAlign: TextAlign.center)
-              .animate()
-              .fadeIn(delay: 200.ms, duration: 400.ms)
-              .slideY(
-                begin: 0.3, // mulai dari 30% di bawah posisi asli
-                end: 0,
-                delay: 200.ms,
-                duration: 400.ms,
-                curve: Curves.easeOut,
-              ),
+                        const SizedBox(height: 32),
 
-          const SizedBox(height: 16),
+                        // Tagline
+                        Text(
+                          'Smart Forex Signals\nfrom MetaTrader EA',
+                          style: AppTextStyles.h2.copyWith(height: 1.2),
+                          textAlign: TextAlign.center,
+                        ),
 
-          // Subtitle — slide up + fade, delay 400ms
-          Text(
-                page.subtitle,
-                style: AppTextStyles.body.copyWith(color: AppColors.textMuted),
-                textAlign: TextAlign.center,
-              )
-              .animate()
-              .fadeIn(delay: 400.ms, duration: 400.ms)
-              .slideY(
-                begin: 0.3,
-                end: 0,
-                delay: 400.ms,
-                duration: 400.ms,
-                curve: Curves.easeOut,
-              ),
+                        const SizedBox(height: 12),
+
+                        // Description
+                        Text(
+                          'Advanced algorithmic intelligence translated into actionable high-probability trade setups for the modern retail trader.',
+                          style: AppTextStyles.body.copyWith(
+                            color: AppColors.onSurfaceVariant,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+
+                        const SizedBox(height: 28),
+
+                        // Feature 1: Real-time EA Signals
+                        const OnboardingFeatureItem(
+                          icon: Icons.insights,
+                          iconColor: AppColors.primary,
+                          iconBg: Color(0x1AB0C6FF),
+                          title: 'Real-time EA Signals',
+                          subtitle:
+                              'Instant execution alerts from our proprietary MT4/MT5 algorithms.',
+                        ),
+
+                        const SizedBox(height: 12),
+
+                        // Feature 2: Lot Size Calculator
+                        const OnboardingFeatureItem(
+                          icon: Icons.calculate_outlined,
+                          iconColor: AppColors.secondaryContainer,
+                          iconBg: Color(0x1A00E5A0),
+                          title: 'Lot Size Calculator',
+                          subtitle:
+                              'Risk management precision. Calculate position sizes in milliseconds.',
+                        ),
+
+                        const SizedBox(height: 12),
+
+                        // Feature 3: Win Rate Analytics
+                        const OnboardingFeatureItem(
+                          icon: Icons.analytics_outlined,
+                          iconColor: AppColors.tertiary,
+                          iconBg: Color(0x1AFFBA20),
+                          title: 'Win Rate Analytics',
+                          subtitle:
+                              'Transparent historical performance with deep quantitative data.',
+                        ),
+
+                        const SizedBox(height: 32),
+                      ],
+                    ),
+                  ),
+                ),
+
+                // Footer CTA — fixed di bawah
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 8, 24, 32),
+                  child: Column(
+                    children: [
+                      _GetStartedButton(onPressed: _onGetStarted),
+                      const SizedBox(height: 20),
+                      Text(
+                        'INSTITUTIONAL GRADE ALGORITHMS  •  NO-LAG EXECUTION',
+                        style: GoogleFonts.inter(
+                          fontSize: 9,
+                          color: AppColors.outline,
+                          letterSpacing: 1.5,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
 }
 
-class _Dot extends StatelessWidget {
-  final bool isActive;
-  final Color color;
-  const _Dot({required this.isActive, required this.color});
+class _GetStartedButton extends StatelessWidget {
+  final VoidCallback onPressed;
+  const _GetStartedButton({required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      margin: const EdgeInsets.symmetric(horizontal: 4),
-      width: isActive ? 24 : 8,
-      height: 8,
+    return Container(
+      width: double.infinity,
+      height: 56,
       decoration: BoxDecoration(
-        color: isActive ? color : AppColors.textMuted.withValues(alpha: 0.4),
-        borderRadius: BorderRadius.circular(4),
+        gradient: const LinearGradient(
+          colors: [AppColors.primary, AppColors.primaryContainer],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        ),
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primary.withValues(alpha: 0.25),
+            blurRadius: 32,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Get Started',
+              style: GoogleFonts.inter(
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                color: AppColors.onPrimary,
+              ),
+            ),
+            const SizedBox(width: 8),
+            const Icon(
+              Icons.arrow_forward,
+              color: AppColors.onPrimary,
+              size: 20,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Blurred color blob untuk ambient glow effect.
+class _GlowBlob extends StatelessWidget {
+  final Color color;
+  final double size;
+
+  const _GlowBlob({required this.color, required this.size});
+
+  @override
+  Widget build(BuildContext context) {
+    return ImageFiltered(
+      imageFilter: ui.ImageFilter.blur(sigmaX: 70, sigmaY: 70),
+      child: Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(shape: BoxShape.circle, color: color),
       ),
     );
   }

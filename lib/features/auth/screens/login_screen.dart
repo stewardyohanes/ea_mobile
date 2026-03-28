@@ -1,9 +1,13 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:tradegenz_app/core/theme/app_colors.dart';
-import 'package:tradegenz_app/core/theme/app_text_styles.dart';
 import 'package:tradegenz_app/features/auth/providers/auth_provider.dart';
+import 'package:tradegenz_app/features/auth/widgets/login_form_card.dart';
+import 'package:tradegenz_app/features/auth/widgets/login_header.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -15,7 +19,6 @@ class LoginScreen extends ConsumerStatefulWidget {
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-
   bool _obscurePassword = true;
 
   @override
@@ -28,7 +31,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Future<void> _onLogin() async {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
-
     if (email.isEmpty || password.isEmpty) return;
 
     await ref.read(authProvider.notifier).login(email, password);
@@ -43,172 +45,109 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final authState = ref.watch(authProvider);
 
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 48),
+      body: Stack(
+        children: [
+          // Background glow — kiri atas (primary)
+          Positioned(
+            top: -80,
+            left: -80,
+            child: _GlowBlob(
+              color: AppColors.primary.withValues(alpha: 0.1),
+              size: 280,
+            ),
+          ),
+          // Background glow — kanan bawah (secondary)
+          Positioned(
+            bottom: -80,
+            right: -80,
+            child: _GlowBlob(
+              color: AppColors.secondaryContainer.withValues(alpha: 0.08),
+              size: 220,
+            ),
+          ),
 
-              // Header
-              Text('Welcome Back', style: AppTextStyles.h1),
-              const SizedBox(height: 8),
-              Text(
-                'Login to your TradeGenZ account',
-                style: AppTextStyles.body.copyWith(color: AppColors.textMuted),
-              ),
+          // Main scrollable content
+          SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+              child: Column(
+                children: [
+                  const SizedBox(height: 24),
 
-              const SizedBox(height: 48),
+                  // Header: icon + TRADEGENZ + subtitle
+                  const LoginHeader(),
 
-              // Email Field
-              _inputLabel('Email'),
-              const SizedBox(height: 8),
-              TextField(
-                controller: _emailController,
-                keyboardType: TextInputType.emailAddress,
-                style: AppTextStyles.body,
-                decoration: _inputDecoration('Enter your email'),
-              ),
+                  const SizedBox(height: 40),
 
-              const SizedBox(height: 20),
-
-              // Password Field
-              _inputLabel('Password'),
-              const SizedBox(height: 8),
-              TextField(
-                controller: _passwordController,
-                obscureText: _obscurePassword,
-                style: AppTextStyles.body,
-                decoration: _inputDecoration('Enter your password').copyWith(
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _obscurePassword
-                          ? Icons.visibility_off
-                          : Icons.visibility,
-                      color: AppColors.textMuted,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _obscurePassword = !_obscurePassword;
-                      });
-                    },
+                  // Form card: inputs + button + integrity footer
+                  LoginFormCard(
+                    emailController: _emailController,
+                    passwordController: _passwordController,
+                    obscurePassword: _obscurePassword,
+                    isLoading: authState.isLoading,
+                    errorMessage: authState.error,
+                    onToggleObscure: () =>
+                        setState(() => _obscurePassword = !_obscurePassword),
+                    onLogin: _onLogin,
+                    onForgotPassword: () => context.push('/forgot-password'),
                   ),
-                ),
-              ),
 
-              // Forgot Password Link
-              Align(
-                alignment: Alignment.centerRight,
-                child: GestureDetector(
-                  onTap: () => context.push('/forgot-password'),
-                  child: Text(
-                    'Forgot Password?',
-                    style: AppTextStyles.body.copyWith(
-                      color: AppColors.primary,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ),
+                  const SizedBox(height: 28),
 
-              // Error Message
-              if (authState.error != null) ...[
-                const SizedBox(height: 16),
-                Text(
-                  authState.error!,
-                  style: AppTextStyles.body.copyWith(color: AppColors.error),
-                ),
-              ],
-
-              const SizedBox(height: 32),
-
-              // Login Button
-              SizedBox(
-                width:
-                    double.infinity, // full width — setara width: '100%' di RN
-                child: ElevatedButton(
-                  onPressed: authState.isLoading ? null : _onLogin,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: authState.isLoading
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.white,
-                          ),
-                        )
-                      : const Text(
-                          'Login',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
+                  // Register link
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Don't have an account? ",
+                        style: GoogleFonts.inter(
+                          fontSize: 14,
+                          color: AppColors.onSurfaceVariant,
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () => context.push('/register'),
+                        child: Text(
+                          'Register Now',
+                          style: GoogleFonts.inter(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: const Color(0xFF47FFBB), // secondary-fixed
+                            decoration: TextDecoration.underline,
+                            decorationColor: const Color(0xFF47FFBB),
                           ),
                         ),
-                ),
-              ),
-
-              const SizedBox(height: 24),
-
-              // Register Link
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Don't have an account? ", style: AppTextStyles.body),
-                  GestureDetector(
-                    onTap: () => context.push('/register'),
-                    child: Text(
-                      'Register',
-                      style: AppTextStyles.body.copyWith(
-                        color: AppColors.primary,
-                        fontWeight: FontWeight.w600,
                       ),
-                    ),
+                    ],
                   ),
+
+                  const SizedBox(height: 24),
                 ],
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
+}
 
-  Widget _inputLabel(String text) {
-    return Text(
-      text,
-      style: AppTextStyles.body.copyWith(
-        color: AppColors.textMuted,
-        fontWeight: FontWeight.w600,
-      ),
-    );
-  }
+/// Blurred color blob untuk background glow effect.
+/// Setara CSS: `filter: blur(100px)` pada colored circle.
+class _GlowBlob extends StatelessWidget {
+  final Color color;
+  final double size;
 
-  InputDecoration _inputDecoration(String hint) {
-    return InputDecoration(
-      hintText: hint,
-      hintStyle: AppTextStyles.body.copyWith(color: AppColors.textMuted),
-      filled: true,
-      fillColor: AppColors.surface,
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: AppColors.divider),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: AppColors.divider),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: AppColors.primary),
+  const _GlowBlob({required this.color, required this.size});
+
+  @override
+  Widget build(BuildContext context) {
+    return ImageFiltered(
+      imageFilter: ui.ImageFilter.blur(sigmaX: 60, sigmaY: 60),
+      child: Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(shape: BoxShape.circle, color: color),
       ),
     );
   }

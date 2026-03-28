@@ -16,9 +16,9 @@ class PairSelector extends StatelessWidget {
   static const List<Map<String, String>> pairs = [
     {'name': 'XAUUSD', 'icon': '🥇'},
     {'name': 'XAGUSD', 'icon': '🥈'},
+    {'name': 'USDJPY', 'icon': '💴'},
     {'name': 'EURUSD', 'icon': '💶'},
     {'name': 'GBPUSD', 'icon': '💷'},
-    {'name': 'USDJPY', 'icon': '💴'},
     {'name': 'AUDUSD', 'icon': '🦘'},
     {'name': 'USDCAD', 'icon': '🍁'},
     {'name': 'USDCHF', 'icon': '🇨🇭'},
@@ -26,61 +26,57 @@ class PairSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 52,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        itemCount: pairs.length,
-        separatorBuilder: (_, _) => const SizedBox(width: 8),
-        itemBuilder: (context, index) {
-          final pair = pairs[index];
-          final isSelected = pair['name'] == selectedPair;
-
-          return GestureDetector(
-            onTap: () {
-              HapticFeedback.selectionClick();
-              onChanged(pair['name']!);
-            },
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-              decoration: BoxDecoration(
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: pairs.map((pair) {
+        final isSelected = pair['name'] == selectedPair;
+        return GestureDetector(
+          onTap: () {
+            HapticFeedback.selectionClick();
+            onChanged(pair['name']!);
+          },
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              color: isSelected ? AppColors.primary : AppColors.surfaceVariant,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(
                 color: isSelected
                     ? AppColors.primary
-                    : AppColors.surfaceVariant,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: isSelected ? AppColors.primary : AppColors.divider,
-                ),
-                boxShadow: isSelected
-                    ? [
-                        BoxShadow(
-                          color: AppColors.primary.withValues(alpha: 0.3),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
-                        ),
-                      ]
-                    : null,
+                    : AppColors.divider.withValues(alpha: 0.5),
               ),
-              child: Row(
-                children: [
-                  Text(pair['icon']!, style: const TextStyle(fontSize: 16)),
-                  const SizedBox(width: 6),
-                  Text(
-                    pair['name']!,
-                    style: AppTextStyles.label.copyWith(
-                      color: isSelected ? Colors.white : AppColors.textMuted,
-                      fontWeight: isSelected
-                          ? FontWeight.w600
-                          : FontWeight.normal,
-                    ),
-                  ),
-                ],
-              ),
+              boxShadow: isSelected
+                  ? [
+                      BoxShadow(
+                        color: AppColors.primary.withValues(alpha: 0.3),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ]
+                  : null,
             ),
-          );
-        },
-      ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(pair['icon']!, style: const TextStyle(fontSize: 14)),
+                const SizedBox(width: 6),
+                Text(
+                  pair['name']!,
+                  style: AppTextStyles.label.copyWith(
+                    color:
+                        isSelected ? Colors.white : AppColors.textMuted,
+                    fontWeight: isSelected
+                        ? FontWeight.w600
+                        : FontWeight.normal,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }).toList(),
     );
   }
 }

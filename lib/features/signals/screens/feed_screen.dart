@@ -16,6 +16,7 @@ class FeedScreen extends ConsumerStatefulWidget {
 
 class _FeedScreenState extends ConsumerState<FeedScreen> {
   final _scrollController = ScrollController();
+  String _activeFilter = 'ALL';
 
   @override
   void initState() {
@@ -38,39 +39,68 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
     }
   }
 
+  void _onFilterChanged(String filter) {
+    setState(() => _activeFilter = filter);
+  }
+
   @override
   Widget build(BuildContext context) {
     final signalsState = ref.watch(signalsProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('TradeGenZ'),
-        actions: [
-          if (signalsState.signals.isNotEmpty)
-            Container(
-              margin: const EdgeInsets.only(right: 16),
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-              decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Text(
-                '${signalsState.signals.where((s) => s.isActive).length} Active',
-                style: AppTextStyles.caption.copyWith(color: AppColors.primary),
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.terminal, size: 20),
+            const SizedBox(width: 8),
+            Text(
+              'TradeGenZ',
+              style: AppTextStyles.h4.copyWith(
+                color: AppColors.textPrimary,
+                fontWeight: FontWeight.w800,
               ),
             ),
+          ],
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.notifications_outlined),
+            color: AppColors.textMuted,
+            onPressed: () {},
+          ),
         ],
       ),
-      body: RefreshIndicator(
-        color: AppColors.primary,
-        backgroundColor: AppColors.surface,
-        onRefresh: () => ref.read(signalsProvider.notifier).fetchInitial(),
-        child: _buildBody(signalsState),
+      body: Column(
+        children: [
+          // Horizontal scrollable filter chips
+          _FilterChipsRow(
+            activeFilter: _activeFilter,
+            onFilterChanged: _onFilterChanged,
+          ),
+          // Main content
+          Expanded(
+            child: RefreshIndicator(
+              color: AppColors.primary,
+              backgroundColor: AppColors.surface,
+              onRefresh: () =>
+                  ref.read(signalsProvider.notifier).fetchInitial(),
+              child: _buildBody(signalsState),
+            ),
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildBody(SignalsState state) {
+    // Filter signals by active symbol filter
+    final filtered = _activeFilter == 'ALL'
+        ? state.signals
+        : state.signals
+            .where((s) => s.symbol == _activeFilter)
+            .toList();
+
     if (state.isLoading) {
       return ListView.builder(
         itemCount: 5,
@@ -95,21 +125,27 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
       );
     }
 
-    if (state.signals.isEmpty) {
-      return const Center(
+    if (filtered.isEmpty) {
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('📭', style: TextStyle(fontSize: 48)),
-            SizedBox(height: 16),
+            const Icon(
+              Icons.inbox_outlined,
+              size: 48,
+              color: AppColors.textMuted,
+            ),
+            const SizedBox(height: 16),
             Text(
               'No signals yet',
-              style: TextStyle(color: AppColors.textPrimary, fontSize: 16),
+              style: AppTextStyles.body,
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
-              'Check back later for new signals',
-              style: TextStyle(color: AppColors.textMuted, fontSize: 13),
+              _activeFilter == 'ALL'
+                  ? 'Check back later for new signals'
+                  : 'No signals for $_activeFilter',
+              style: AppTextStyles.caption,
             ),
           ],
         ),
@@ -118,10 +154,10 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
 
     return ListView.builder(
       controller: _scrollController,
-      itemCount: state.signals.length + 2,
+      itemCount: filtered.length + 2,
       itemBuilder: (context, index) {
         if (index == 0) return const MarketSessionWidget();
-        if (index == state.signals.length + 1) {
+        if (index == filtered.length + 1) {
           return state.isLoadingMore
               ? const Padding(
                   padding: EdgeInsets.all(16),
@@ -131,8 +167,58 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
                 )
               : const SizedBox.shrink();
         }
-        return SignalCard(signal: state.signals[index - 1]);
+        return SignalCard(signal: filtered[index - 1]);
       },
+    );
+  }
+}
+
+// --- Horizontal scrollable filter chips ---
+class _FilterChipsRow extends StatelessWidget {
+  final String activeFilter;
+  final ValueChanged<String> onFilterChanged;
+
+  static const _filters = ['ALL', 'XAUUSD', 'XAGUSD', 'EURUSD', 'USDJPY'];
+
+  const _FilterChipsRow({
+    required this.activeFilter,
+    required this.onFilterChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 48,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        itemCount: _filters.length,
+        itemBuilder: (context, index) {
+          final filter = _filters[index];
+          final isActive = activeFilter == filter;
+          return GestureDetector(
+            onTap: () => onFilterChanged(filter),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 180),
+              margin: const EdgeInsets.only(right: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+              decoration: BoxDecoration(
+                color: isActive
+                    ? AppColors.primary
+                    : AppColors.surfaceContainerHigh,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                filter,
+                style: AppTextStyles.label.copyWith(
+                  color: isActive ? AppColors.onPrimary : AppColors.textMuted,
+                  fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
+                ),
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }

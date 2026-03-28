@@ -1,29 +1,69 @@
 import 'package:flutter/material.dart';
 
+/// Color tokens di-extract langsung dari Stitch design system.
+/// Menggunakan Material Design 3 dark scheme.
 class AppColors {
   AppColors._();
 
-  // === Backgrounds ===
-  static const Color background = Color(0xFF050D1A);
-  static const Color surface = Color(0xFF0D1F3C);
-  static const Color surfaceVariant = Color(0xFF0A1828);
-  static const Color card = Color(0xFF1A3358);
-  static const Color cardAlt = Color(0xFF1A3A6A);
+  // === Background & Surface ===
+  static const Color background = Color(0xFF0B1421);
+  static const Color surfaceContainerLowest = Color(0xFF060E1B);
+  static const Color surfaceContainerLow = Color(0xFF131C29);
+  static const Color surfaceContainer = Color(0xFF18202E);
+  static const Color surfaceContainerHigh = Color(0xFF222A38);
+  static const Color surfaceContainerHighest = Color(0xFF2D3544);
+  static const Color surfaceBright = Color(0xFF313948);
 
   // === Text ===
-  static const Color textPrimary = Color(0xFFFFFFFF);
-  static const Color textMuted = Color(0xFF7A88A8);
+  static const Color onBackground = Color(0xFFDAE3F6);
+  static const Color onSurface = Color(0xFFDAE3F6);
+  static const Color onSurfaceVariant = Color(0xFFC2C6D7);
 
-  // === Brand ===
-  static const Color primary = Color(0xFF2979FF);
-  static const Color success = Color(0xFF00E5A0);
-  static const Color error = Color(0xFFFF3D57);
-  static const Color gold = Color(0xFFFFB800);
-  static const Color orange = Color(0xFFFF6D00);
+  // === Outline ===
+  static const Color outline = Color(0xFF8C90A0);
+  static const Color outlineVariant = Color(0xFF424655);
+
+  // === Primary (light blue) ===
+  static const Color primary = Color(0xFFB0C6FF);
+  static const Color primaryContainer = Color(0xFF558DFF);
+  static const Color onPrimary = Color(0xFF002D6E);
+  static const Color onPrimaryContainer = Color(0xFF002661);
+  static const Color inversePrimary = Color(0xFF0058CA);
+
+  // === Secondary (green/success) ===
+  static const Color secondary = Color(0xFF6CFFBF);
+  static const Color secondaryContainer = Color(0xFF00E5A0);
+  static const Color onSecondary = Color(0xFF003824);
+  static const Color onSecondaryContainer = Color(0xFF006141);
+
+  // === Tertiary (gold/amber) ===
+  static const Color tertiary = Color(0xFFFFBA20);
+  static const Color tertiaryContainer = Color(0xFFBC8700);
+  static const Color onTertiary = Color(0xFF412D00);
+  static const Color onTertiaryContainer = Color(0xFF392600);
+
+  // === Error ===
+  static const Color error = Color(0xFFFFB4AB);
+  static const Color errorContainer = Color(0xFF93000A);
+  static const Color onError = Color(0xFF690005);
+  static const Color onErrorContainer = Color(0xFFFFDAD6);
+
+  // === Inverse ===
+  static const Color inverseSurface = Color(0xFFDAE3F6);
+  static const Color inverseOnSurface = Color(0xFF28313F);
+
+  // === Aliases (kompatibilitas dengan kode lama) ===
+  static const Color surface = surfaceContainer;
+  static const Color card = surfaceContainer;
+  static const Color cardAlt = surfaceContainerHigh;
+  static const Color surfaceVariant = surfaceContainerHighest;
+  static const Color textPrimary = onBackground;
+  static const Color textMuted = onSurfaceVariant;
+  static const Color success = secondaryContainer;
+  static const Color gold = tertiary;
+  static const Color orange = tertiaryContainer;
   static const Color purple = Color(0xFF7C4DFF);
   static const Color cyan = Color(0xFF00BCD4);
-
-  // === Utility ===
-  static const Color divider = Color(0xFF1A3358);
+  static const Color divider = outlineVariant;
   static const Color transparent = Colors.transparent;
 }

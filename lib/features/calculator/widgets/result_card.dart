@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 
@@ -26,104 +27,103 @@ class ResultCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            AppColors.surface,
-            AppColors.primary.withValues(alpha: 0.05),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(20),
+        color: AppColors.surfaceContainer,
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: lotSize != null
-              ? riskColor.withValues(alpha: 0.3)
-              : AppColors.divider,
+              ? riskColor.withValues(alpha: 0.25)
+              : AppColors.outlineVariant.withValues(alpha: 0.15),
         ),
       ),
       child: Column(
         children: [
-          Text('Recommended Lot Size', style: AppTextStyles.caption),
-          const SizedBox(height: 8),
-
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 300),
-            child: Text(
-              lotSize != null ? lotSize!.toStringAsFixed(2) : '—',
-              key: ValueKey(lotSize?.toStringAsFixed(2)),
-              style: TextStyle(
-                color: lotSize != null ? riskColor : AppColors.textMuted,
-                fontSize: 56,
-                fontWeight: FontWeight.bold,
-                height: 1,
-              ),
-            ),
-          ),
-
+          // Label
           Text(
-            'lots',
-            style: AppTextStyles.label.copyWith(color: AppColors.textMuted),
-          ),
-
-          const SizedBox(height: 20),
-
-          // Risk meter bar
-          ClipRRect(
-            borderRadius: BorderRadius.circular(4),
-            child: LinearProgressIndicator(
-              value: (riskPercent / 10).clamp(0.0, 1.0),
-              backgroundColor: AppColors.surfaceVariant,
-              color: riskColor,
-              minHeight: 6,
+            'RECOMMENDED POSITION SIZE',
+            style: GoogleFonts.inter(
+              fontSize: 9,
+              fontWeight: FontWeight.w700,
+              color: AppColors.onSurfaceVariant,
+              letterSpacing: 2.0,
             ),
           ),
-
           const SizedBox(height: 8),
 
+          // Lot size number + badge
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Container(
-                width: 8,
-                height: 8,
-                decoration: BoxDecoration(
-                  color: riskColor,
-                  shape: BoxShape.circle,
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 300),
+                child: Text(
+                  lotSize != null ? lotSize!.toStringAsFixed(2) : '—',
+                  key: ValueKey(lotSize?.toStringAsFixed(2)),
+                  style: GoogleFonts.jetBrainsMono(
+                    color: lotSize != null ? riskColor : AppColors.textMuted,
+                    fontSize: 52,
+                    fontWeight: FontWeight.w700,
+                    height: 1,
+                  ),
                 ),
               ),
-              const SizedBox(width: 6),
-              Text(
-                riskLabel,
-                style: AppTextStyles.caption.copyWith(color: riskColor),
+              const SizedBox(width: 8),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 6),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'LOTS',
+                      style: GoogleFonts.jetBrainsMono(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.outline,
+                        letterSpacing: 2,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    // Risk label badge
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 3,
+                      ),
+                      decoration: BoxDecoration(
+                        color: riskColor.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        riskLabel,
+                        style: AppTextStyles.caption.copyWith(
+                          color: riskColor,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 10,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
 
           if (riskAmount != null) ...[
             const SizedBox(height: 16),
-            Divider(color: AppColors.divider.withValues(alpha: 0.5)),
-            const SizedBox(height: 12),
+            // RISK AMOUNT | RISK LEVEL — dua kotak grid
             Row(
               children: [
                 Expanded(
-                  child: _StatItem(
-                    label: 'Risk Amount',
+                  child: _MetricBox(
+                    label: 'RISK AMOUNT',
                     value: '\$${riskAmount!.toStringAsFixed(2)}',
                     color: AppColors.error,
                   ),
                 ),
-                Container(width: 1, height: 32, color: AppColors.divider),
+                const SizedBox(width: 8),
                 Expanded(
-                  child: _StatItem(
-                    label: 'Pair',
-                    value: pair,
-                    color: AppColors.primary,
-                  ),
-                ),
-                Container(width: 1, height: 32, color: AppColors.divider),
-                Expanded(
-                  child: _StatItem(
-                    label: 'Risk %',
+                  child: _MetricBox(
+                    label: 'RISK LEVEL',
                     value: '${riskPercent.toStringAsFixed(1)}%',
                     color: riskColor,
                   ),
@@ -137,12 +137,12 @@ class ResultCard extends StatelessWidget {
   }
 }
 
-class _StatItem extends StatelessWidget {
+class _MetricBox extends StatelessWidget {
   final String label;
   final String value;
   final Color color;
 
-  const _StatItem({
+  const _MetricBox({
     required this.label,
     required this.value,
     required this.color,
@@ -150,22 +150,42 @@ class _StatItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(label, style: AppTextStyles.caption),
-        const SizedBox(height: 4),
-        AnimatedSwitcher(
-          duration: const Duration(milliseconds: 200),
-          child: Text(
-            value,
-            key: ValueKey(value),
-            style: AppTextStyles.bodySmall.copyWith(
-              color: color,
-              fontWeight: FontWeight.w600,
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceContainerHigh,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: color.withValues(alpha: 0.2),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: GoogleFonts.inter(
+              fontSize: 9,
+              fontWeight: FontWeight.w700,
+              color: AppColors.onSurfaceVariant,
+              letterSpacing: 1.5,
             ),
           ),
-        ),
-      ],
+          const SizedBox(height: 4),
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 200),
+            child: Text(
+              value,
+              key: ValueKey(value),
+              style: GoogleFonts.jetBrainsMono(
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                color: color,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
