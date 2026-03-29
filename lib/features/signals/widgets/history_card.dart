@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../models/signal_model.dart';
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 
@@ -10,15 +11,14 @@ class HistoryCard extends StatelessWidget {
 
   bool get _isWin => signal.isTpHit;
   Color get _statusColor => _isWin ? AppColors.secondaryContainer : AppColors.error;
-  String get _statusLabel => _isWin ? 'TP HIT' : 'SL HIT';
 
-  // Harga exit: TP kalau tp_hit, SL kalau sl_hit
+  String _statusLabel(BuildContext context) =>
+      _isWin ? context.l10n.statusTpHit : context.l10n.statusSlHit;
+
   double get _exitPrice => _isWin ? (signal.tp ?? signal.sl) : signal.sl;
 
-  // Pips difference (simplified: selisih harga × 10 untuk pairs biasa, × 1 untuk Gold)
   double get _pipsDiff {
     final diff = (_exitPrice - signal.entry1).abs();
-    // XAUUSD/XAGUSD pakai satuan berbeda dari forex biasa
     if (signal.symbol.contains('XAU') || signal.symbol.contains('XAG')) {
       return diff;
     }
@@ -41,6 +41,7 @@ class HistoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       padding: const EdgeInsets.all(16),
@@ -53,10 +54,8 @@ class HistoryCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          // Top row: avatar + info + pips
           Row(
             children: [
-              // Circle avatar dengan status ring
               Container(
                 width: 44,
                 height: 44,
@@ -77,7 +76,6 @@ class HistoryCard extends StatelessWidget {
 
               const SizedBox(width: 12),
 
-              // Pair + status badge + date
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -93,7 +91,7 @@ class HistoryCard extends StatelessWidget {
                               : AppColors.error,
                         ),
                         const SizedBox(width: 6),
-                        _StatusBadge(label: _statusLabel, color: _statusColor),
+                        _StatusBadge(label: _statusLabel(context), color: _statusColor),
                       ],
                     ),
                     const SizedBox(height: 3),
@@ -102,7 +100,6 @@ class HistoryCard extends StatelessWidget {
                 ),
               ),
 
-              // Pips display
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
@@ -115,7 +112,7 @@ class HistoryCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'Pips',
+                    l10n.pipsLabel,
                     style: AppTextStyles.caption.copyWith(
                       color: _statusColor.withValues(alpha: 0.7),
                     ),
@@ -132,12 +129,11 @@ class HistoryCard extends StatelessWidget {
           ),
           const SizedBox(height: 10),
 
-          // Bottom grid: ENTRY | EXIT | R:R
           Row(
             children: [
               Expanded(
                 child: _PriceCell(
-                  label: 'ENTRY',
+                  label: l10n.entryShort,
                   value: signal.entry1.toStringAsFixed(_decimalPlaces),
                   color: AppColors.onSurfaceVariant,
                 ),
@@ -145,7 +141,7 @@ class HistoryCard extends StatelessWidget {
               Container(width: 1, height: 28, color: AppColors.outlineVariant.withValues(alpha: 0.2)),
               Expanded(
                 child: _PriceCell(
-                  label: 'EXIT',
+                  label: l10n.exitLabel,
                   value: _exitPrice.toStringAsFixed(_decimalPlaces),
                   color: _statusColor,
                 ),
@@ -153,7 +149,7 @@ class HistoryCard extends StatelessWidget {
               Container(width: 1, height: 28, color: AppColors.outlineVariant.withValues(alpha: 0.2)),
               Expanded(
                 child: _PriceCell(
-                  label: 'R:R',
+                  label: l10n.rrLabel,
                   value: signal.riskReward != null
                       ? '1:${signal.riskReward!.toStringAsFixed(1)}'
                       : '—',

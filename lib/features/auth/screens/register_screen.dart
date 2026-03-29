@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../providers/auth_provider.dart';
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 
@@ -19,7 +20,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final _confirmPasswordController = TextEditingController();
 
   bool _obscurePassword = true;
-  String? _validationError; // error dari validasi lokal (sebelum hit API)
+  String? _validationError;
 
   @override
   void dispose() {
@@ -31,7 +32,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   }
 
   Future<void> _onRegister() async {
-    // Reset validation error dulu
     setState(() => _validationError = null);
 
     final name = _nameController.text.trim();
@@ -39,19 +39,18 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     final password = _passwordController.text.trim();
     final confirmPassword = _confirmPasswordController.text.trim();
 
-    // Validasi lokal — sebelum panggil API
     if (name.isEmpty || email.isEmpty || password.isEmpty) {
-      setState(() => _validationError = 'All fields are required');
+      setState(() => _validationError = context.l10n.allFieldsRequired);
       return;
     }
 
     if (password.length < 8) {
-      setState(() => _validationError = 'Password minimum 8 characters');
+      setState(() => _validationError = context.l10n.passwordMinLength);
       return;
     }
 
     if (password != confirmPassword) {
-      setState(() => _validationError = 'Passwords do not match');
+      setState(() => _validationError = context.l10n.passwordsDoNotMatch);
       return;
     }
 
@@ -60,9 +59,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final authState = ref.watch(authProvider);
-
-    // Gabungkan error lokal dan error dari API
     final errorMessage = _validationError ?? authState.error;
 
     return Scaffold(
@@ -74,43 +72,43 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             children: [
               const SizedBox(height: 48),
 
-              Text('Create Account', style: AppTextStyles.h1),
+              Text(l10n.createAccount, style: AppTextStyles.h1),
               const SizedBox(height: 8),
               Text(
-                'Join TradeGenZ and start trading smarter',
+                l10n.createAccountSubtitle,
                 style: AppTextStyles.body.copyWith(color: AppColors.textMuted),
               ),
 
               const SizedBox(height: 48),
 
-              _inputLabel('Full Name'),
+              _inputLabel(l10n.fullName),
               const SizedBox(height: 8),
               TextField(
                 controller: _nameController,
                 style: AppTextStyles.body,
-                decoration: _inputDecoration('Enter your full name'),
+                decoration: _inputDecoration(l10n.enterFullName),
               ),
 
               const SizedBox(height: 20),
 
-              _inputLabel('Email'),
+              _inputLabel(l10n.email),
               const SizedBox(height: 8),
               TextField(
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
                 style: AppTextStyles.body,
-                decoration: _inputDecoration('Enter your email'),
+                decoration: _inputDecoration(l10n.enterEmail),
               ),
 
               const SizedBox(height: 20),
 
-              _inputLabel('Password'),
+              _inputLabel(l10n.password),
               const SizedBox(height: 8),
               TextField(
                 controller: _passwordController,
                 obscureText: _obscurePassword,
                 style: AppTextStyles.body,
-                decoration: _inputDecoration('Min. 8 characters').copyWith(
+                decoration: _inputDecoration(l10n.passwordHint).copyWith(
                   suffixIcon: IconButton(
                     icon: Icon(
                       _obscurePassword
@@ -126,16 +124,15 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
               const SizedBox(height: 20),
 
-              _inputLabel('Confirm Password'),
+              _inputLabel(l10n.confirmPassword),
               const SizedBox(height: 8),
               TextField(
                 controller: _confirmPasswordController,
                 obscureText: _obscurePassword,
                 style: AppTextStyles.body,
-                decoration: _inputDecoration('Re-enter your password'),
+                decoration: _inputDecoration(l10n.reEnterPassword),
               ),
 
-              // Error message — lokal atau dari API
               if (errorMessage != null) ...[
                 const SizedBox(height: 16),
                 Text(
@@ -166,9 +163,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             color: Colors.white,
                           ),
                         )
-                      : const Text(
-                          'Create Account',
-                          style: TextStyle(
+                      : Text(
+                          l10n.createAccount,
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -182,11 +179,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Already have an account? ', style: AppTextStyles.body),
+                  Text(l10n.alreadyHaveAccount, style: AppTextStyles.body),
                   GestureDetector(
-                    onTap: () => context.pop(), // kembali ke login
+                    onTap: () => context.pop(),
                     child: Text(
-                      'Login',
+                      l10n.login,
                       style: AppTextStyles.body.copyWith(
                         color: AppColors.primary,
                         fontWeight: FontWeight.w600,

@@ -6,6 +6,7 @@ import '../data/signals_api.dart';
 import '../models/signal_model.dart';
 import '../widgets/price_ladder.dart';
 import '../../auth/providers/auth_provider.dart';
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 
@@ -34,7 +35,7 @@ class SignalDetailScreen extends ConsumerWidget {
           children: [
             const Icon(Icons.terminal, size: 18),
             const SizedBox(width: 8),
-            const Text('TradeGenZ'),
+            Text(context.l10n.signalFeedTitle),
           ],
         ),
         leading: IconButton(
@@ -54,11 +55,11 @@ class SignalDetailScreen extends ConsumerWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('Failed to load signal', style: AppTextStyles.body),
+              Text(context.l10n.failedToLoadSignal, style: AppTextStyles.body),
               const SizedBox(height: 12),
               ElevatedButton(
                 onPressed: () => ref.invalidate(signalDetailProvider(signalId)),
-                child: const Text('Retry'),
+                child: Text(context.l10n.retry),
               ),
             ],
           ),
@@ -84,16 +85,16 @@ class _DetailContent extends StatelessWidget {
     return AppColors.textMuted;
   }
 
-  String get _statusLabel {
+  String _statusLabel(BuildContext context) {
     switch (signal.status) {
       case 'active':
-        return 'ACTIVE';
+        return context.l10n.statusActive;
       case 'tp_hit':
-        return 'TP HIT';
+        return context.l10n.statusTpHit;
       case 'sl_hit':
-        return 'SL HIT';
+        return context.l10n.statusSlHit;
       case 'closed':
-        return 'CLOSED';
+        return context.l10n.statusClosed;
       default:
         return signal.status.toUpperCase();
     }
@@ -147,7 +148,7 @@ class _DetailContent extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    _Badge(label: _statusLabel, color: _statusColor),
+                    _Badge(label: _statusLabel(context), color: _statusColor),
                   ],
                 ),
 
@@ -216,13 +217,13 @@ class _DetailContent extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Unlock Full Signal Detail',
+                                  context.l10n.unlockSignalDetail,
                                   style: AppTextStyles.bodySmall.copyWith(
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
                                 Text(
-                                  'Upgrade to see Entry, SL & TP levels',
+                                  context.l10n.upgradeToSeeDetail,
                                   style: AppTextStyles.caption,
                                 ),
                               ],
@@ -270,7 +271,7 @@ class _PriceGrid extends StatelessWidget {
           children: [
             Expanded(
               child: _PriceCell(
-                label: 'ENTRY 1',
+                label: context.l10n.entry1Label,
                 value: signal.entry1.toStringAsFixed(_dec),
                 color: AppColors.primary,
               ),
@@ -278,7 +279,7 @@ class _PriceGrid extends StatelessWidget {
             const SizedBox(width: 8),
             Expanded(
               child: _PriceCell(
-                label: 'ENTRY 2',
+                label: context.l10n.entry2Label,
                 value: signal.entry2 != null
                     ? signal.entry2!.toStringAsFixed(_dec)
                     : '—',
@@ -293,7 +294,7 @@ class _PriceGrid extends StatelessWidget {
           children: [
             Expanded(
               child: _PriceCell(
-                label: 'STOP LOSS',
+                label: context.l10n.stopLossLabel,
                 value: signal.sl.toStringAsFixed(_dec),
                 color: AppColors.error,
               ),
@@ -301,7 +302,7 @@ class _PriceGrid extends StatelessWidget {
             const SizedBox(width: 8),
             Expanded(
               child: _PriceCell(
-                label: 'TAKE PROFIT',
+                label: context.l10n.takeProfitLabel,
                 value: signal.tp != null
                     ? signal.tp!.toStringAsFixed(_dec)
                     : '—',
@@ -316,7 +317,7 @@ class _PriceGrid extends StatelessWidget {
           children: [
             Expanded(
               child: _PriceCell(
-                label: 'RISK/REWARD',
+                label: context.l10n.riskRewardLabel,
                 value: signal.riskReward != null
                     ? '1 : ${signal.riskReward!.toStringAsFixed(1)}'
                     : '—',
@@ -403,7 +404,7 @@ class _TrendStrengthCell extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'TREND STRENGTH',
+            context.l10n.trendStrengthLabel,
             style: GoogleFonts.inter(
               fontSize: 9,
               fontWeight: FontWeight.w700,
@@ -478,7 +479,7 @@ class _ExecuteSignalButton extends StatelessWidget {
           onPressed: () {},
           icon: const Icon(Icons.bolt, color: AppColors.onPrimary, size: 20),
           label: Text(
-            'EXECUTE SIGNAL',
+            context.l10n.executeSignal,
             style: GoogleFonts.inter(
               fontSize: 13,
               fontWeight: FontWeight.w700,

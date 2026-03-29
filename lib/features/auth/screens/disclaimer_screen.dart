@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/storage/secure_storage.dart';
@@ -19,7 +20,6 @@ class _DisclaimerScreenState extends State<DisclaimerScreen> {
   @override
   void initState() {
     super.initState();
-    // Detect kalau user sudah scroll sampai bawah
     _scrollController.addListener(_onScroll);
   }
 
@@ -33,7 +33,6 @@ class _DisclaimerScreenState extends State<DisclaimerScreen> {
     final maxScroll = _scrollController.position.maxScrollExtent;
     final currentScroll = _scrollController.position.pixels;
 
-    // Aktifkan checkbox kalau sudah scroll 90% ke bawah
     if (currentScroll >= maxScroll * 0.9 && !_hasScrolledToBottom) {
       setState(() => _hasScrolledToBottom = true);
     }
@@ -46,11 +45,11 @@ class _DisclaimerScreenState extends State<DisclaimerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
-      appBar: AppBar(title: const Text('Risk Disclaimer')),
+      appBar: AppBar(title: Text(l10n.riskDisclaimerTitle)),
       body: Column(
         children: [
-          // Disclaimer text — scrollable
           Expanded(
             child: SingleChildScrollView(
               controller: _scrollController,
@@ -58,7 +57,6 @@ class _DisclaimerScreenState extends State<DisclaimerScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Warning banner
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
@@ -78,7 +76,7 @@ class _DisclaimerScreenState extends State<DisclaimerScreen> {
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
-                            'Please read this disclaimer carefully before using TradeGenZ.',
+                            l10n.disclaimerIntro,
                             style: AppTextStyles.bodySmall.copyWith(
                               color: AppColors.error,
                             ),
@@ -91,54 +89,40 @@ class _DisclaimerScreenState extends State<DisclaimerScreen> {
                   const SizedBox(height: 24),
 
                   _DisclaimerSection(
-                    title: '1. No Financial Advice',
-                    content:
-                        'The trading signals provided by TradeGenZ are for informational purposes only and do not constitute financial advice. TradeGenZ is not a licensed financial advisor, broker, or dealer.',
+                    title: l10n.disclaimerSection1Title,
+                    content: l10n.disclaimerSection1Body,
                   ),
-
                   _DisclaimerSection(
-                    title: '2. Risk of Loss',
-                    content:
-                        'Trading in forex, commodities, and other financial instruments involves a high level of risk and may not be suitable for all investors. You may lose some or all of your invested capital. Never trade with money you cannot afford to lose.',
+                    title: l10n.disclaimerSection2Title,
+                    content: l10n.disclaimerSection2Body,
                   ),
-
                   _DisclaimerSection(
-                    title: '3. Past Performance',
-                    content:
-                        'Past performance of any trading signal or strategy is not indicative of future results. Markets are unpredictable and no signal service can guarantee profits.',
+                    title: l10n.disclaimerSection3Title,
+                    content: l10n.disclaimerSection3Body,
                   ),
-
                   _DisclaimerSection(
-                    title: '4. Your Responsibility',
-                    content:
-                        'You are solely responsible for your trading decisions. TradeGenZ and its team shall not be held liable for any losses incurred as a result of using our signals or services.',
+                    title: l10n.disclaimerSection4Title,
+                    content: l10n.disclaimerSection4Body,
                   ),
-
                   _DisclaimerSection(
-                    title: '5. Signal Accuracy',
-                    content:
-                        'While we strive to provide accurate and timely signals, TradeGenZ does not guarantee the accuracy, completeness, or timeliness of any signal. Market conditions can change rapidly.',
+                    title: l10n.disclaimerSection5Title,
+                    content: l10n.disclaimerSection5Body,
                   ),
-
                   _DisclaimerSection(
-                    title: '6. Independent Verification',
-                    content:
-                        'We strongly recommend that you conduct your own research and analysis before executing any trade. Consider consulting with a qualified financial advisor if needed.',
+                    title: l10n.disclaimerSection6Title,
+                    content: l10n.disclaimerSection6Body,
                   ),
-
                   _DisclaimerSection(
-                    title: '7. Regulatory Compliance',
-                    content:
-                        'It is your responsibility to ensure that using TradeGenZ services complies with the laws and regulations in your jurisdiction. TradeGenZ is not responsible for any regulatory issues.',
+                    title: l10n.disclaimerSection7Title,
+                    content: l10n.disclaimerSection7Body,
                   ),
 
                   const SizedBox(height: 16),
 
-                  // Hint kalau belum scroll sampai bawah
                   if (!_hasScrolledToBottom)
                     Center(
                       child: Text(
-                        '↓ Scroll to bottom to continue',
+                        l10n.scrollToBottom,
                         style: AppTextStyles.caption.copyWith(
                           color: AppColors.textMuted,
                         ),
@@ -151,7 +135,6 @@ class _DisclaimerScreenState extends State<DisclaimerScreen> {
             ),
           ),
 
-          // Bottom section — checkbox + button
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
@@ -164,7 +147,6 @@ class _DisclaimerScreenState extends State<DisclaimerScreen> {
             ),
             child: Column(
               children: [
-                // Checkbox — hanya aktif setelah scroll sampai bawah
                 GestureDetector(
                   onTap: _hasScrolledToBottom
                       ? () => setState(() => _isAccepted = !_isAccepted)
@@ -198,7 +180,7 @@ class _DisclaimerScreenState extends State<DisclaimerScreen> {
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          'I have read and agree to the risk disclaimer',
+                          l10n.agreeToDisclaimer,
                           style: AppTextStyles.bodySmall.copyWith(
                             color: _hasScrolledToBottom
                                 ? AppColors.textPrimary
@@ -212,24 +194,20 @@ class _DisclaimerScreenState extends State<DisclaimerScreen> {
 
                 const SizedBox(height: 16),
 
-                // Accept button
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    // Hanya aktif kalau sudah scroll dan checklist
                     onPressed: _isAccepted ? _onAccept : null,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
-                      disabledBackgroundColor: AppColors.primary.withValues(
-                        alpha: 0.3,
-                      ),
+                      disabledBackgroundColor: AppColors.primary.withValues(alpha: 0.3),
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
                     child: Text(
-                      'I Understand & Accept',
+                      l10n.understandAndAccept,
                       style: TextStyle(
                         color: _isAccepted
                             ? Colors.white

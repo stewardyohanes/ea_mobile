@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/network/network_status_provider.dart';
+import '../../core/extensions/l10n_extension.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 
@@ -34,7 +35,7 @@ class NetworkBanner extends ConsumerWidget {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    'No internet connection',
+                    context.l10n.noInternetConnection,
                     style: AppTextStyles.caption.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.w600,

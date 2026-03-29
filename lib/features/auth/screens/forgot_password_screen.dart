@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tradegenz_app/core/extensions/l10n_extension.dart';
 import 'package:tradegenz_app/core/theme/app_colors.dart';
 import 'package:tradegenz_app/core/theme/app_text_styles.dart';
 import 'package:tradegenz_app/features/auth/data/auth_api.dart';
@@ -38,7 +39,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       if (mounted) setState(() => _otpSent = true);
     } catch (_) {
       if (mounted) {
-        setState(() => _error = 'Gagal mengirim OTP. Periksa koneksi internet kamu.');
+        setState(() => _error = context.l10n.failedToSendOtp);
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -72,54 +73,46 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     );
   }
 
-  // ──────────────────────────────────────────
-  // STEP 01: Enter Email
-  // ──────────────────────────────────────────
   Widget _buildEmailView() {
+    final l10n = context.l10n;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 8),
 
-        // Page header
-        Text('Account Recovery', style: AppTextStyles.h2),
+        Text(l10n.accountRecovery, style: AppTextStyles.h2),
         const SizedBox(height: 8),
         Text(
-          'Review the three-step flow for resetting secure access to your TradeGenZ terminal.',
+          l10n.forgotPasswordSubtitle,
           style: AppTextStyles.body.copyWith(color: AppColors.onSurfaceVariant),
         ),
 
         const SizedBox(height: 32),
 
-        // Step card
         _StepCard(
-          stepLabel: 'STEP_01',
+          stepLabel: l10n.step01,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Step title
-              Text('Enter Email', style: AppTextStyles.h3),
+              Text(l10n.enterEmailStep, style: AppTextStyles.h3),
               const SizedBox(height: 8),
               Text(
-                'Input your registered terminal identifier to initiate the account recovery sequence.',
+                l10n.forgotPasswordStep1Desc,
                 style: AppTextStyles.body.copyWith(color: AppColors.onSurfaceVariant),
               ),
 
               const SizedBox(height: 24),
 
-              // Field label
-              _FieldLabel('TERMINAL ADDRESS'),
+              _FieldLabel(l10n.terminalAddress),
               const SizedBox(height: 8),
 
-              // Email TextField
               _MonoTextField(
                 controller: _emailController,
-                hint: 'operator@tradegenz.io',
+                hint: l10n.terminalAddressHint,
                 prefixIcon: Icons.alternate_email,
                 keyboardType: TextInputType.emailAddress,
               ),
 
-              // Error
               if (_error != null) ...[
                 const SizedBox(height: 12),
                 Text(
@@ -130,11 +123,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
               const SizedBox(height: 28),
 
-              // Send OTP button
               _GradientButton(
                 isLoading: _isLoading,
                 onPressed: _sendOTP,
-                label: 'SEND OTP',
+                label: l10n.sendOtp,
                 icon: Icons.send,
               ),
             ],
@@ -144,10 +136,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     );
   }
 
-  // ──────────────────────────────────────────
-  // STEP 02: OTP Sent
-  // ──────────────────────────────────────────
   Widget _buildOTPSentView() {
+    final l10n = context.l10n;
     final email = _emailController.text.trim();
 
     return Column(
@@ -155,23 +145,20 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       children: [
         const SizedBox(height: 8),
 
-        // Page header (same branding)
-        Text('Account Recovery', style: AppTextStyles.h2),
+        Text(l10n.accountRecovery, style: AppTextStyles.h2),
         const SizedBox(height: 8),
         Text(
-          'Review the three-step flow for resetting secure access to your TradeGenZ terminal.',
+          l10n.forgotPasswordSubtitle,
           style: AppTextStyles.body.copyWith(color: AppColors.onSurfaceVariant),
         ),
 
         const SizedBox(height: 32),
 
-        // Step card
         _StepCard(
-          stepLabel: 'STEP_02',
+          stepLabel: l10n.step02,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Green check icon
               const Icon(
                 Icons.check_circle,
                 color: AppColors.secondaryContainer,
@@ -179,13 +166,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               ),
               const SizedBox(height: 12),
 
-              Text('Verification Sent', style: AppTextStyles.h3),
+              Text(l10n.verificationSent, style: AppTextStyles.h3),
               const SizedBox(height: 8),
               RichText(
                 text: TextSpan(
                   style: AppTextStyles.body.copyWith(color: AppColors.onSurfaceVariant),
                   children: [
-                    const TextSpan(text: 'An encrypted sync key has been dispatched to '),
+                    TextSpan(text: l10n.forgotPasswordStep2Desc),
                     TextSpan(
                       text: email,
                       style: AppTextStyles.body.copyWith(
@@ -199,10 +186,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
               const SizedBox(height: 24),
 
-              _FieldLabel('ENTER OTP CODE'),
+              _FieldLabel(l10n.enterOtpCode),
               const SizedBox(height: 8),
 
-              // OTP hint box
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -218,7 +204,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     const Icon(Icons.pin, color: AppColors.outline, size: 20),
                     const SizedBox(width: 12),
                     Text(
-                      'Enter 6-digit OTP on next screen',
+                      l10n.enterOtpOnNextScreen,
                       style: GoogleFonts.jetBrainsMono(
                         fontSize: 14,
                         color: AppColors.outline.withValues(alpha: 0.5),
@@ -228,7 +214,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 ),
               ),
 
-              // Error
               if (_error != null) ...[
                 const SizedBox(height: 12),
                 Text(
@@ -239,11 +224,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
               const SizedBox(height: 28),
 
-              // Verify OTP button
               _GradientButton(
                 isLoading: false,
                 onPressed: () => context.push('/otp-verification', extra: email),
-                label: 'VERIFY OTP',
+                label: l10n.verifyOtp,
                 icon: Icons.verified_outlined,
               ),
             ],
@@ -253,10 +237,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     );
   }
 }
-
-// ──────────────────────────────────────────
-// Shared internal widgets
-// ──────────────────────────────────────────
 
 class _StepCard extends StatelessWidget {
   final String stepLabel;
@@ -277,7 +257,6 @@ class _StepCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Step label chip
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(

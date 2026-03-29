@@ -1,0 +1,452 @@
+{
+  "@@locale": "id",
+
+  "appName": "TradeGenZ",
+
+  "institutionalGrade": "ALGORITMA INSTITUSIONAL  •  EKSEKUSI TANPA LAG",
+
+  "onboardingTitle": "TRADEGENZ",
+
+  "onboardingSubtitle": "Sinyal Forex Cerdas\ndari MetaTrader EA",
+
+  "onboardingDescription": "Kecerdasan algoritmik canggih yang diterjemahkan menjadi setup trading probabilitas tinggi yang actionable untuk trader ritel modern.",
+
+  "featureSignalsTitle": "Sinyal EA Real-time",
+
+  "featureSignalsDesc": "Peringatan eksekusi instan dari algoritma MT4/MT5 proprietary kami.",
+
+  "featureCalculatorTitle": "Kalkulator Lot Size",
+
+  "featureCalculatorDesc": "Presisi manajemen risiko. Hitung ukuran posisi dalam milidetik.",
+
+  "featureAnalyticsTitle": "Analitik Win Rate",
+
+  "featureAnalyticsDesc": "Performa historis transparan dengan data kuantitatif mendalam.",
+
+  "getStarted": "Mulai",
+
+  "dontHaveAccount": "Belum punya akun? ",
+
+  "registerNow": "Daftar Sekarang",
+
+  "createAccount": "Buat Akun",
+
+  "createAccountSubtitle": "Bergabung dengan TradeGenZ dan mulai trading lebih cerdas",
+
+  "fullName": "Nama Lengkap",
+
+  "enterFullName": "Masukkan nama lengkap Anda",
+
+  "email": "Email",
+
+  "enterEmail": "Masukkan email Anda",
+
+  "password": "Kata Sandi",
+
+  "passwordHint": "Min. 8 karakter",
+
+  "confirmPassword": "Konfirmasi Kata Sandi",
+
+  "reEnterPassword": "Masukkan ulang kata sandi Anda",
+
+  "allFieldsRequired": "Semua kolom wajib diisi",
+
+  "passwordMinLength": "Kata sandi minimal 8 karakter",
+
+  "passwordsDoNotMatch": "Kata sandi tidak sama",
+
+  "alreadyHaveAccount": "Sudah punya akun? ",
+
+  "login": "Masuk",
+
+  "accountRecovery": "Pemulihan Akun",
+
+  "forgotPasswordSubtitle": "Tinjau alur tiga langkah untuk mereset akses aman ke terminal TradeGenZ Anda.",
+
+  "step01": "LANGKAH_01",
+
+  "step02": "LANGKAH_02",
+
+  "enterEmailStep": "Masukkan Email",
+
+  "forgotPasswordStep1Desc": "Masukkan identifikasi terminal terdaftar Anda untuk memulai urutan pemulihan akun.",
+
+  "terminalAddress": "ALAMAT TERMINAL",
+
+  "terminalAddressHint": "operator@tradegenz.io",
+
+  "failedToSendOtp": "Gagal mengirim OTP. Periksa koneksi internet kamu.",
+
+  "sendOtp": "KIRIM OTP",
+
+  "verificationSent": "Verifikasi Terkirim",
+
+  "forgotPasswordStep2Desc": "Kunci sinkronisasi terenkripsi telah dikirim ke ",
+
+  "enterOtpCode": "MASUKKAN KODE OTP",
+
+  "enterOtpOnNextScreen": "Masukkan OTP 6 digit di layar berikutnya",
+
+  "verifyOtp": "VERIFIKASI OTP",
+
+  "otpTitle": "Masukkan Kode OTP",
+
+  "otpSentTo": "Kode OTP telah dikirim ke ",
+
+  "otpHint": "Masukkan 6 digit kode OTP",
+
+  "verify": "Verifikasi",
+
+  "didNotReceiveCode": "Tidak menerima kode? ",
+
+  "resend": "Kirim Ulang",
+
+  "otpResentSuccess": "OTP berhasil dikirim ulang",
+
+  "otpResentFailed": "Gagal kirim ulang OTP. Coba lagi.",
+
+  "resetPassword": "Reset Kata Sandi",
+
+  "resetPasswordSubtitle": "Buat kata sandi baru yang kuat untuk terminal trading Anda. Gunakan minimal 12 karakter dengan simbol.",
+
+  "newPassword": "KATA SANDI BARU",
+
+  "confirmPasswordLabel": "KONFIRMASI KATA SANDI",
+
+  "passwordsDontMatch": "Kata sandi tidak sama",
+
+  "passwordTooShort": "Kata sandi minimal 8 karakter",
+
+  "passwordChangedSuccess": "Kata sandi berhasil diubah",
+
+  "invalidOrExpiredOtp": "Kode OTP tidak valid atau sudah kadaluarsa",
+
+  "somethingWentWrong": "Terjadi kesalahan. Coba lagi.",
+
+  "passwordStrengthWeak": "Lemah",
+
+  "passwordStrengthMedium": "Sedang",
+
+  "passwordStrengthStrong": "Kuat",
+
+  "savePassword": "SIMPAN KATA SANDI",
+
+  "encryptionLabel": "ENKRIPSI",
+
+  "encryptionValue": "AES-256 BIT",
+
+  "protocolLabel": "PROTOKOL",
+
+  "mfaReady": "MFA SIAP",
+
+  "riskDisclaimerTitle": "Penafian Risiko",
+
+  "disclaimerIntro": "Harap baca penafian ini dengan seksama sebelum menggunakan TradeGenZ.",
+
+  "disclaimerSection1Title": "1. Bukan Saran Keuangan",
+
+  "disclaimerSection1Body": "Sinyal trading yang disediakan oleh TradeGenZ hanya untuk tujuan informasi dan bukan merupakan saran keuangan. TradeGenZ bukan penasihat keuangan, broker, atau dealer yang berlisensi.",
+
+  "disclaimerSection2Title": "2. Risiko Kerugian",
+
+  "disclaimerSection2Body": "Trading forex, komoditas, dan instrumen keuangan lainnya melibatkan tingkat risiko yang tinggi dan mungkin tidak cocok untuk semua investor. Anda mungkin kehilangan sebagian atau seluruh modal yang diinvestasikan. Jangan pernah trading dengan uang yang tidak mampu Anda tanggung kerugiannya.",
+
+  "disclaimerSection3Title": "3. Performa Masa Lalu",
+
+  "disclaimerSection3Body": "Performa masa lalu dari sinyal atau strategi trading apa pun bukan merupakan indikasi hasil di masa depan. Pasar tidak dapat diprediksi dan tidak ada layanan sinyal yang dapat menjamin keuntungan.",
+
+  "disclaimerSection4Title": "4. Tanggung Jawab Anda",
+
+  "disclaimerSection4Body": "Anda sepenuhnya bertanggung jawab atas keputusan trading Anda. TradeGenZ dan timnya tidak bertanggung jawab atas kerugian yang timbul akibat penggunaan sinyal atau layanan kami.",
+
+  "disclaimerSection5Title": "5. Akurasi Sinyal",
+
+  "disclaimerSection5Body": "Meskipun kami berusaha memberikan sinyal yang akurat dan tepat waktu, TradeGenZ tidak menjamin akurasi, kelengkapan, atau ketepatan waktu sinyal apa pun. Kondisi pasar dapat berubah dengan cepat.",
+
+  "disclaimerSection6Title": "6. Verifikasi Mandiri",
+
+  "disclaimerSection6Body": "Kami sangat menyarankan Anda melakukan riset dan analisis sendiri sebelum melakukan trade apa pun. Pertimbangkan untuk berkonsultasi dengan penasihat keuangan yang berkualifikasi jika diperlukan.",
+
+  "disclaimerSection7Title": "7. Kepatuhan Regulasi",
+
+  "disclaimerSection7Body": "Tanggung jawab Anda untuk memastikan bahwa penggunaan layanan TradeGenZ mematuhi hukum dan peraturan di yurisdiksi Anda. TradeGenZ tidak bertanggung jawab atas masalah regulasi apa pun.",
+
+  "scrollToBottom": "↓ Gulir ke bawah untuk melanjutkan",
+
+  "agreeToDisclaimer": "Saya telah membaca dan menyetujui penafian risiko",
+
+  "understandAndAccept": "Saya Mengerti & Menyetujui",
+
+  "signalFeedTitle": "TradeGenZ",
+
+  "noSignalsYet": "Belum ada sinyal",
+
+  "noSignalsYetSubtitle": "Periksa kembali nanti untuk sinyal baru",
+
+  "noSignalsForSymbol": "Tidak ada sinyal untuk {symbol}",
+
+  "retry": "Coba Lagi",
+
+  "failedToLoadSignal": "Gagal memuat sinyal",
+
+  "statusActive": "AKTIF",
+
+  "statusTpHit": "TP TERCAPAI",
+
+  "statusSlHit": "SL TERCAPAI",
+
+  "statusClosed": "DITUTUP",
+
+  "entry1Label": "ENTRY 1",
+
+  "entry2Label": "ENTRY 2",
+
+  "stopLossLabel": "STOP LOSS",
+
+  "takeProfitLabel": "TAKE PROFIT",
+
+  "riskRewardLabel": "RISIKO/REWARD",
+
+  "trendStrengthLabel": "KEKUATAN TREN",
+
+  "unlockSignalDetail": "Buka Detail Sinyal Lengkap",
+
+  "upgradeToSeeDetail": "Upgrade untuk melihat Entry, SL & TP",
+
+  "executeSignal": "EKSEKUSI SINYAL",
+
+  "signalHistoryTitle": "Riwayat Sinyal",
+
+  "totalLabel": "TOTAL",
+
+  "winLabel": "MENANG",
+
+  "lossLabel": "KALAH",
+
+  "winRateLabel": "WIN RATE",
+
+  "noSignalsFound": "Tidak ada sinyal",
+
+  "noCompletedSignalsYet": "Belum ada sinyal yang selesai",
+
+  "noFilterSignalsFound": "Tidak ada sinyal {filter}",
+
+  "timeJustNow": "Baru saja",
+
+  "timeDaysAgo": "{count}h lalu",
+
+  "timeHoursAgo": "{count}j lalu",
+
+  "timeMinutesAgo": "{count}m lalu",
+
+  "upgradeToSeeEntrySlTp": "Upgrade untuk melihat Entry, SL & TP",
+
+  "entryPriceLabel": "HARGA ENTRY",
+
+  "takeProfitShort": "TAKEPROFIT",
+
+  "riskRewardRatio": "R:R 1:{ratio}",
+
+  "pipsLabel": "Pips",
+
+  "entryShort": "ENTRY",
+
+  "exitLabel": "EXIT",
+
+  "rrLabel": "R:R",
+
+  "filterAll": "SEMUA",
+
+  "filterTpHit": "TP TERCAPAI",
+
+  "filterSlHit": "SL TERCAPAI",
+
+  "profileTitle": "TradeGenZ",
+
+  "winRateStat": "WIN RATE",
+
+  "totalSignalsStat": "TOTAL SINYAL",
+
+  "accountSection": "AKUN",
+
+  "referralCode": "Kode Referral",
+
+  "referralCodeCopied": "Kode referral disalin!",
+
+  "supportSection": "DUKUNGAN",
+
+  "contactWhatsApp": "Hubungi via WhatsApp",
+
+  "helpFaq": "Bantuan & FAQ",
+
+  "aboutSection": "TENTANG",
+
+  "appVersion": "Versi Aplikasi",
+
+  "appVersionNumber": "1.0.0",
+
+  "privacyPolicy": "Kebijakan Privasi",
+
+  "termsOfService": "Syarat Layanan",
+
+  "logoutAccount": "KELUAR AKUN",
+
+  "activeAffiliate": "Afiliasi Aktif",
+
+  "activePremium": "Premium Aktif",
+
+  "planExpires": "Berakhir: {date}",
+
+  "premiumFeature1": "Sinyal Frekuensi Tinggi Real-time",
+
+  "premiumFeature2": "Peta Likuiditas Institusional",
+
+  "premiumFeature3": "Kalkulator Volatilitas Canggih",
+
+  "upgradeToPremium": "Upgrade ke Premium",
+
+  "unlockSignalsAlerts": "Buka sinyal penuh & peringatan real-time",
+
+  "upgrade": "Upgrade",
+
+  "upgradePlanTitle": "Upgrade Paket",
+
+  "proprietaryAlphaAccess": "AKSES ALPHA PROPRIETARY",
+
+  "upgradePremiumTitle": "Upgrade ke Premium",
+
+  "upgradePremiumSubtitle": "Buka eksekusi data berkecepatan tinggi dan sinyal algoritmik yang dibangun untuk generasi quant berikutnya.",
+
+  "billingMonthly": "Bulanan",
+
+  "billingYearly": "Tahunan",
+
+  "save33": "Hemat 33%",
+
+  "planFree": "Gratis",
+
+  "priceFree": "$0",
+
+  "priceForever": "/ selamanya",
+
+  "freePlanFeature1": "Arah sinyal realtime (BELI/JUAL)",
+
+  "freePlanFeature2": "Lihat pasang trading & status",
+
+  "freePlanFeature3": "Riwayat sinyal (terbatas)",
+
+  "freePlanFeature4": "Harga entry, SL & TP tersembunyi",
+
+  "freePlanFeature5": "Tanpa notifikasi push",
+
+  "currentPlan": "Paket Saat Ini",
+
+  "planPremium": "Premium",
+
+  "pricePremiumMonthly": "$10",
+
+  "pricePerMonth": "/ bulan",
+
+  "pricePremiumYearly": "$80",
+
+  "pricePerYear": "/ tahun ($6.7/bln)",
+
+  "premiumPlanFeature1": "Detail sinyal lengkap (Entry, SL, TP)",
+
+  "premiumPlanFeature2": "Notifikasi push realtime",
+
+  "premiumPlanFeature3": "Semua pasang trading",
+
+  "premiumPlanFeature4": "Riwayat sinyal lengkap",
+
+  "premiumPlanFeature5": "Tanpa iklan",
+
+  "getPremium": "Dapatkan Premium",
+
+  "planAffiliate": "Afiliasi",
+
+  "priceAffiliate": "GRATIS",
+
+  "priceViaBroker": "(via broker)",
+
+  "affiliatePlanFeature1": "Semua fitur Premium",
+
+  "affiliatePlanFeature2": "Daftar via link broker kami",
+
+  "affiliatePlanFeature3": "Tanpa biaya bulanan",
+
+  "affiliatePlanFeature4": "Trading aktif diperlukan",
+
+  "registerViaBroker": "Daftar via Broker",
+
+  "contactWhatsAppActivate": "Hubungi kami via WhatsApp untuk mengaktifkan paket Anda",
+
+  "affiliatePlanCard": "Paket Afiliasi",
+
+  "premiumPlanCard": "Paket Premium",
+
+  "planActiveUntil": "Aktif hingga {date}",
+
+  "getPremiumUnlock": "Dapatkan sinyal tak terbatas & peringatan real-time",
+
+  "calculatorTitle": "Kalkulator Lot Size",
+
+  "reset": "Reset",
+
+  "tradingPair": "Pasang Trading",
+
+  "accountBalance": "Saldo Akun",
+
+  "riskPerTrade": "Risiko per Trade",
+
+  "riskLevelConservative": "Konservatif",
+
+  "riskLevelModerate": "Moderat",
+
+  "riskLevelAggressive": "Agresif",
+
+  "riskLevelVeryHigh": "Risiko Sangat Tinggi",
+
+  "stopLoss": "Stop Loss",
+
+  "pipsUnit": "pips",
+
+  "calculatePosition": "HITUNG POSISI",
+
+  "recommendedPositionSize": "UKURAN POSISI YANG DISARANKAN",
+
+  "lotsUnit": "LOT",
+
+  "riskAmount": "JUMLAH RISIKO",
+
+  "riskLevel": "LEVEL RISIKO",
+
+  "noInternetConnection": "Tidak ada koneksi internet",
+
+  "loginTitle": "TRADEGENZ",
+
+  "loginSubtitle": "SECURE QUANTUM TERMINAL ACCESS",
+
+  "loginEmailLabel": "EMAIL TERMINAL ID",
+
+  "loginPasswordLabel": "ACCESS CIPHER",
+
+  "forgotPasswordLink": "Lupa Kata Sandi?",
+
+  "initiateLogin": "INITIATE LOGIN",
+
+  "systemIntegrity": "SYSTEM INTEGRITY: OPTIMAL",
+
+  "sslVerified": "SSL VERIFIED",
+
+  "whatsappUpgradeMessage": "Halo, saya ingin upgrade ke plan {plan} ({price}) di TradeGenZ.",
+  "@whatsappUpgradeMessage": {
+    "placeholders": {
+      "plan": {"type": "String"},
+      "price": {"type": "String"}
+    }
+  },
+
+  "whatsappAffiliateMessage": "Halo, saya ingin aktivasi Affiliate Plan di TradeGenZ.",
+  "@whatsappAffiliateMessage": {}
+}

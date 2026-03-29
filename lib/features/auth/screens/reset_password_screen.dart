@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tradegenz_app/core/extensions/l10n_extension.dart';
 import 'package:tradegenz_app/core/theme/app_colors.dart';
 import 'package:tradegenz_app/core/theme/app_text_styles.dart';
 import 'package:tradegenz_app/features/auth/data/auth_api.dart';
@@ -43,14 +44,16 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     if (password.isEmpty || confirm.isEmpty) return;
 
     if (password != confirm) {
-      setState(() => _error = 'Password tidak sama');
+      setState(() => _error = context.l10n.passwordsDontMatch);
       return;
     }
 
     if (password.length < 8) {
-      setState(() => _error = 'Password minimal 8 karakter');
+      setState(() => _error = context.l10n.passwordTooShort);
       return;
     }
+
+    final l10n = context.l10n;
 
     setState(() {
       _isLoading = true;
@@ -66,25 +69,24 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Password berhasil diubah'),
+          SnackBar(
+            content: Text(l10n.passwordChangedSuccess),
             backgroundColor: AppColors.success,
           ),
         );
         context.go('/login');
       }
     } on DioException catch (e) {
-      final message =
-          e.response?.data['error'] as String? ?? 'Kode OTP tidak valid atau sudah kadaluarsa';
+      final message = e.response?.data['error'] as String? ??
+          l10n.invalidOrExpiredOtp;
       setState(() => _error = message);
     } catch (_) {
-      setState(() => _error = 'Terjadi kesalahan. Coba lagi.');
+      setState(() => _error = l10n.somethingWentWrong);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
   }
 
-  // ── Password strength ──────────────────────────────────────────────────────
   int _strengthLevel(String password) {
     if (password.isEmpty) return 0;
     int score = 0;
@@ -110,16 +112,16 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     }
   }
 
-  String _strengthLabel(int level) {
+  String _strengthLabel(BuildContext context, int level) {
     switch (level) {
       case 1:
-        return 'Weak';
+        return context.l10n.passwordStrengthWeak;
       case 2:
-        return 'Medium';
+        return context.l10n.passwordStrengthMedium;
       case 3:
-        return 'Strong';
+        return context.l10n.passwordStrengthStrong;
       case 4:
-        return 'Strong';
+        return context.l10n.passwordStrengthStrong;
       default:
         return '';
     }
@@ -127,6 +129,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -145,7 +148,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
             children: [
               const SizedBox(height: 8),
 
-              // Header row: terminal icon + title
               Row(
                 children: [
                   Container(
@@ -163,18 +165,17 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  Text('Reset Password', style: AppTextStyles.h2),
+                  Text(l10n.resetPassword, style: AppTextStyles.h2),
                 ],
               ),
               const SizedBox(height: 10),
               Text(
-                'Set a new strong password for your trading terminal. Use at least 12 characters with symbols.',
+                l10n.resetPasswordSubtitle,
                 style: AppTextStyles.body.copyWith(color: AppColors.onSurfaceVariant),
               ),
 
               const SizedBox(height: 32),
 
-              // Main card
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(24),
@@ -186,7 +187,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Top gradient stripe
                     Container(
                       height: 2,
                       margin: const EdgeInsets.only(bottom: 24),
@@ -202,8 +202,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                       ),
                     ),
 
-                    // New password field
-                    _FieldLabel('NEW PASSWORD'),
+                    _FieldLabel(l10n.newPassword),
                     const SizedBox(height: 8),
                     _PasswordField(
                       controller: _passwordController,
@@ -216,8 +215,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
                     const SizedBox(height: 20),
 
-                    // Confirm password field
-                    _FieldLabel('CONFIRM PASSWORD'),
+                    _FieldLabel(l10n.confirmPasswordLabel),
                     const SizedBox(height: 8),
                     _PasswordField(
                       controller: _confirmPasswordController,
@@ -229,15 +227,13 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
                     const SizedBox(height: 20),
 
-                    // Password strength indicator
                     _PasswordStrengthBar(
                       password: _passwordController.text,
                       strengthLevel: _strengthLevel(_passwordController.text),
                       strengthColor: _strengthColor(_strengthLevel(_passwordController.text)),
-                      strengthLabel: _strengthLabel(_strengthLevel(_passwordController.text)),
+                      strengthLabel: _strengthLabel(context, _strengthLevel(_passwordController.text)),
                     ),
 
-                    // Error
                     if (_error != null) ...[
                       const SizedBox(height: 16),
                       Text(
@@ -248,10 +244,10 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
                     const SizedBox(height: 28),
 
-                    // Save button
                     _GradientButton(
                       isLoading: _isLoading,
                       onPressed: _onReset,
+                      label: l10n.savePassword,
                     ),
                   ],
                 ),
@@ -259,8 +255,12 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
               const SizedBox(height: 24),
 
-              // Security badges row
-              _SecurityBadgesRow(),
+              _SecurityBadgesRow(
+                encryptionLabel: l10n.encryptionLabel,
+                encryptionValue: l10n.encryptionValue,
+                protocolLabel: l10n.protocolLabel,
+                protocolValue: l10n.mfaReady,
+              ),
             ],
           ),
         ),
@@ -268,10 +268,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     );
   }
 }
-
-// ──────────────────────────────────────────────────────────────────────────────
-// Internal widgets
-// ──────────────────────────────────────────────────────────────────────────────
 
 class _FieldLabel extends StatelessWidget {
   final String text;
@@ -337,27 +333,17 @@ class _PasswordField extends StatelessWidget {
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-            color: AppColors.outlineVariant.withValues(alpha: 0.2),
-          ),
+          borderSide: BorderSide(color: AppColors.outlineVariant.withValues(alpha: 0.2)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-            color: AppColors.outlineVariant.withValues(alpha: 0.2),
-          ),
+          borderSide: BorderSide(color: AppColors.outlineVariant.withValues(alpha: 0.2)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-            color: AppColors.primary.withValues(alpha: 0.5),
-            width: 1.5,
-          ),
+          borderSide: BorderSide(color: AppColors.primary.withValues(alpha: 0.5), width: 1.5),
         ),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 14,
-        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       ),
     );
   }
@@ -420,10 +406,12 @@ class _PasswordStrengthBar extends StatelessWidget {
 class _GradientButton extends StatelessWidget {
   final bool isLoading;
   final VoidCallback onPressed;
+  final String label;
 
   const _GradientButton({
     required this.isLoading,
     required this.onPressed,
+    required this.label,
   });
 
   @override
@@ -452,24 +440,19 @@ class _GradientButton extends StatelessWidget {
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
           disabledBackgroundColor: Colors.transparent,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
         child: isLoading
             ? const SizedBox(
                 width: 20,
                 height: 20,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  color: AppColors.onPrimary,
-                ),
+                child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.onPrimary),
               )
             : Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'SAVE PASSWORD',
+                    label,
                     style: GoogleFonts.inter(
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
@@ -487,6 +470,18 @@ class _GradientButton extends StatelessWidget {
 }
 
 class _SecurityBadgesRow extends StatelessWidget {
+  final String encryptionLabel;
+  final String encryptionValue;
+  final String protocolLabel;
+  final String protocolValue;
+
+  const _SecurityBadgesRow({
+    required this.encryptionLabel,
+    required this.encryptionValue,
+    required this.protocolLabel,
+    required this.protocolValue,
+  });
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -494,16 +489,16 @@ class _SecurityBadgesRow extends StatelessWidget {
         Expanded(
           child: _SecurityBadge(
             icon: Icons.verified_user,
-            label: 'ENCRYPTION',
-            value: 'AES-256 BIT',
+            label: encryptionLabel,
+            value: encryptionValue,
           ),
         ),
         const SizedBox(width: 12),
         Expanded(
           child: _SecurityBadge(
             icon: Icons.security,
-            label: 'PROTOCOL',
-            value: 'MFA READY',
+            label: protocolLabel,
+            value: protocolValue,
           ),
         ),
       ],

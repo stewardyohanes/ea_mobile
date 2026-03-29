@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tradegenz_app/core/extensions/l10n_extension.dart';
 import 'package:tradegenz_app/features/signals/providers/signal_provider.dart';
 import '../models/signal_model.dart';
 import '../widgets/history_card.dart';
@@ -18,7 +19,6 @@ class HistoryScreen extends ConsumerStatefulWidget {
 
 class _HistoryScreenState extends ConsumerState<HistoryScreen> {
   final _scrollController = ScrollController();
-  // Filter by status: ALL | TP HIT | SL HIT
   String _activeFilter = 'ALL';
 
   @override
@@ -46,7 +46,6 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
 
   void _onFilterChanged(String filter) {
     setState(() => _activeFilter = filter);
-    // Filter dilakukan client-side dari data yang sudah ada
   }
 
   List<Signal> _filtered(List<Signal> signals) {
@@ -56,13 +55,13 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
       case 'SL HIT':
         return signals.where((s) => s.isSlHit).toList();
       default:
-        // ALL: tampilkan semua yang sudah selesai (tp_hit + sl_hit + closed)
         return signals.where((s) => !s.isActive).toList();
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final signalsState = ref.watch(historySignalsProvider);
     final allCompleted = signalsState.signals.where((s) => !s.isActive).toList();
     final filtered = _filtered(signalsState.signals);
@@ -74,7 +73,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
           children: [
             const Icon(Icons.terminal, size: 20),
             const SizedBox(width: 8),
-            const Text('Signal History'),
+            Text(l10n.signalHistoryTitle),
           ],
         ),
         actions: [
@@ -86,24 +85,22 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
       ),
       body: Column(
         children: [
-          // Stats 2×2 grid — selalu pakai semua completed signals (bukan filtered)
           if (!signalsState.isLoading && allCompleted.isNotEmpty)
             _StatsGrid(signals: allCompleted),
 
-          // Filter tab: ALL | TP HIT | SL HIT
           FilterTabBar(
             activeFilter: _activeFilter,
             onFilterChanged: _onFilterChanged,
           ),
 
-          // List history mengisi sisa ruang
-          Expanded(child: _buildBody(signalsState, filtered)),
+          Expanded(child: _buildBody(context, signalsState, filtered)),
         ],
       ),
     );
   }
 
-  Widget _buildBody(SignalsState state, List<Signal> filtered) {
+  Widget _buildBody(BuildContext context, SignalsState state, List<Signal> filtered) {
+    final l10n = context.l10n;
     if (state.isLoading) {
       return ListView.builder(
         itemCount: 6,
@@ -118,12 +115,12 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
           children: [
             const Text('📭', style: TextStyle(fontSize: 48)),
             const SizedBox(height: 16),
-            Text('No signals found', style: AppTextStyles.body),
+            Text(l10n.noSignalsFound, style: AppTextStyles.body),
             const SizedBox(height: 8),
             Text(
               _activeFilter == 'ALL'
-                  ? 'No completed signals yet'
-                  : 'No $_activeFilter signals found',
+                  ? l10n.noCompletedSignalsYet
+                  : l10n.noFilterSignalsFound(_activeFilter),
               style: AppTextStyles.caption,
             ),
           ],
@@ -159,14 +156,13 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
   }
 }
 
-// ─── Stats 2×2 Grid ──────────────────────────────────────────────────────────
-
 class _StatsGrid extends StatelessWidget {
   final List<Signal> signals;
   const _StatsGrid({required this.signals});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final total = signals.length;
     final win = signals.where((s) => s.isTpHit).length;
     final loss = signals.where((s) => s.isSlHit).length;
@@ -179,17 +175,9 @@ class _StatsGrid extends StatelessWidget {
           Expanded(
             child: Column(
               children: [
-                _StatTile(
-                  label: 'TOTAL',
-                  value: total.toString(),
-                  color: AppColors.primary,
-                ),
+                _StatTile(label: l10n.totalLabel, value: total.toString(), color: AppColors.primary),
                 const SizedBox(height: 8),
-                _StatTile(
-                  label: 'LOSS',
-                  value: loss.toString(),
-                  color: AppColors.error,
-                ),
+                _StatTile(label: l10n.lossLabel, value: loss.toString(), color: AppColors.error),
               ],
             ),
           ),
@@ -197,14 +185,10 @@ class _StatsGrid extends StatelessWidget {
           Expanded(
             child: Column(
               children: [
-                _StatTile(
-                  label: 'WIN',
-                  value: win.toString(),
-                  color: AppColors.secondaryContainer,
-                ),
+                _StatTile(label: l10n.winLabel, value: win.toString(), color: AppColors.secondaryContainer),
                 const SizedBox(height: 8),
                 _StatTile(
-                  label: 'WIN RATE',
+                  label: l10n.winRateLabel,
                   value: '${winRate.toStringAsFixed(0)}%',
                   color: AppColors.tertiary,
                 ),

@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../widgets/profile_header.dart';
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../../shared/models/user_model.dart';
@@ -40,7 +41,7 @@ class ProfileScreen extends ConsumerWidget {
           children: [
             const Icon(Icons.terminal, size: 20),
             const SizedBox(width: 8),
-            const Text('TradeGenZ'),
+            Text(context.l10n.profileTitle),
           ],
         ),
         actions: [
@@ -75,11 +76,11 @@ class ProfileScreen extends ConsumerWidget {
             // Account section (hanya untuk affiliate — referral code)
             if (user.isAffiliate) ...[
               _SettingsGroup(
-                title: 'ACCOUNT',
+                title: context.l10n.accountSection,
                 children: [
                   _SettingsRow(
                     icon: Icons.share,
-                    label: 'Referral Code',
+                    label: context.l10n.referralCode,
                     trailing: Row(
                       children: [
                         Container(
@@ -112,9 +113,9 @@ class ProfileScreen extends ConsumerWidget {
                                 ClipboardData(text: user.referralCode!),
                               );
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Referral code copied!'),
-                                  duration: Duration(seconds: 2),
+                                SnackBar(
+                                  content: Text(context.l10n.referralCodeCopied),
+                                  duration: const Duration(seconds: 2),
                                 ),
                               );
                             }
@@ -135,17 +136,17 @@ class ProfileScreen extends ConsumerWidget {
 
             // Support section
             _SettingsGroup(
-              title: 'SUPPORT',
+              title: context.l10n.supportSection,
               children: [
                 _SettingsRow(
                   icon: Icons.chat,
                   iconColor: AppColors.secondaryContainer,
-                  label: 'Contact via WhatsApp',
+                  label: context.l10n.contactWhatsApp,
                   onTap: _launchWhatsApp,
                 ),
                 _SettingsRow(
                   icon: Icons.help_outline,
-                  label: 'Help & FAQ',
+                  label: context.l10n.helpFaq,
                   onTap: () {},
                 ),
               ],
@@ -155,22 +156,22 @@ class ProfileScreen extends ConsumerWidget {
 
             // About section
             _SettingsGroup(
-              title: 'ABOUT',
+              title: context.l10n.aboutSection,
               children: [
                 _SettingsRow(
                   icon: Icons.info_outline,
-                  label: 'App Version',
-                  trailing: Text('1.0.0', style: AppTextStyles.caption),
+                  label: context.l10n.appVersion,
+                  trailing: Text(context.l10n.appVersionNumber, style: AppTextStyles.caption),
                   showChevron: false,
                 ),
                 _SettingsRow(
                   icon: Icons.gavel,
-                  label: 'Privacy Policy',
+                  label: context.l10n.privacyPolicy,
                   onTap: () {},
                 ),
                 _SettingsRow(
                   icon: Icons.description_outlined,
-                  label: 'Terms of Service',
+                  label: context.l10n.termsOfService,
                   onTap: () {},
                 ),
               ],
@@ -187,7 +188,7 @@ class ProfileScreen extends ConsumerWidget {
                 },
                 icon: const Icon(Icons.logout, color: AppColors.error),
                 label: Text(
-                  'LOGOUT ACCOUNT',
+                  context.l10n.logoutAccount,
                   style: GoogleFonts.inter(
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
@@ -225,7 +226,7 @@ class _StatsGrid extends StatelessWidget {
       children: [
         Expanded(
           child: _StatCard(
-            label: 'WIN RATE',
+            label: context.l10n.winRateStat,
             value: user.winRate != null ? '${user.winRate}' : '—',
             unit: '%',
             accentColor: AppColors.secondaryContainer,
@@ -234,7 +235,7 @@ class _StatsGrid extends StatelessWidget {
         const SizedBox(width: 12),
         Expanded(
           child: _StatCard(
-            label: 'TOTAL SIGNALS',
+            label: context.l10n.totalSignalsStat,
             value: user.totalSignals?.toString() ?? '—',
             unit: 'X',
             accentColor: AppColors.primary,
@@ -322,18 +323,18 @@ class _PlanCard extends StatelessWidget {
   Color get _color =>
       user.isAffiliate ? AppColors.purple : AppColors.tertiary;
 
-  String get _planTitle =>
-      user.isAffiliate ? 'Active Affiliate' : 'Active Premium';
-
-  List<String> get _features => [
-    'Real-time High-Frequency Signals',
-    'Institutional Liquidity Heatmaps',
-    'Advanced Volatility Calculator',
-  ];
-
   @override
   Widget build(BuildContext context) {
     if (!user.isPremium) return _FreePlanCard();
+
+    final planTitle = user.isAffiliate
+        ? context.l10n.activeAffiliate
+        : context.l10n.activePremium;
+    final List<String> features = [
+      context.l10n.premiumFeature1,
+      context.l10n.premiumFeature2,
+      context.l10n.premiumFeature3,
+    ];
 
     return Container(
       padding: const EdgeInsets.all(20),
@@ -361,7 +362,7 @@ class _PlanCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    _planTitle.toUpperCase(),
+                    planTitle.toUpperCase(),
                     style: GoogleFonts.inter(
                       fontSize: 16,
                       fontWeight: FontWeight.w900,
@@ -372,7 +373,7 @@ class _PlanCard extends StatelessWidget {
                   if (user.planExpiry != null) ...[
                     const SizedBox(height: 4),
                     Text(
-                      'Expires: ${user.planExpiry}',
+                      context.l10n.planExpires(user.planExpiry!),
                       style: GoogleFonts.jetBrainsMono(
                         fontSize: 11,
                         color: AppColors.onSurfaceVariant,
@@ -385,7 +386,7 @@ class _PlanCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 20),
-          ..._features.map(
+          ...features.map(
             (f) => Padding(
               padding: const EdgeInsets.only(bottom: 12),
               child: Row(
@@ -432,10 +433,10 @@ class _FreePlanCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Upgrade to Premium', style: AppTextStyles.h4),
+                Text(context.l10n.upgradeToPremium, style: AppTextStyles.h4),
                 const SizedBox(height: 4),
                 Text(
-                  'Unlock full signals & real-time alerts',
+                  context.l10n.unlockSignalsAlerts,
                   style: AppTextStyles.caption,
                 ),
               ],
@@ -454,7 +455,7 @@ class _FreePlanCard extends StatelessWidget {
               minimumSize: Size.zero,
             ),
             child: Text(
-              'Upgrade',
+              context.l10n.upgrade,
               style: GoogleFonts.inter(
                 fontSize: 13,
                 fontWeight: FontWeight.w700,

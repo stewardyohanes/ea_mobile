@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tradegenz_app/core/extensions/l10n_extension.dart';
 import 'package:tradegenz_app/core/theme/app_colors.dart';
 import 'package:tradegenz_app/features/auth/providers/auth_provider.dart';
 import 'package:tradegenz_app/features/auth/widgets/login_form_card.dart';
@@ -99,7 +100,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Don't have an account? ",
+                        context.l10n.dontHaveAccount,
                         style: GoogleFonts.inter(
                           fontSize: 14,
                           color: AppColors.onSurfaceVariant,
@@ -108,7 +109,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       GestureDetector(
                         onTap: () => context.push('/register'),
                         child: Text(
-                          'Register Now',
+                          context.l10n.registerNow,
                           style: GoogleFonts.inter(
                             fontSize: 14,
                             fontWeight: FontWeight.w700,

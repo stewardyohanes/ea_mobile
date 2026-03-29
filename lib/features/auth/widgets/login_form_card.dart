@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tradegenz_app/core/extensions/l10n_extension.dart';
 import 'package:tradegenz_app/core/theme/app_colors.dart';
 import 'package:tradegenz_app/core/theme/app_text_styles.dart';
 
@@ -68,7 +69,7 @@ class LoginFormCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Email field
-                const _FieldLabel('EMAIL TERMINAL ID'),
+                _FieldLabel(context.l10n.loginEmailLabel),
                 const SizedBox(height: 8),
                 _MonoTextField(
                   controller: emailController,
@@ -83,11 +84,11 @@ class LoginFormCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const _FieldLabel('ACCESS CIPHER'),
+                    _FieldLabel(context.l10n.loginPasswordLabel),
                     GestureDetector(
                       onTap: onForgotPassword,
                       child: Text(
-                        'Forgot Password?',
+                        context.l10n.forgotPasswordLink,
                         style: GoogleFonts.inter(
                           fontSize: 12,
                           fontWeight: FontWeight.w700,
@@ -277,7 +278,7 @@ class _LoginButton extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'INITIATE LOGIN',
+                    context.l10n.initiateLogin,
                     style: GoogleFonts.inter(
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
@@ -331,7 +332,7 @@ class _IntegrityFooter extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  'SYSTEM INTEGRITY: OPTIMAL',
+                  context.l10n.systemIntegrity,
                   style: GoogleFonts.jetBrainsMono(
                     fontSize: 9,
                     color: AppColors.outline,
@@ -346,7 +347,7 @@ class _IntegrityFooter extends StatelessWidget {
                 const Icon(Icons.security, size: 11, color: AppColors.tertiary),
                 const SizedBox(width: 4),
                 Text(
-                  'SSL VERIFIED',
+                  context.l10n.sslVerified,
                   style: GoogleFonts.jetBrainsMono(
                     fontSize: 9,
                     color: AppColors.outline,

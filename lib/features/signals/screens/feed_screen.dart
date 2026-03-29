@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tradegenz_app/core/extensions/l10n_extension.dart';
 import 'package:tradegenz_app/features/signals/providers/signal_provider.dart';
 import '../widgets/signal_card.dart';
 import '../widgets/market_session_widget.dart';
@@ -45,6 +46,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final signalsState = ref.watch(signalsProvider);
 
     return Scaffold(
@@ -55,7 +57,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
             const Icon(Icons.terminal, size: 20),
             const SizedBox(width: 8),
             Text(
-              'TradeGenZ',
+              l10n.signalFeedTitle,
               style: AppTextStyles.h4.copyWith(
                 color: AppColors.textPrimary,
                 fontWeight: FontWeight.w800,
@@ -73,19 +75,17 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
       ),
       body: Column(
         children: [
-          // Horizontal scrollable filter chips
           _FilterChipsRow(
             activeFilter: _activeFilter,
             onFilterChanged: _onFilterChanged,
           ),
-          // Main content
           Expanded(
             child: RefreshIndicator(
               color: AppColors.primary,
               backgroundColor: AppColors.surface,
               onRefresh: () =>
                   ref.read(signalsProvider.notifier).fetchInitial(),
-              child: _buildBody(signalsState),
+              child: _buildBody(context, signalsState),
             ),
           ),
         ],
@@ -93,8 +93,8 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
     );
   }
 
-  Widget _buildBody(SignalsState state) {
-    // Filter signals by active symbol filter
+  Widget _buildBody(BuildContext context, SignalsState state) {
+    final l10n = context.l10n;
     final filtered = _activeFilter == 'ALL'
         ? state.signals
         : state.signals
@@ -118,7 +118,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
             ElevatedButton(
               onPressed: () =>
                   ref.read(signalsProvider.notifier).fetchInitial(),
-              child: const Text('Retry'),
+              child: Text(l10n.retry),
             ),
           ],
         ),
@@ -136,15 +136,12 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
               color: AppColors.textMuted,
             ),
             const SizedBox(height: 16),
-            Text(
-              'No signals yet',
-              style: AppTextStyles.body,
-            ),
+            Text(l10n.noSignalsYet, style: AppTextStyles.body),
             const SizedBox(height: 8),
             Text(
               _activeFilter == 'ALL'
-                  ? 'Check back later for new signals'
-                  : 'No signals for $_activeFilter',
+                  ? l10n.noSignalsYetSubtitle
+                  : l10n.noSignalsForSymbol(_activeFilter),
               style: AppTextStyles.caption,
             ),
           ],
@@ -173,7 +170,6 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
   }
 }
 
-// --- Horizontal scrollable filter chips ---
 class _FilterChipsRow extends StatelessWidget {
   final String activeFilter;
   final ValueChanged<String> onFilterChanged;

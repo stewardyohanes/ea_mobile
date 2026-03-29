@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../shared/models/user_model.dart';
+import '../../../../core/extensions/l10n_extension.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 
@@ -43,12 +44,12 @@ class _ActivePlanCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                user.isAffiliate ? 'Affiliate Plan' : 'Premium Plan',
+                user.isAffiliate ? context.l10n.affiliatePlanCard : context.l10n.premiumPlanCard,
                 style: AppTextStyles.h3.copyWith(color: _color),
               ),
               if (user.planExpiry != null)
                 Text(
-                  'Active until ${user.planExpiry}',
+                  context.l10n.planActiveUntil(user.planExpiry!),
                   style: AppTextStyles.caption,
                 ),
             ],
@@ -77,22 +78,22 @@ class _UpgradeCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Expanded(
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Upgrade to Premium',
-                  style: TextStyle(
+                  context.l10n.upgradeToPremium,
+                  style: const TextStyle(
                     color: AppColors.textPrimary,
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                SizedBox(height: 4),
+                const SizedBox(height: 4),
                 Text(
-                  'Get unlimited signals & real-time alerts',
-                  style: TextStyle(color: AppColors.textMuted, fontSize: 12),
+                  context.l10n.getPremiumUnlock,
+                  style: const TextStyle(color: AppColors.textMuted, fontSize: 12),
                 ),
               ],
             ),
@@ -107,9 +108,9 @@ class _UpgradeCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
-            child: const Text(
-              'Upgrade',
-              style: TextStyle(
+            child: Text(
+              context.l10n.upgrade,
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 13,
                 fontWeight: FontWeight.w600,

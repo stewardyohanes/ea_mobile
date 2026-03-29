@@ -6,6 +6,7 @@ import 'package:tradegenz_app/features/calculator/widgets/result_card.dart';
 import 'package:tradegenz_app/features/calculator/widgets/risk_slider.dart';
 import 'package:tradegenz_app/features/calculator/widgets/section_card.dart';
 
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 
@@ -26,11 +27,11 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   double? _lotSize;
   double? _riskAmount;
 
-  String get _riskLabel {
-    if (_riskPercent <= 1) return 'Conservative';
-    if (_riskPercent <= 2) return 'Moderate';
-    if (_riskPercent <= 3) return 'Aggressive';
-    return 'Very High Risk';
+  String _riskLabel(BuildContext context) {
+    if (_riskPercent <= 1) return context.l10n.riskLevelConservative;
+    if (_riskPercent <= 2) return context.l10n.riskLevelModerate;
+    if (_riskPercent <= 3) return context.l10n.riskLevelAggressive;
+    return context.l10n.riskLevelVeryHigh;
   }
 
   Color get _riskColor {
@@ -132,14 +133,14 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           children: [
             const Icon(Icons.terminal, size: 20),
             const SizedBox(width: 8),
-            const Text('Lot Size Calculator'),
+            Text(context.l10n.calculatorTitle),
           ],
         ),
         actions: [
           IconButton(
             icon: const Icon(Icons.restart_alt_rounded),
             onPressed: _reset,
-            tooltip: 'Reset',
+            tooltip: context.l10n.reset,
           ),
         ],
       ),
@@ -153,7 +154,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
               riskAmount: _riskAmount,
               riskPercent: _riskPercent,
               riskColor: _riskColor,
-              riskLabel: _riskLabel,
+              riskLabel: _riskLabel(context),
               pair: _selectedPair,
             ).animate().fadeIn(duration: 400.ms),
           ),
@@ -169,7 +170,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
               child: Column(
                 children: [
                   SectionCard(
-                    title: 'Trading Pair',
+                    title: context.l10n.tradingPair,
                     icon: Icons.currency_exchange,
                     child: PairSelector(
                       selectedPair: _selectedPair,
@@ -183,7 +184,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   const SizedBox(height: 12),
 
                   SectionCard(
-                    title: 'Account Balance',
+                    title: context.l10n.accountBalance,
                     icon: Icons.account_balance_wallet_rounded,
                     child: TextField(
                       controller: _balanceController,
@@ -203,7 +204,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   const SizedBox(height: 12),
 
                   SectionCard(
-                    title: 'Risk per Trade',
+                    title: context.l10n.riskPerTrade,
                     icon: Icons.shield_rounded,
                     iconColor: _riskColor,
                     trailing: Container(
@@ -216,7 +217,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
-                        _riskLabel,
+                        _riskLabel(context),
                         style: AppTextStyles.caption.copyWith(
                           color: _riskColor,
                           fontWeight: FontWeight.w600,
@@ -226,7 +227,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                     child: RiskSlider(
                       value: _riskPercent,
                       riskColor: _riskColor,
-                      riskLabel: _riskLabel,
+                      riskLabel: _riskLabel(context),
                       onChanged: (value) {
                         setState(() => _riskPercent = value);
                         _calculate();
@@ -237,7 +238,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   const SizedBox(height: 12),
 
                   SectionCard(
-                    title: 'Stop Loss',
+                    title: context.l10n.stopLoss,
                     icon: Icons.remove_circle_outline_rounded,
                     iconColor: AppColors.error,
                     child: TextField(
@@ -253,7 +254,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                       style: AppTextStyles.h3,
                       decoration: _inputDecoration(
                         hint: '50',
-                        suffix: 'pips',
+                        suffix: context.l10n.pipsUnit,
                         focusColor: AppColors.error,
                       ),
                     ),
@@ -291,7 +292,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                         size: 20,
                       ),
                       label: Text(
-                        'CALCULATE POSITION',
+                        context.l10n.calculatePosition,
                         style: AppTextStyles.label.copyWith(
                           color: AppColors.onPrimary,
                           fontWeight: FontWeight.w700,

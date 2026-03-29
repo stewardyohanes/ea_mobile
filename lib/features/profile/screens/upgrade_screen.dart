@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../widgets/plan_card_item.dart';
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 
@@ -17,17 +18,17 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
   // Toggle billing period — monthly atau yearly
   bool _isYearly = false;
 
-  Future<void> _contactWhatsApp(String plan, String price) async {
+  Future<void> _contactWhatsApp(BuildContext context, String plan, String price) async {
     final message = Uri.encodeComponent(
-      'Halo, saya ingin upgrade ke plan $plan ($price) di TradeGenZ.',
+      context.l10n.whatsappUpgradeMessage(plan, price),
     );
     final uri = Uri.parse('https://wa.me/62XXXXXXXXXXX?text=$message');
     if (await canLaunchUrl(uri)) await launchUrl(uri);
   }
 
-  Future<void> _contactWhatsAppAffiliate() async {
+  Future<void> _contactWhatsAppAffiliate(BuildContext context) async {
     final message = Uri.encodeComponent(
-      'Halo, saya ingin aktivasi Affiliate Plan di TradeGenZ.',
+      context.l10n.whatsappAffiliateMessage,
     );
     final uri = Uri.parse('https://wa.me/62XXXXXXXXXXX?text=$message');
     if (await canLaunchUrl(uri)) await launchUrl(uri);
@@ -37,7 +38,7 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Upgrade Plan'),
+        title: Text(context.l10n.upgradePlanTitle),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
@@ -78,7 +79,7 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
                       ),
                       const SizedBox(width: 6),
                       Text(
-                        'PROPRIETARY ALPHA ACCESS',
+                        context.l10n.proprietaryAlphaAccess,
                         style: GoogleFonts.inter(
                           fontSize: 10,
                           fontWeight: FontWeight.w700,
@@ -89,10 +90,10 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
                     ],
                   ),
                   const SizedBox(height: 8),
-                  Text('Upgrade to Premium', style: AppTextStyles.h2),
+                  Text(context.l10n.upgradePremiumTitle, style: AppTextStyles.h2),
                   const SizedBox(height: 6),
                   Text(
-                    'Unlock high-velocity data execution and algorithmic signals built for the next generation of quants.',
+                    context.l10n.upgradePremiumSubtitle,
                     style: AppTextStyles.body.copyWith(
                       color: AppColors.onSurfaceVariant,
                     ),
@@ -114,15 +115,15 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   _BillingTab(
-                    label: 'Monthly',
+                    label: context.l10n.billingMonthly,
                     isActive: !_isYearly,
                     onTap: () => setState(() => _isYearly = false),
                   ),
                   _BillingTab(
-                    label: 'Yearly',
+                    label: context.l10n.billingYearly,
                     isActive: _isYearly,
                     onTap: () => setState(() => _isYearly = true),
-                    badge: 'Save 33%',
+                    badge: context.l10n.save33,
                   ),
                 ],
               ),
@@ -132,66 +133,67 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
 
             // FREE Plan
             PlanCardItem(
-              name: 'Free',
-              price: '\$0',
-              period: '/ forever',
+              name: context.l10n.planFree,
+              price: context.l10n.priceFree,
+              period: context.l10n.priceForever,
               color: AppColors.textMuted,
-              features: const [
-                'Realtime signal direction (BUY/SELL)',
-                'See trading pair & status',
-                'Signal history (limited)',
+              features: [
+                context.l10n.freePlanFeature1,
+                context.l10n.freePlanFeature2,
+                context.l10n.freePlanFeature3,
               ],
-              lockedFeatures: const [
-                'Entry price, SL & TP hidden',
-                'No push notifications',
+              lockedFeatures: [
+                context.l10n.freePlanFeature4,
+                context.l10n.freePlanFeature5,
               ],
               onTap: () => context.pop(),
-              buttonLabel: 'Current Plan',
+              buttonLabel: context.l10n.currentPlan,
             ),
 
             // PREMIUM Plan
             PlanCardItem(
-              name: 'Premium',
-              price: _isYearly ? '\$80' : '\$10',
-              period: _isYearly ? '/ year (\$6.7/mo)' : '/ month',
+              name: context.l10n.planPremium,
+              price: _isYearly ? context.l10n.pricePremiumYearly : context.l10n.pricePremiumMonthly,
+              period: _isYearly ? context.l10n.pricePerYear : context.l10n.pricePerMonth,
               color: AppColors.primary,
               isPopular: true,
-              features: const [
-                'Full signal detail (Entry, SL, TP)',
-                'Realtime push notifications',
-                'All trading pairs',
-                'Complete signal history',
-                'No ads',
+              features: [
+                context.l10n.premiumPlanFeature1,
+                context.l10n.premiumPlanFeature2,
+                context.l10n.premiumPlanFeature3,
+                context.l10n.premiumPlanFeature4,
+                context.l10n.premiumPlanFeature5,
               ],
               lockedFeatures: const [],
               onTap: () => _contactWhatsApp(
+                context,
                 'Premium',
                 _isYearly ? '\$80/year' : '\$10/month',
               ),
-              buttonLabel: 'Get Premium',
+              buttonLabel: context.l10n.getPremium,
             ),
 
             // AFFILIATE Plan
             PlanCardItem(
-              name: 'Affiliate',
-              price: 'FREE',
-              period: '(via broker)',
+              name: context.l10n.planAffiliate,
+              price: context.l10n.priceAffiliate,
+              period: context.l10n.priceViaBroker,
               color: AppColors.purple,
-              features: const [
-                'Everything in Premium',
-                'Register via our broker link',
-                'No monthly fee',
-                'Active trading required',
+              features: [
+                context.l10n.affiliatePlanFeature1,
+                context.l10n.affiliatePlanFeature2,
+                context.l10n.affiliatePlanFeature3,
+                context.l10n.affiliatePlanFeature4,
               ],
               lockedFeatures: const [],
-              onTap: _contactWhatsAppAffiliate,
-              buttonLabel: 'Register via Broker',
+              onTap: () => _contactWhatsAppAffiliate(context),
+              buttonLabel: context.l10n.registerViaBroker,
             ),
 
             const SizedBox(height: 16),
 
             Text(
-              'Contact us via WhatsApp to activate your plan',
+              context.l10n.contactWhatsAppActivate,
               style: AppTextStyles.caption,
               textAlign: TextAlign.center,
             ),

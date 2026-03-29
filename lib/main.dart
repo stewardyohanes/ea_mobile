@@ -1,7 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tradegenz_app/app/router.dart';
+import 'package:tradegenz_app/core/extensions/l10n_extension.dart';
 import 'package:tradegenz_app/core/notifications/fcm_service.dart';
 import 'package:tradegenz_app/core/theme/app_theme.dart';
 import 'package:tradegenz_app/features/auth/providers/auth_provider.dart';
@@ -48,6 +50,13 @@ class _TradeGenZAppState extends ConsumerState<TradeGenZApp> {
       debugShowCheckedModeBanner: false,
       routerConfig: router,
       theme: AppTheme.dark,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: AppLocalizations.supportedLocales,
     );
   }
 }

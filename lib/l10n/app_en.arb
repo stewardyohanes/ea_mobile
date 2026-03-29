@@ -1,0 +1,703 @@
+{
+  "@@locale": "en",
+
+  "appName": "TradeGenZ",
+  "@appName": {"description": "Application name"},
+
+  "institutionalGrade": "INSTITUTIONAL GRADE ALGORITHMS  •  NO-LAG EXECUTION",
+  "@institutionalGrade": {"description": "Onboarding tagline"},
+
+  "onboardingTitle": "TRADEGENZ",
+  "@onboardingTitle": {},
+
+  "onboardingSubtitle": "Smart Forex Signals\nfrom MetaTrader EA",
+  "@onboardingSubtitle": {},
+
+  "onboardingDescription": "Advanced algorithmic intelligence translated into actionable high-probability trade setups for the modern retail trader.",
+  "@onboardingDescription": {},
+
+  "featureSignalsTitle": "Real-time EA Signals",
+  "@featureSignalsTitle": {},
+
+  "featureSignalsDesc": "Instant execution alerts from our proprietary MT4/MT5 algorithms.",
+  "@featureSignalsDesc": {},
+
+  "featureCalculatorTitle": "Lot Size Calculator",
+  "@featureCalculatorTitle": {},
+
+  "featureCalculatorDesc": "Risk management precision. Calculate position sizes in milliseconds.",
+  "@featureCalculatorDesc": {},
+
+  "featureAnalyticsTitle": "Win Rate Analytics",
+  "@featureAnalyticsTitle": {},
+
+  "featureAnalyticsDesc": "Transparent historical performance with deep quantitative data.",
+  "@featureAnalyticsDesc": {},
+
+  "getStarted": "Get Started",
+  "@getStarted": {},
+
+  "dontHaveAccount": "Don't have an account? ",
+  "@dontHaveAccount": {},
+
+  "registerNow": "Register Now",
+  "@registerNow": {},
+
+  "createAccount": "Create Account",
+  "@createAccount": {},
+
+  "createAccountSubtitle": "Join TradeGenZ and start trading smarter",
+  "@createAccountSubtitle": {},
+
+  "fullName": "Full Name",
+  "@fullName": {},
+
+  "enterFullName": "Enter your full name",
+  "@enterFullName": {},
+
+  "email": "Email",
+  "@email": {},
+
+  "enterEmail": "Enter your email",
+  "@enterEmail": {},
+
+  "password": "Password",
+  "@password": {},
+
+  "passwordHint": "Min. 8 characters",
+  "@passwordHint": {},
+
+  "confirmPassword": "Confirm Password",
+  "@confirmPassword": {},
+
+  "reEnterPassword": "Re-enter your password",
+  "@reEnterPassword": {},
+
+  "allFieldsRequired": "All fields are required",
+  "@allFieldsRequired": {},
+
+  "passwordMinLength": "Password minimum 8 characters",
+  "@passwordMinLength": {},
+
+  "passwordsDoNotMatch": "Passwords do not match",
+  "@passwordsDoNotMatch": {},
+
+  "alreadyHaveAccount": "Already have an account? ",
+  "@alreadyHaveAccount": {},
+
+  "login": "Login",
+  "@login": {},
+
+  "accountRecovery": "Account Recovery",
+  "@accountRecovery": {},
+
+  "forgotPasswordSubtitle": "Review the three-step flow for resetting secure access to your TradeGenZ terminal.",
+  "@forgotPasswordSubtitle": {},
+
+  "step01": "STEP_01",
+  "@step01": {},
+
+  "step02": "STEP_02",
+  "@step02": {},
+
+  "enterEmailStep": "Enter Email",
+  "@enterEmailStep": {},
+
+  "forgotPasswordStep1Desc": "Input your registered terminal identifier to initiate the account recovery sequence.",
+  "@forgotPasswordStep1Desc": {},
+
+  "terminalAddress": "TERMINAL ADDRESS",
+  "@terminalAddress": {},
+
+  "terminalAddressHint": "operator@tradegenz.io",
+  "@terminalAddressHint": {},
+
+  "failedToSendOtp": "Failed to send OTP. Please check your internet connection.",
+  "@failedToSendOtp": {},
+
+  "sendOtp": "SEND OTP",
+  "@sendOtp": {},
+
+  "verificationSent": "Verification Sent",
+  "@verificationSent": {},
+
+  "forgotPasswordStep2Desc": "An encrypted sync key has been dispatched to ",
+  "@forgotPasswordStep2Desc": {},
+
+  "enterOtpCode": "ENTER OTP CODE",
+  "@enterOtpCode": {},
+
+  "enterOtpOnNextScreen": "Enter 6-digit OTP on next screen",
+  "@enterOtpOnNextScreen": {},
+
+  "verifyOtp": "VERIFY OTP",
+  "@verifyOtp": {},
+
+  "otpTitle": "Enter OTP Code",
+  "@otpTitle": {},
+
+  "otpSentTo": "OTP code has been sent to ",
+  "@otpSentTo": {},
+
+  "otpHint": "Enter 6-digit OTP code",
+  "@otpHint": {},
+
+  "verify": "Verify",
+  "@verify": {},
+
+  "didNotReceiveCode": "Didn't receive the code? ",
+  "@didNotReceiveCode": {},
+
+  "resend": "Resend",
+  "@resend": {},
+
+  "otpResentSuccess": "OTP resent successfully",
+  "@otpResentSuccess": {},
+
+  "otpResentFailed": "Failed to resend OTP. Please try again.",
+  "@otpResentFailed": {},
+
+  "resetPassword": "Reset Password",
+  "@resetPassword": {},
+
+  "resetPasswordSubtitle": "Set a new strong password for your trading terminal. Use at least 12 characters with symbols.",
+  "@resetPasswordSubtitle": {},
+
+  "newPassword": "NEW PASSWORD",
+  "@newPassword": {},
+
+  "confirmPasswordLabel": "CONFIRM PASSWORD",
+  "@confirmPasswordLabel": {},
+
+  "passwordsDontMatch": "Passwords do not match",
+  "@passwordsDontMatch": {},
+
+  "passwordTooShort": "Password must be at least 8 characters",
+  "@passwordTooShort": {},
+
+  "passwordChangedSuccess": "Password changed successfully",
+  "@passwordChangedSuccess": {},
+
+  "invalidOrExpiredOtp": "Invalid or expired OTP code",
+  "@invalidOrExpiredOtp": {},
+
+  "somethingWentWrong": "Something went wrong. Please try again.",
+  "@somethingWentWrong": {},
+
+  "passwordStrengthWeak": "Weak",
+  "@passwordStrengthWeak": {},
+
+  "passwordStrengthMedium": "Medium",
+  "@passwordStrengthMedium": {},
+
+  "passwordStrengthStrong": "Strong",
+  "@passwordStrengthStrong": {},
+
+  "savePassword": "SAVE PASSWORD",
+  "@savePassword": {},
+
+  "encryptionLabel": "ENCRYPTION",
+  "@encryptionLabel": {},
+
+  "encryptionValue": "AES-256 BIT",
+  "@encryptionValue": {},
+
+  "protocolLabel": "PROTOCOL",
+  "@protocolLabel": {},
+
+  "mfaReady": "MFA READY",
+  "@mfaReady": {},
+
+  "riskDisclaimerTitle": "Risk Disclaimer",
+  "@riskDisclaimerTitle": {},
+
+  "disclaimerIntro": "Please read this disclaimer carefully before using TradeGenZ.",
+  "@disclaimerIntro": {},
+
+  "disclaimerSection1Title": "1. No Financial Advice",
+  "@disclaimerSection1Title": {},
+
+  "disclaimerSection1Body": "The trading signals provided by TradeGenZ are for informational purposes only and do not constitute financial advice. TradeGenZ is not a licensed financial advisor, broker, or dealer.",
+  "@disclaimerSection1Body": {},
+
+  "disclaimerSection2Title": "2. Risk of Loss",
+  "@disclaimerSection2Title": {},
+
+  "disclaimerSection2Body": "Trading in forex, commodities, and other financial instruments involves a high level of risk and may not be suitable for all investors. You may lose some or all of your invested capital. Never trade with money you cannot afford to lose.",
+  "@disclaimerSection2Body": {},
+
+  "disclaimerSection3Title": "3. Past Performance",
+  "@disclaimerSection3Title": {},
+
+  "disclaimerSection3Body": "Past performance of any trading signal or strategy is not indicative of future results. Markets are unpredictable and no signal service can guarantee profits.",
+  "@disclaimerSection3Body": {},
+
+  "disclaimerSection4Title": "4. Your Responsibility",
+  "@disclaimerSection4Title": {},
+
+  "disclaimerSection4Body": "You are solely responsible for your trading decisions. TradeGenZ and its team shall not be held liable for any losses incurred as a result of using our signals or services.",
+  "@disclaimerSection4Body": {},
+
+  "disclaimerSection5Title": "5. Signal Accuracy",
+  "@disclaimerSection5Title": {},
+
+  "disclaimerSection5Body": "While we strive to provide accurate and timely signals, TradeGenZ does not guarantee the accuracy, completeness, or timeliness of any signal. Market conditions can change rapidly.",
+  "@disclaimerSection5Body": {},
+
+  "disclaimerSection6Title": "6. Independent Verification",
+  "@disclaimerSection6Title": {},
+
+  "disclaimerSection6Body": "We strongly recommend that you conduct your own research and analysis before executing any trade. Consider consulting with a qualified financial advisor if needed.",
+  "@disclaimerSection6Body": {},
+
+  "disclaimerSection7Title": "7. Regulatory Compliance",
+  "@disclaimerSection7Title": {},
+
+  "disclaimerSection7Body": "It is your responsibility to ensure that using TradeGenZ services complies with the laws and regulations in your jurisdiction. TradeGenZ is not responsible for any regulatory issues.",
+  "@disclaimerSection7Body": {},
+
+  "scrollToBottom": "↓ Scroll to bottom to continue",
+  "@scrollToBottom": {},
+
+  "agreeToDisclaimer": "I have read and agree to the risk disclaimer",
+  "@agreeToDisclaimer": {},
+
+  "understandAndAccept": "I Understand & Accept",
+  "@understandAndAccept": {},
+
+  "signalFeedTitle": "TradeGenZ",
+  "@signalFeedTitle": {},
+
+  "noSignalsYet": "No signals yet",
+  "@noSignalsYet": {},
+
+  "noSignalsYetSubtitle": "Check back later for new signals",
+  "@noSignalsYetSubtitle": {},
+
+  "noSignalsForSymbol": "No signals for {symbol}",
+  "@noSignalsForSymbol": {
+    "placeholders": {
+      "symbol": {"type": "String"}
+    }
+  },
+
+  "retry": "Retry",
+  "@retry": {},
+
+  "failedToLoadSignal": "Failed to load signal",
+  "@failedToLoadSignal": {},
+
+  "statusActive": "ACTIVE",
+  "@statusActive": {},
+
+  "statusTpHit": "TP HIT",
+  "@statusTpHit": {},
+
+  "statusSlHit": "SL HIT",
+  "@statusSlHit": {},
+
+  "statusClosed": "CLOSED",
+  "@statusClosed": {},
+
+  "entry1Label": "ENTRY 1",
+  "@entry1Label": {},
+
+  "entry2Label": "ENTRY 2",
+  "@entry2Label": {},
+
+  "stopLossLabel": "STOP LOSS",
+  "@stopLossLabel": {},
+
+  "takeProfitLabel": "TAKE PROFIT",
+  "@takeProfitLabel": {},
+
+  "riskRewardLabel": "RISK/REWARD",
+  "@riskRewardLabel": {},
+
+  "trendStrengthLabel": "TREND STRENGTH",
+  "@trendStrengthLabel": {},
+
+  "unlockSignalDetail": "Unlock Full Signal Detail",
+  "@unlockSignalDetail": {},
+
+  "upgradeToSeeDetail": "Upgrade to see Entry, SL & TP levels",
+  "@upgradeToSeeDetail": {},
+
+  "executeSignal": "EXECUTE SIGNAL",
+  "@executeSignal": {},
+
+  "signalHistoryTitle": "Signal History",
+  "@signalHistoryTitle": {},
+
+  "totalLabel": "TOTAL",
+  "@totalLabel": {},
+
+  "winLabel": "WIN",
+  "@winLabel": {},
+
+  "lossLabel": "LOSS",
+  "@lossLabel": {},
+
+  "winRateLabel": "WIN RATE",
+  "@winRateLabel": {},
+
+  "noSignalsFound": "No signals found",
+  "@noSignalsFound": {},
+
+  "noCompletedSignalsYet": "No completed signals yet",
+  "@noCompletedSignalsYet": {},
+
+  "noFilterSignalsFound": "No {filter} signals found",
+  "@noFilterSignalsFound": {
+    "placeholders": {
+      "filter": {"type": "String"}
+    }
+  },
+
+  "timeJustNow": "Just now",
+  "@timeJustNow": {},
+
+  "timeDaysAgo": "{count}d ago",
+  "@timeDaysAgo": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+
+  "timeHoursAgo": "{count}h ago",
+  "@timeHoursAgo": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+
+  "timeMinutesAgo": "{count}m ago",
+  "@timeMinutesAgo": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+
+  "upgradeToSeeEntrySlTp": "Upgrade to see Entry, SL & TP",
+  "@upgradeToSeeEntrySlTp": {},
+
+  "entryPriceLabel": "ENTRY PRICE",
+  "@entryPriceLabel": {},
+
+  "takeProfitShort": "TAKEPROFIT",
+  "@takeProfitShort": {},
+
+  "riskRewardRatio": "R:R 1:{ratio}",
+  "@riskRewardRatio": {
+    "placeholders": {
+      "ratio": {"type": "String"}
+    }
+  },
+
+  "pipsLabel": "Pips",
+  "@pipsLabel": {},
+
+  "entryShort": "ENTRY",
+  "@entryShort": {},
+
+  "exitLabel": "EXIT",
+  "@exitLabel": {},
+
+  "rrLabel": "R:R",
+  "@rrLabel": {},
+
+  "filterAll": "ALL",
+  "@filterAll": {},
+
+  "filterTpHit": "TP HIT",
+  "@filterTpHit": {},
+
+  "filterSlHit": "SL HIT",
+  "@filterSlHit": {},
+
+  "profileTitle": "TradeGenZ",
+  "@profileTitle": {},
+
+  "winRateStat": "WIN RATE",
+  "@winRateStat": {},
+
+  "totalSignalsStat": "TOTAL SIGNALS",
+  "@totalSignalsStat": {},
+
+  "accountSection": "ACCOUNT",
+  "@accountSection": {},
+
+  "referralCode": "Referral Code",
+  "@referralCode": {},
+
+  "referralCodeCopied": "Referral code copied!",
+  "@referralCodeCopied": {},
+
+  "supportSection": "SUPPORT",
+  "@supportSection": {},
+
+  "contactWhatsApp": "Contact via WhatsApp",
+  "@contactWhatsApp": {},
+
+  "helpFaq": "Help & FAQ",
+  "@helpFaq": {},
+
+  "aboutSection": "ABOUT",
+  "@aboutSection": {},
+
+  "appVersion": "App Version",
+  "@appVersion": {},
+
+  "appVersionNumber": "1.0.0",
+  "@appVersionNumber": {},
+
+  "privacyPolicy": "Privacy Policy",
+  "@privacyPolicy": {},
+
+  "termsOfService": "Terms of Service",
+  "@termsOfService": {},
+
+  "logoutAccount": "LOGOUT ACCOUNT",
+  "@logoutAccount": {},
+
+  "activeAffiliate": "Active Affiliate",
+  "@activeAffiliate": {},
+
+  "activePremium": "Active Premium",
+  "@activePremium": {},
+
+  "planExpires": "Expires: {date}",
+  "@planExpires": {
+    "placeholders": {
+      "date": {"type": "String"}
+    }
+  },
+
+  "premiumFeature1": "Real-time High-Frequency Signals",
+  "@premiumFeature1": {},
+
+  "premiumFeature2": "Institutional Liquidity Heatmaps",
+  "@premiumFeature2": {},
+
+  "premiumFeature3": "Advanced Volatility Calculator",
+  "@premiumFeature3": {},
+
+  "upgradeToPremium": "Upgrade to Premium",
+  "@upgradeToPremium": {},
+
+  "unlockSignalsAlerts": "Unlock full signals & real-time alerts",
+  "@unlockSignalsAlerts": {},
+
+  "upgrade": "Upgrade",
+  "@upgrade": {},
+
+  "upgradePlanTitle": "Upgrade Plan",
+  "@upgradePlanTitle": {},
+
+  "proprietaryAlphaAccess": "PROPRIETARY ALPHA ACCESS",
+  "@proprietaryAlphaAccess": {},
+
+  "upgradePremiumTitle": "Upgrade to Premium",
+  "@upgradePremiumTitle": {},
+
+  "upgradePremiumSubtitle": "Unlock high-velocity data execution and algorithmic signals built for the next generation of quants.",
+  "@upgradePremiumSubtitle": {},
+
+  "billingMonthly": "Monthly",
+  "@billingMonthly": {},
+
+  "billingYearly": "Yearly",
+  "@billingYearly": {},
+
+  "save33": "Save 33%",
+  "@save33": {},
+
+  "planFree": "Free",
+  "@planFree": {},
+
+  "priceFree": "$0",
+  "@priceFree": {},
+
+  "priceForever": "/ forever",
+  "@priceForever": {},
+
+  "freePlanFeature1": "Realtime signal direction (BUY/SELL)",
+  "@freePlanFeature1": {},
+
+  "freePlanFeature2": "See trading pair & status",
+  "@freePlanFeature2": {},
+
+  "freePlanFeature3": "Signal history (limited)",
+  "@freePlanFeature3": {},
+
+  "freePlanFeature4": "Entry price, SL & TP hidden",
+  "@freePlanFeature4": {},
+
+  "freePlanFeature5": "No push notifications",
+  "@freePlanFeature5": {},
+
+  "currentPlan": "Current Plan",
+  "@currentPlan": {},
+
+  "planPremium": "Premium",
+  "@planPremium": {},
+
+  "pricePremiumMonthly": "$10",
+  "@pricePremiumMonthly": {},
+
+  "pricePerMonth": "/ month",
+  "@pricePerMonth": {},
+
+  "pricePremiumYearly": "$80",
+  "@pricePremiumYearly": {},
+
+  "pricePerYear": "/ year ($6.7/mo)",
+  "@pricePerYear": {},
+
+  "premiumPlanFeature1": "Full signal detail (Entry, SL, TP)",
+  "@premiumPlanFeature1": {},
+
+  "premiumPlanFeature2": "Realtime push notifications",
+  "@premiumPlanFeature2": {},
+
+  "premiumPlanFeature3": "All trading pairs",
+  "@premiumPlanFeature3": {},
+
+  "premiumPlanFeature4": "Complete signal history",
+  "@premiumPlanFeature4": {},
+
+  "premiumPlanFeature5": "No ads",
+  "@premiumPlanFeature5": {},
+
+  "getPremium": "Get Premium",
+  "@getPremium": {},
+
+  "planAffiliate": "Affiliate",
+  "@planAffiliate": {},
+
+  "priceAffiliate": "FREE",
+  "@priceAffiliate": {},
+
+  "priceViaBroker": "(via broker)",
+  "@priceViaBroker": {},
+
+  "affiliatePlanFeature1": "Everything in Premium",
+  "@affiliatePlanFeature1": {},
+
+  "affiliatePlanFeature2": "Register via our broker link",
+  "@affiliatePlanFeature2": {},
+
+  "affiliatePlanFeature3": "No monthly fee",
+  "@affiliatePlanFeature3": {},
+
+  "affiliatePlanFeature4": "Active trading required",
+  "@affiliatePlanFeature4": {},
+
+  "registerViaBroker": "Register via Broker",
+  "@registerViaBroker": {},
+
+  "contactWhatsAppActivate": "Contact us via WhatsApp to activate your plan",
+  "@contactWhatsAppActivate": {},
+
+  "affiliatePlanCard": "Affiliate Plan",
+  "@affiliatePlanCard": {},
+
+  "premiumPlanCard": "Premium Plan",
+  "@premiumPlanCard": {},
+
+  "planActiveUntil": "Active until {date}",
+  "@planActiveUntil": {
+    "placeholders": {
+      "date": {"type": "String"}
+    }
+  },
+
+  "getPremiumUnlock": "Get unlimited signals & real-time alerts",
+  "@getPremiumUnlock": {},
+
+  "calculatorTitle": "Lot Size Calculator",
+  "@calculatorTitle": {},
+
+  "reset": "Reset",
+  "@reset": {},
+
+  "tradingPair": "Trading Pair",
+  "@tradingPair": {},
+
+  "accountBalance": "Account Balance",
+  "@accountBalance": {},
+
+  "riskPerTrade": "Risk per Trade",
+  "@riskPerTrade": {},
+
+  "riskLevelConservative": "Conservative",
+  "@riskLevelConservative": {},
+
+  "riskLevelModerate": "Moderate",
+  "@riskLevelModerate": {},
+
+  "riskLevelAggressive": "Aggressive",
+  "@riskLevelAggressive": {},
+
+  "riskLevelVeryHigh": "Very High Risk",
+  "@riskLevelVeryHigh": {},
+
+  "stopLoss": "Stop Loss",
+  "@stopLoss": {},
+
+  "pipsUnit": "pips",
+  "@pipsUnit": {},
+
+  "calculatePosition": "CALCULATE POSITION",
+  "@calculatePosition": {},
+
+  "recommendedPositionSize": "RECOMMENDED POSITION SIZE",
+  "@recommendedPositionSize": {},
+
+  "lotsUnit": "LOTS",
+  "@lotsUnit": {},
+
+  "riskAmount": "RISK AMOUNT",
+  "@riskAmount": {},
+
+  "riskLevel": "RISK LEVEL",
+  "@riskLevel": {},
+
+  "noInternetConnection": "No internet connection",
+  "@noInternetConnection": {},
+
+  "loginTitle": "TRADEGENZ",
+  "@loginTitle": {},
+
+  "loginSubtitle": "SECURE QUANTUM TERMINAL ACCESS",
+  "@loginSubtitle": {},
+
+  "loginEmailLabel": "EMAIL TERMINAL ID",
+  "@loginEmailLabel": {},
+
+  "loginPasswordLabel": "ACCESS CIPHER",
+  "@loginPasswordLabel": {},
+
+  "forgotPasswordLink": "Forgot Password?",
+  "@forgotPasswordLink": {},
+
+  "initiateLogin": "INITIATE LOGIN",
+  "@initiateLogin": {},
+
+  "systemIntegrity": "SYSTEM INTEGRITY: OPTIMAL",
+  "@systemIntegrity": {},
+
+  "sslVerified": "SSL VERIFIED",
+  "@sslVerified": {},
+
+  "whatsappUpgradeMessage": "Hello, I want to upgrade to {plan} plan ({price}) on TradeGenZ.",
+  "@whatsappUpgradeMessage": {
+    "placeholders": {
+      "plan": {"type": "String"},
+      "price": {"type": "String"}
+    }
+  },
+
+  "whatsappAffiliateMessage": "Hello, I want to activate the Affiliate Plan on TradeGenZ.",
+  "@whatsappAffiliateMessage": {}
+}

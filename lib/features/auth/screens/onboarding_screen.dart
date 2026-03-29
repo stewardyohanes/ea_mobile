@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tradegenz_app/core/extensions/l10n_extension.dart';
 import 'package:tradegenz_app/core/storage/secure_storage.dart';
 import 'package:tradegenz_app/core/theme/app_colors.dart';
 import 'package:tradegenz_app/core/theme/app_text_styles.dart';
@@ -24,10 +25,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       body: Stack(
         children: [
-          // Ambient glow — kiri atas
+          // Ambient glow — top left
           Positioned(
             top: -80,
             left: -80,
@@ -36,7 +38,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               size: 320,
             ),
           ),
-          // Ambient glow — kanan tengah
+          // Ambient glow — center right
           Positioned(
             bottom: MediaQuery.of(context).size.height * 0.25,
             right: -80,
@@ -63,7 +65,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        'TRADEGENZ',
+                        l10n.onboardingTitle,
                         style: GoogleFonts.inter(
                           fontSize: 26,
                           fontWeight: FontWeight.w900,
@@ -88,7 +90,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                         // Tagline
                         Text(
-                          'Smart Forex Signals\nfrom MetaTrader EA',
+                          l10n.onboardingSubtitle,
                           style: AppTextStyles.h2.copyWith(height: 1.2),
                           textAlign: TextAlign.center,
                         ),
@@ -97,7 +99,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                         // Description
                         Text(
-                          'Advanced algorithmic intelligence translated into actionable high-probability trade setups for the modern retail trader.',
+                          l10n.onboardingDescription,
                           style: AppTextStyles.body.copyWith(
                             color: AppColors.onSurfaceVariant,
                           ),
@@ -107,37 +109,34 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         const SizedBox(height: 28),
 
                         // Feature 1: Real-time EA Signals
-                        const OnboardingFeatureItem(
+                        OnboardingFeatureItem(
                           icon: Icons.insights,
                           iconColor: AppColors.primary,
-                          iconBg: Color(0x1AB0C6FF),
-                          title: 'Real-time EA Signals',
-                          subtitle:
-                              'Instant execution alerts from our proprietary MT4/MT5 algorithms.',
+                          iconBg: const Color(0x1AB0C6FF),
+                          title: l10n.featureSignalsTitle,
+                          subtitle: l10n.featureSignalsDesc,
                         ),
 
                         const SizedBox(height: 12),
 
                         // Feature 2: Lot Size Calculator
-                        const OnboardingFeatureItem(
+                        OnboardingFeatureItem(
                           icon: Icons.calculate_outlined,
                           iconColor: AppColors.secondaryContainer,
-                          iconBg: Color(0x1A00E5A0),
-                          title: 'Lot Size Calculator',
-                          subtitle:
-                              'Risk management precision. Calculate position sizes in milliseconds.',
+                          iconBg: const Color(0x1A00E5A0),
+                          title: l10n.featureCalculatorTitle,
+                          subtitle: l10n.featureCalculatorDesc,
                         ),
 
                         const SizedBox(height: 12),
 
                         // Feature 3: Win Rate Analytics
-                        const OnboardingFeatureItem(
+                        OnboardingFeatureItem(
                           icon: Icons.analytics_outlined,
                           iconColor: AppColors.tertiary,
-                          iconBg: Color(0x1AFFBA20),
-                          title: 'Win Rate Analytics',
-                          subtitle:
-                              'Transparent historical performance with deep quantitative data.',
+                          iconBg: const Color(0x1AFFBA20),
+                          title: l10n.featureAnalyticsTitle,
+                          subtitle: l10n.featureAnalyticsDesc,
                         ),
 
                         const SizedBox(height: 32),
@@ -146,7 +145,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                 ),
 
-                // Footer CTA — fixed di bawah
+                // Footer CTA — fixed at bottom
                 Padding(
                   padding: const EdgeInsets.fromLTRB(24, 8, 24, 32),
                   child: Column(
@@ -154,7 +153,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       _GetStartedButton(onPressed: _onGetStarted),
                       const SizedBox(height: 20),
                       Text(
-                        'INSTITUTIONAL GRADE ALGORITHMS  •  NO-LAG EXECUTION',
+                        l10n.institutionalGrade,
                         style: GoogleFonts.inter(
                           fontSize: 9,
                           color: AppColors.outline,
@@ -211,7 +210,7 @@ class _GetStartedButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Get Started',
+              context.l10n.getStarted,
               style: GoogleFonts.inter(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
@@ -231,7 +230,7 @@ class _GetStartedButton extends StatelessWidget {
   }
 }
 
-/// Blurred color blob untuk ambient glow effect.
+/// Blurred color blob for ambient glow effect.
 class _GlowBlob extends StatelessWidget {
   final Color color;
   final double size;

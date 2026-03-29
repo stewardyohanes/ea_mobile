@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 
@@ -39,7 +40,7 @@ class ResultCard extends StatelessWidget {
         children: [
           // Label
           Text(
-            'RECOMMENDED POSITION SIZE',
+            context.l10n.recommendedPositionSize,
             style: GoogleFonts.inter(
               fontSize: 9,
               fontWeight: FontWeight.w700,
@@ -74,7 +75,7 @@ class ResultCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'LOTS',
+                      context.l10n.lotsUnit,
                       style: GoogleFonts.jetBrainsMono(
                         fontSize: 11,
                         fontWeight: FontWeight.w600,
@@ -115,7 +116,7 @@ class ResultCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: _MetricBox(
-                    label: 'RISK AMOUNT',
+                    label: context.l10n.riskAmount,
                     value: '\$${riskAmount!.toStringAsFixed(2)}',
                     color: AppColors.error,
                   ),
@@ -123,7 +124,7 @@ class ResultCard extends StatelessWidget {
                 const SizedBox(width: 8),
                 Expanded(
                   child: _MetricBox(
-                    label: 'RISK LEVEL',
+                    label: context.l10n.riskLevel,
                     value: '${riskPercent.toStringAsFixed(1)}%',
                     color: riskColor,
                   ),

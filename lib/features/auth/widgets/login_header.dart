@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tradegenz_app/core/extensions/l10n_extension.dart';
 import 'package:tradegenz_app/core/theme/app_colors.dart';
 
 /// Header section login: terminal icon box + title TRADEGENZ + subtitle
@@ -35,7 +36,7 @@ class LoginHeader extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         Text(
-          'TRADEGENZ',
+          context.l10n.loginTitle,
           style: GoogleFonts.inter(
             fontSize: 34,
             fontWeight: FontWeight.w900,
@@ -45,7 +46,7 @@ class LoginHeader extends StatelessWidget {
         ),
         const SizedBox(height: 6),
         Text(
-          'SECURE QUANTUM TERMINAL ACCESS',
+          context.l10n.loginSubtitle,
           style: GoogleFonts.inter(
             fontSize: 11,
             fontWeight: FontWeight.w500,
