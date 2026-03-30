@@ -25,7 +25,7 @@ class User {
       name: json['name'] as String?,
       email: json['email'] as String,
       plan: json['plan'] as String,
-      planExpiry: json['plan_expiry'] as String?,
+      planExpiry: (json['plan_expires_at'] ?? json['plan_expiry']) as String?,
       referralCode: json['referral_code'] as String?,
       winRate: json['win_rate'] as int?,
       totalSignals: json['total_signals'] as int?,

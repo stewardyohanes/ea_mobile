@@ -101,6 +101,17 @@ class AuthNotifier extends Notifier<AuthState> {
     }
   }
 
+  /// Dipanggil setelah IAP berhasil diverifikasi backend — refresh data user.
+  Future<void> refreshUser() async {
+    try {
+      final user = await AuthApi.getMe();
+      state = state.copyWith(user: user);
+      if (user.isPremium) await FcmService.initialize();
+    } on Exception {
+      // Jika gagal refresh, biarkan state lama — tidak perlu logout
+    }
+  }
+
   Future<void> logout() async {
     await SecureStorage.deleteToken();
     await SecureStorage.deleteRefreshToken();

@@ -706,6 +706,15 @@ class AppLocalizationsId extends AppLocalizations {
   String get sslVerified => 'SSL VERIFIED';
 
   @override
+  String get processing => 'Memproses...';
+
+  @override
+  String get purchaseSuccess => 'Pembelian berhasil! Premium aktif.';
+
+  @override
+  String get restorePurchases => 'Pulihkan Pembelian';
+
+  @override
   String whatsappUpgradeMessage(String plan, String price) {
     return 'Halo, saya ingin upgrade ke plan $plan ($price) di TradeGenZ.';
   }

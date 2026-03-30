@@ -704,6 +704,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sslVerified => 'SSL VERIFIED';
 
   @override
+  String get processing => 'Processing...';
+
+  @override
+  String get purchaseSuccess => 'Purchase successful! Premium activated.';
+
+  @override
+  String get restorePurchases => 'Restore Purchases';
+
+  @override
   String whatsappUpgradeMessage(String plan, String price) {
     return 'Hello, I want to upgrade to $plan plan ($price) on TradeGenZ.';
   }

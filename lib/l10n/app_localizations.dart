@@ -1412,6 +1412,24 @@ abstract class AppLocalizations {
   /// **'SSL VERIFIED'**
   String get sslVerified;
 
+  /// No description provided for @processing.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing...'**
+  String get processing;
+
+  /// No description provided for @purchaseSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchase successful! Premium activated.'**
+  String get purchaseSuccess;
+
+  /// No description provided for @restorePurchases.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore Purchases'**
+  String get restorePurchases;
+
   /// No description provided for @whatsappUpgradeMessage.
   ///
   /// In en, this message translates to:

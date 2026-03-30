@@ -10,6 +10,7 @@ class PlanCardItem extends StatelessWidget {
   final List<String> features;
   final List<String> lockedFeatures;
   final bool isPopular;
+  final bool isLoading;
   final VoidCallback onTap;
   final String buttonLabel;
 
@@ -23,6 +24,7 @@ class PlanCardItem extends StatelessWidget {
     required this.onTap,
     required this.buttonLabel,
     this.isPopular = false,
+    this.isLoading = false,
     super.key,
   });
 
@@ -120,13 +122,22 @@ class PlanCardItem extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: Text(
-                    buttonLabel,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                  child: isLoading
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : Text(
+                          buttonLabel,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                 ),
               ),
             ],

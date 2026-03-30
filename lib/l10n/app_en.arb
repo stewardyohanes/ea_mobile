@@ -690,6 +690,15 @@
   "sslVerified": "SSL VERIFIED",
   "@sslVerified": {},
 
+  "processing": "Processing...",
+  "@processing": {},
+
+  "purchaseSuccess": "Purchase successful! Premium activated.",
+  "@purchaseSuccess": {},
+
+  "restorePurchases": "Restore Purchases",
+  "@restorePurchases": {},
+
   "whatsappUpgradeMessage": "Hello, I want to upgrade to {plan} plan ({price}) on TradeGenZ.",
   "@whatsappUpgradeMessage": {
     "placeholders": {

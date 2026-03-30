@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -6,24 +7,25 @@ import '../widgets/plan_card_item.dart';
 import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
+import '../../subscription/providers/subscription_provider.dart';
 
-class UpgradeScreen extends StatefulWidget {
+class UpgradeScreen extends ConsumerStatefulWidget {
   const UpgradeScreen({super.key});
 
   @override
-  State<UpgradeScreen> createState() => _UpgradeScreenState();
+  ConsumerState<UpgradeScreen> createState() => _UpgradeScreenState();
 }
 
-class _UpgradeScreenState extends State<UpgradeScreen> {
-  // Toggle billing period — monthly atau yearly
+class _UpgradeScreenState extends ConsumerState<UpgradeScreen> {
   bool _isYearly = false;
 
-  Future<void> _contactWhatsApp(BuildContext context, String plan, String price) async {
-    final message = Uri.encodeComponent(
-      context.l10n.whatsappUpgradeMessage(plan, price),
-    );
-    final uri = Uri.parse('https://wa.me/62XXXXXXXXXXX?text=$message');
-    if (await canLaunchUrl(uri)) await launchUrl(uri);
+  @override
+  void initState() {
+    super.initState();
+    // Load harga dari Play Store saat screen dibuka
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(subscriptionProvider.notifier).loadProducts();
+    });
   }
 
   Future<void> _contactWhatsAppAffiliate(BuildContext context) async {
@@ -36,6 +38,39 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final subState = ref.watch(subscriptionProvider);
+
+    // Listen untuk success & error
+    ref.listen<SubscriptionState>(subscriptionProvider, (prev, next) {
+      if (next.purchaseSuccess && !(prev?.purchaseSuccess ?? false)) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(context.l10n.purchaseSuccess),
+            backgroundColor: AppColors.success,
+          ),
+        );
+        ref.read(subscriptionProvider.notifier).clearSuccess();
+        context.pop();
+      }
+      if (next.error != null && next.error != prev?.error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(next.error!),
+            backgroundColor: AppColors.error,
+          ),
+        );
+        ref.read(subscriptionProvider.notifier).clearError();
+      }
+    });
+
+    // Ambil harga dari Play Store jika sudah load, fallback ke hardcoded
+    final monthlyProduct = subState.products['premium_monthly'];
+    final yearlyProduct = subState.products['premium_yearly'];
+    final monthlyPrice = monthlyProduct?.price ?? context.l10n.pricePremiumMonthly;
+    final yearlyPrice = yearlyProduct?.price ?? context.l10n.pricePremiumYearly;
+
+    final isPurchasing = subState.isPurchasing;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(context.l10n.upgradePlanTitle),
@@ -49,7 +84,7 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Header banner — "Proprietary Alpha Access"
+            // Header banner
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(20),
@@ -72,11 +107,7 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
                 children: [
                   Row(
                     children: [
-                      const Icon(
-                        Icons.bolt,
-                        color: AppColors.tertiary,
-                        size: 18,
-                      ),
+                      const Icon(Icons.bolt, color: AppColors.tertiary, size: 18),
                       const SizedBox(width: 6),
                       Text(
                         context.l10n.proprietaryAlphaAccess,
@@ -104,7 +135,7 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
 
             const SizedBox(height: 24),
 
-            // Billing toggle — Monthly / Yearly
+            // Billing toggle
             Container(
               padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
@@ -153,7 +184,7 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
             // PREMIUM Plan
             PlanCardItem(
               name: context.l10n.planPremium,
-              price: _isYearly ? context.l10n.pricePremiumYearly : context.l10n.pricePremiumMonthly,
+              price: _isYearly ? yearlyPrice : monthlyPrice,
               period: _isYearly ? context.l10n.pricePerYear : context.l10n.pricePerMonth,
               color: AppColors.primary,
               isPopular: true,
@@ -165,12 +196,15 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
                 context.l10n.premiumPlanFeature5,
               ],
               lockedFeatures: const [],
-              onTap: () => _contactWhatsApp(
-                context,
-                'Premium',
-                _isYearly ? '\$80/year' : '\$10/month',
-              ),
-              buttonLabel: context.l10n.getPremium,
+              onTap: isPurchasing
+                  ? () {}
+                  : () => ref.read(subscriptionProvider.notifier).purchase(
+                        _isYearly ? 'premium_yearly' : 'premium_monthly',
+                      ),
+              buttonLabel: isPurchasing
+                  ? context.l10n.processing
+                  : context.l10n.getPremium,
+              isLoading: isPurchasing,
             ),
 
             // AFFILIATE Plan
@@ -198,6 +232,21 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
               textAlign: TextAlign.center,
             ),
 
+            const SizedBox(height: 8),
+
+            // Restore Purchases button
+            TextButton(
+              onPressed: isPurchasing
+                  ? null
+                  : () => ref.read(subscriptionProvider.notifier).restore(),
+              child: Text(
+                context.l10n.restorePurchases,
+                style: AppTextStyles.caption.copyWith(
+                  color: AppColors.primary,
+                ),
+              ),
+            ),
+
             const SizedBox(height: 24),
           ],
         ),
@@ -206,7 +255,6 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
   }
 }
 
-// Toggle tab widget
 class _BillingTab extends StatelessWidget {
   final String label;
   final bool isActive;
