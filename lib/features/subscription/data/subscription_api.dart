@@ -16,7 +16,7 @@ class SubscriptionApi {
       data: {
         'purchase_token': purchaseToken,
         'product_id': productId,
-        'package_name': 'com.tradegenz.app',
+        'package_name': 'com.tradegenz.tradegenz_app',
       },
     );
     return response.data as Map<String, dynamic>;

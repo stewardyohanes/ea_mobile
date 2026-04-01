@@ -65,7 +65,7 @@ class SubscriptionNotifier extends Notifier<SubscriptionState> {
   Future<void> loadProducts() async {
     final available = await IAPService.instance.isAvailable();
     if (!available) {
-      state = state.copyWith(error: 'Play Store tidak tersedia');
+      state = state.copyWith(error: 'Play Store is not available');
       return;
     }
 
@@ -82,7 +82,7 @@ class SubscriptionNotifier extends Notifier<SubscriptionState> {
   Future<void> purchase(String productId) async {
     final product = state.products[productId];
     if (product == null) {
-      state = state.copyWith(error: 'Product tidak ditemukan. Coba lagi.');
+      state = state.copyWith(error: 'Product not found. Please try again.');
       return;
     }
 
@@ -124,7 +124,7 @@ class SubscriptionNotifier extends Notifier<SubscriptionState> {
         case PurchaseStatus.error:
           state = state.copyWith(
             isPurchasing: false,
-            error: purchase.error?.message ?? 'Pembelian gagal. Coba lagi.',
+            error: purchase.error?.message ?? 'Purchase failed. Please try again.',
           );
           await IAPService.instance.completePurchase(purchase);
           break;
@@ -158,9 +158,9 @@ class SubscriptionNotifier extends Notifier<SubscriptionState> {
     } catch (e) {
       state = state.copyWith(
         isPurchasing: false,
-        error: 'Verifikasi pembelian gagal. Hubungi support jika masalah berlanjut.',
+        error: 'Purchase verification failed: ${e.toString()}',
       );
-      // Tetap complete purchase agar tidak stuck
+      // Complete purchase to avoid stuck state
       await IAPService.instance.completePurchase(purchase);
     }
   }

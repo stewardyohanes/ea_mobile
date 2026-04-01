@@ -101,14 +101,24 @@ class AuthNotifier extends Notifier<AuthState> {
     }
   }
 
-  /// Dipanggil setelah IAP berhasil diverifikasi backend — refresh data user.
+  /// Dipanggil setelah IAP berhasil diverifikasi backend — refresh JWT + data user.
   Future<void> refreshUser() async {
     try {
+      // Refresh JWT so the new token contains updated plan (premium)
+      final refreshToken = await SecureStorage.getRefreshToken();
+      if (refreshToken != null) {
+        final tokenData = await AuthApi.refresh(refreshToken);
+        await SecureStorage.saveToken(tokenData['token'] as String);
+        if (tokenData['refresh_token'] != null) {
+          await SecureStorage.saveRefreshToken(tokenData['refresh_token'] as String);
+        }
+      }
+
       final user = await AuthApi.getMe();
       state = state.copyWith(user: user);
       if (user.isPremium) await FcmService.initialize();
     } on Exception {
-      // Jika gagal refresh, biarkan state lama — tidak perlu logout
+      // If refresh fails, keep existing state — no logout needed
     }
   }
 
