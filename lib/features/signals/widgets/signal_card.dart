@@ -111,7 +111,10 @@ class _PremiumPriceBlock extends StatelessWidget {
   final String timeAgo;
   const _PremiumPriceBlock({required this.signal, required this.timeAgo});
 
-  bool get _isBullish => signal.trend.toUpperCase().contains('BULL');
+  bool get _isBullish {
+    final t = signal.trend.toUpperCase();
+    return t.contains('BULL') || t.contains('UP');
+  }
   int get _dec => signal.entry1 > 100 ? 2 : 5;
 
   @override

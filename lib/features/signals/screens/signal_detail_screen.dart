@@ -100,7 +100,22 @@ class _DetailContent extends StatelessWidget {
     }
   }
 
-  bool get _isBullish => signal.trend.toUpperCase().contains('BULL');
+  bool get _isBullish {
+    final t = signal.trend.toUpperCase();
+    return t.contains('BULL') || t.contains('UP');
+  }
+
+  String get _formattedDate {
+    try {
+      final dt = DateTime.parse(signal.createdAt).toLocal();
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      return '${months[dt.month - 1]} ${dt.day}, ${dt.year} · '
+             '${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
+    } catch (_) {
+      return signal.createdAt;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -174,7 +189,7 @@ class _DetailContent extends StatelessWidget {
                       ),
                       const SizedBox(width: 12),
                     ],
-                    Text(signal.createdAt, style: AppTextStyles.caption),
+                    Text(_formattedDate, style: AppTextStyles.caption),
                   ],
                 ),
 
