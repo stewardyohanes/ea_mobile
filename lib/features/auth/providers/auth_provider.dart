@@ -67,9 +67,11 @@ class AuthNotifier extends Notifier<AuthState> {
         password: password,
       );
       final token = data['token'] as String;
+      final refreshToken = data['refresh_token'] as String;
       final user = User.fromJson(data['user'] as Map<String, dynamic>);
 
       await SecureStorage.saveToken(token);
+      await SecureStorage.saveRefreshToken(refreshToken);
       state = state.copyWith(user: user, isLoading: false);
     } on DioException catch (e) {
       final message =

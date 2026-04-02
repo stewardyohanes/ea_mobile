@@ -118,7 +118,7 @@ class FcmService {
     try {
       await DioClient.instance.post(
         '/devices',
-        data: {'token': token, 'platform': defaultTargetPlatform.toString()},
+        data: {'fcm_token': token, 'platform': defaultTargetPlatform.name.toLowerCase()},
       );
       debugPrint('=== FCM token registered ===');
     } catch (e) {

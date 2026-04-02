@@ -25,7 +25,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
   void initState() {
     super.initState();
     Future.microtask(
-      () => ref.read(historySignalsProvider.notifier).fetchInitial(),
+      () => ref.read(historySignalsProvider.notifier).fetchInitial(scope: 'history'),
     );
     _scrollController.addListener(_onScroll);
   }
@@ -40,7 +40,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
     final maxScroll = _scrollController.position.maxScrollExtent;
     final currentScroll = _scrollController.position.pixels;
     if (currentScroll >= maxScroll - 200) {
-      ref.read(historySignalsProvider.notifier).fetchMore();
+      ref.read(historySignalsProvider.notifier).fetchMore(scope: 'history');
     }
   }
 
@@ -55,7 +55,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
       case 'SL HIT':
         return signals.where((s) => s.isSlHit).toList();
       default:
-        return signals.where((s) => !s.isActive).toList();
+        return signals;
     }
   }
 
@@ -63,7 +63,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final signalsState = ref.watch(historySignalsProvider);
-    final allCompleted = signalsState.signals.where((s) => !s.isActive).toList();
+    final allCompleted = signalsState.signals;
     final filtered = _filtered(signalsState.signals);
 
     return Scaffold(
@@ -132,7 +132,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
       color: AppColors.primary,
       backgroundColor: AppColors.surface,
       onRefresh: () =>
-          ref.read(historySignalsProvider.notifier).fetchInitial(),
+          ref.read(historySignalsProvider.notifier).fetchInitial(scope: 'history'),
       child: ListView.builder(
         controller: _scrollController,
         itemCount: filtered.length + 1,

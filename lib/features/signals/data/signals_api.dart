@@ -10,10 +10,16 @@ class SignalsApi {
     int page = 1,
     int limit = 20,
     String? direction,
+    String? scope, // 'feed' | 'history'
   }) async {
     final response = await _dio.get(
       '/signals',
-      queryParameters: {'page': page, 'limit': limit, 'direction': ?direction},
+      queryParameters: {
+        'page': page,
+        'limit': limit,
+        if (direction case String direction) 'direction': direction,
+        if (scope case String scope) 'scope': scope,
+      },
     );
 
     final List data = response.data['data'] as List? ?? [];

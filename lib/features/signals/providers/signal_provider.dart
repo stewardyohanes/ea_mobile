@@ -42,13 +42,13 @@ class SignalNotifier extends Notifier<SignalsState> {
   @override
   SignalsState build() => const SignalsState();
 
-  Future<void> fetchInitial({String? direction}) async {
-    // Reset signals dulu supaya data lama tidak tampil saat loading filter baru
+  Future<void> fetchInitial({String? direction, String? scope}) async {
     state = state.copyWith(isLoading: true, error: null, signals: []);
     try {
       final signals = await SignalsApi.getSignals(
         page: 1,
         direction: direction,
+        scope: scope,
       );
 
       state = state.copyWith(
@@ -65,7 +65,7 @@ class SignalNotifier extends Notifier<SignalsState> {
     }
   }
 
-  Future<void> fetchMore({String? direction}) async {
+  Future<void> fetchMore({String? direction, String? scope}) async {
     if (!state.hasMore || state.isLoadingMore) return;
 
     state = state.copyWith(isLoadingMore: true, error: null);
@@ -75,6 +75,7 @@ class SignalNotifier extends Notifier<SignalsState> {
       final newSignals = await SignalsApi.getSignals(
         page: nextPage,
         direction: direction,
+        scope: scope,
       );
 
       state = state.copyWith(
@@ -90,8 +91,6 @@ class SignalNotifier extends Notifier<SignalsState> {
       );
     }
   }
-
-
 }
 
 final signalsProvider = NotifierProvider<SignalNotifier, SignalsState>(
@@ -99,8 +98,6 @@ final signalsProvider = NotifierProvider<SignalNotifier, SignalsState>(
 );
 
 /// Provider terpisah untuk History screen — tidak konflik dengan Feed.
-/// Feed pakai signalsProvider (filter client-side by symbol).
-/// History pakai historySignalsProvider (filter server-side by direction BUY/SELL).
 final historySignalsProvider = NotifierProvider<SignalNotifier, SignalsState>(
   SignalNotifier.new,
 );

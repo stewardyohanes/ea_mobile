@@ -43,6 +43,9 @@ class Signal {
 
   bool get isBuy => direction == 'BUY';
   bool get isActive => status == 'active';
+  bool get isTriggered => status == 'triggered';
+  bool get isReplaced => status == 'replaced';
   bool get isTpHit => status == 'tp_hit';
   bool get isSlHit => status == 'sl_hit';
+  bool get isInFeed => status == 'active' || status == 'triggered';
 }

@@ -22,7 +22,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() => ref.read(signalsProvider.notifier).fetchInitial());
+    Future.microtask(() => ref.read(signalsProvider.notifier).fetchInitial(scope: 'feed'));
     _scrollController.addListener(_onScroll);
   }
 
@@ -36,7 +36,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
     final maxScroll = _scrollController.position.maxScrollExtent;
     final currentScroll = _scrollController.position.pixels;
     if (currentScroll >= maxScroll - 200) {
-      ref.read(signalsProvider.notifier).fetchMore();
+      ref.read(signalsProvider.notifier).fetchMore(scope: 'feed');
     }
   }
 
@@ -84,7 +84,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
               color: AppColors.primary,
               backgroundColor: AppColors.surface,
               onRefresh: () =>
-                  ref.read(signalsProvider.notifier).fetchInitial(),
+                  ref.read(signalsProvider.notifier).fetchInitial(scope: 'feed'),
               child: _buildBody(context, signalsState),
             ),
           ),
