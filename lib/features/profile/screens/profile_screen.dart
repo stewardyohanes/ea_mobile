@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../auth/providers/auth_provider.dart';
@@ -10,19 +11,30 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../../shared/models/user_model.dart';
 
-class ProfileScreen extends ConsumerWidget {
+class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
 
-  Future<void> _launchWhatsApp() async {
-    final uri = Uri.parse('https://wa.me/628xxxxxxxxxx');
+  @override
+  ConsumerState<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends ConsumerState<ProfileScreen> {
+  Future<void> _launchEmail() async {
+    final uri = Uri.parse('mailto:chloeder29@gmail.com');
     if (await canLaunchUrl(uri)) await launchUrl(uri);
   }
 
+  Future<void> _launchPrivacyPolicy() async {
+    final uri = Uri.parse('https://www.tradegenz.com/privacy-policy');
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
+  }
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
 
-    // Loading state — jangan return kosong, tampilkan spinner
     if (authState.isLoading) {
       return const Scaffold(
         body: Center(
@@ -51,170 +63,174 @@ class ProfileScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 8),
+      body: RefreshIndicator(
+        color: AppColors.primary,
+        backgroundColor: AppColors.surface,
+        onRefresh: () => ref.read(authProvider.notifier).refreshUser(),
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 8),
 
-            // Header — avatar dengan badge di kanan bawah + nama + email
-            Center(child: ProfileHeader(user: user)),
+              Center(child: ProfileHeader(user: user)),
 
-            const SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-            // Stats — 2-column grid dengan left border accent (persis Stitch)
-            _StatsGrid(user: user),
+              _StatsGrid(user: user),
 
-            const SizedBox(height: 16),
+              const SizedBox(height: 16),
 
-            // Plan card — Active plan dengan features list
-            _PlanCard(user: user),
+              _PlanCard(user: user),
 
-            const SizedBox(height: 16),
+              const SizedBox(height: 16),
 
-            // Account section (hanya untuk affiliate — referral code)
-            if (user.isAffiliate) ...[
-              _SettingsGroup(
-                title: context.l10n.accountSection,
-                children: [
-                  _SettingsRow(
-                    icon: Icons.share,
-                    label: context.l10n.referralCode,
-                    trailing: Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColors.surfaceContainerLowest,
-                            borderRadius: BorderRadius.circular(6),
-                            border: Border.all(
-                              color: AppColors.outlineVariant.withValues(
-                                alpha: 0.2,
+              if (user.isAffiliate) ...[
+                _SettingsGroup(
+                  title: context.l10n.accountSection,
+                  children: [
+                    _SettingsRow(
+                      icon: Icons.share,
+                      label: context.l10n.referralCode,
+                      trailing: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.surfaceContainerLowest,
+                              borderRadius: BorderRadius.circular(6),
+                              border: Border.all(
+                                color: AppColors.outlineVariant.withValues(
+                                  alpha: 0.2,
+                                ),
+                              ),
+                            ),
+                            child: Text(
+                              user.referralCode ?? '—',
+                              style: GoogleFonts.jetBrainsMono(
+                                fontSize: 12,
+                                color: AppColors.onSurface,
                               ),
                             ),
                           ),
-                          child: Text(
-                            user.referralCode ?? '—',
-                            style: GoogleFonts.jetBrainsMono(
-                              fontSize: 12,
-                              color: AppColors.onSurface,
+                          const SizedBox(width: 8),
+                          GestureDetector(
+                            onTap: () {
+                              if (user.referralCode != null) {
+                                Clipboard.setData(
+                                  ClipboardData(text: user.referralCode!),
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      context.l10n.referralCodeCopied,
+                                    ),
+                                    duration: const Duration(seconds: 2),
+                                  ),
+                                );
+                              }
+                            },
+                            child: const Icon(
+                              Icons.content_copy,
+                              size: 20,
+                              color: AppColors.primary,
                             ),
                           ),
-                        ),
-                        const SizedBox(width: 8),
-                        GestureDetector(
-                          onTap: () {
-                            if (user.referralCode != null) {
-                              Clipboard.setData(
-                                ClipboardData(text: user.referralCode!),
-                              );
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(context.l10n.referralCodeCopied),
-                                  duration: const Duration(seconds: 2),
-                                ),
-                              );
-                            }
-                          },
-                          child: const Icon(
-                            Icons.content_copy,
-                            size: 20,
-                            color: AppColors.primary,
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+              ],
+
+              _SettingsGroup(
+                title: context.l10n.supportSection,
+                children: [
+                  _SettingsRow(
+                    icon: Icons.email_outlined,
+                    iconColor: AppColors.secondaryContainer,
+                    label: context.l10n.contactEmail,
+                    onTap: _launchEmail,
+                  ),
+                  _SettingsRow(
+                    icon: Icons.help_outline,
+                    label: context.l10n.helpFaq,
+                    onTap: () => context.push('/faq'),
                   ),
                 ],
               ),
+
               const SizedBox(height: 8),
-            ],
 
-            // Support section
-            _SettingsGroup(
-              title: context.l10n.supportSection,
-              children: [
-                _SettingsRow(
-                  icon: Icons.chat,
-                  iconColor: AppColors.secondaryContainer,
-                  label: context.l10n.contactWhatsApp,
-                  onTap: _launchWhatsApp,
-                ),
-                _SettingsRow(
-                  icon: Icons.help_outline,
-                  label: context.l10n.helpFaq,
-                  onTap: () {},
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 8),
-
-            // About section
-            _SettingsGroup(
-              title: context.l10n.aboutSection,
-              children: [
-                _SettingsRow(
-                  icon: Icons.info_outline,
-                  label: context.l10n.appVersion,
-                  trailing: Text(context.l10n.appVersionNumber, style: AppTextStyles.caption),
-                  showChevron: false,
-                ),
-                _SettingsRow(
-                  icon: Icons.gavel,
-                  label: context.l10n.privacyPolicy,
-                  onTap: () {},
-                ),
-                _SettingsRow(
-                  icon: Icons.description_outlined,
-                  label: context.l10n.termsOfService,
-                  onTap: () {},
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 24),
-
-            // Logout
-            SizedBox(
-              width: double.infinity,
-              child: OutlinedButton.icon(
-                onPressed: () async {
-                  await ref.read(authProvider.notifier).logout();
-                },
-                icon: const Icon(Icons.logout, color: AppColors.error),
-                label: Text(
-                  context.l10n.logoutAccount,
-                  style: GoogleFonts.inter(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.error,
-                    letterSpacing: 1.5,
+              _SettingsGroup(
+                title: context.l10n.aboutSection,
+                children: [
+                  _SettingsRow(
+                    icon: Icons.info_outline,
+                    label: context.l10n.appVersion,
+                    trailing: Text(
+                      context.l10n.appVersionNumber,
+                      style: AppTextStyles.caption,
+                    ),
+                    showChevron: false,
                   ),
-                ),
-                style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  side: BorderSide(
-                    color: AppColors.error.withValues(alpha: 0.5),
+                  _SettingsRow(
+                    icon: Icons.gavel,
+                    label: context.l10n.privacyPolicy,
+                    onTap: _launchPrivacyPolicy,
                   ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                  _SettingsRow(
+                    icon: Icons.description_outlined,
+                    label: context.l10n.termsOfService,
+                    onTap: () => context.push('/terms'),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 24),
+
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed: () async {
+                    await ref.read(authProvider.notifier).logout();
+                  },
+                  icon: const Icon(Icons.logout, color: AppColors.error),
+                  label: Text(
+                    context.l10n.logoutAccount,
+                    style: GoogleFonts.inter(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.error,
+                      letterSpacing: 1.5,
+                    ),
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    side: BorderSide(
+                      color: AppColors.error.withValues(alpha: 0.5),
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-// ─── Stats Grid — 2 kolom dengan left border accent ──────────────────────────
+// ─── Stats Grid ───────────────────────────────────────────────────────────────
 
 class _StatsGrid extends StatelessWidget {
   final User user;
@@ -314,7 +330,7 @@ class _StatCard extends StatelessWidget {
   }
 }
 
-// ─── Plan Card — Active plan dengan features ─────────────────────────────────
+// ─── Plan Card ────────────────────────────────────────────────────────────────
 
 class _PlanCard extends StatelessWidget {
   final User user;
@@ -391,10 +407,10 @@ class _PlanCard extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 12),
               child: Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.check_circle,
                     size: 18,
-                    color: const Color(0xFF47FFBB),
+                    color: Color(0xFF47FFBB),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -444,7 +460,7 @@ class _FreePlanCard extends StatelessWidget {
           ),
           const SizedBox(width: 12),
           ElevatedButton(
-            onPressed: () => Navigator.of(context).pushNamed('/upgrade'),
+            onPressed: () => context.push('/upgrade'),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,
               foregroundColor: AppColors.onPrimary,
@@ -489,7 +505,6 @@ class _SettingsGroup extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Section header
           Container(
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),

@@ -680,6 +680,18 @@ abstract class AppLocalizations {
   /// **'SL HIT'**
   String get statusSlHit;
 
+  /// No description provided for @statusWin.
+  ///
+  /// In en, this message translates to:
+  /// **'WIN'**
+  String get statusWin;
+
+  /// No description provided for @statusLoss.
+  ///
+  /// In en, this message translates to:
+  /// **'LOSS'**
+  String get statusLoss;
+
   /// No description provided for @statusClosed.
   ///
   /// In en, this message translates to:
@@ -878,6 +890,18 @@ abstract class AppLocalizations {
   /// **'SL HIT'**
   String get filterSlHit;
 
+  /// No description provided for @filterWin.
+  ///
+  /// In en, this message translates to:
+  /// **'WIN'**
+  String get filterWin;
+
+  /// No description provided for @filterLoss.
+  ///
+  /// In en, this message translates to:
+  /// **'LOSS'**
+  String get filterLoss;
+
   /// No description provided for @profileTitle.
   ///
   /// In en, this message translates to:
@@ -926,11 +950,29 @@ abstract class AppLocalizations {
   /// **'Contact via WhatsApp'**
   String get contactWhatsApp;
 
+  /// No description provided for @contactEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact via Email'**
+  String get contactEmail;
+
   /// No description provided for @helpFaq.
   ///
   /// In en, this message translates to:
   /// **'Help & FAQ'**
   String get helpFaq;
+
+  /// No description provided for @faqTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Help & FAQ'**
+  String get faqTitle;
+
+  /// No description provided for @termsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Service'**
+  String get termsTitle;
 
   /// No description provided for @aboutSection.
   ///

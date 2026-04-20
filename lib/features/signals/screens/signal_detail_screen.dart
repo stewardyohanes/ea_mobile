@@ -81,13 +81,17 @@ class _DetailContent extends StatelessWidget {
   Color get _statusColor {
     if (signal.isTpHit) return AppColors.secondaryContainer;
     if (signal.isSlHit) return AppColors.error;
+    if (signal.isPending) return AppColors.tertiary;
     if (signal.isActive) return AppColors.primary;
     return AppColors.textMuted;
   }
 
   String _statusLabel(BuildContext context) {
     switch (signal.status) {
+      case 'pending':
+        return 'PENDING';
       case 'active':
+      case 'triggered':
         return context.l10n.statusActive;
       case 'tp_hit':
         return context.l10n.statusTpHit;
@@ -108,10 +112,22 @@ class _DetailContent extends StatelessWidget {
   String get _formattedDate {
     try {
       final dt = DateTime.parse(signal.createdAt).toLocal();
-      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const months = [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
+      ];
       return '${months[dt.month - 1]} ${dt.day}, ${dt.year} · '
-             '${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
+          '${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
     } catch (_) {
       return signal.createdAt;
     }
@@ -262,8 +278,7 @@ class _DetailContent extends StatelessWidget {
         ),
 
         // EXECUTE SIGNAL sticky button di bottom
-        if (isPremium && signal.isActive)
-          _ExecuteSignalButton(signal: signal),
+        if (isPremium && signal.isActive) _ExecuteSignalButton(signal: signal),
       ],
     );
   }
@@ -340,9 +355,7 @@ class _PriceGrid extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 8),
-            Expanded(
-              child: _TrendStrengthCell(trend: signal.trend),
-            ),
+            Expanded(child: _TrendStrengthCell(trend: signal.trend)),
           ],
         ),
       ],
@@ -367,9 +380,7 @@ class _PriceCell extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surfaceContainer,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: color.withValues(alpha: 0.2),
-        ),
+        border: Border.all(color: color.withValues(alpha: 0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -429,24 +440,29 @@ class _TrendStrengthCell extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           if (trend.isEmpty)
-            Text('—',
-                style: GoogleFonts.jetBrainsMono(
-                  fontSize: 16,
-                  color: AppColors.textMuted,
-                ))
+            Text(
+              '—',
+              style: GoogleFonts.jetBrainsMono(
+                fontSize: 16,
+                color: AppColors.textMuted,
+              ),
+            )
           else
             Row(
-              children: List.generate(3, (i) => Padding(
-                padding: const EdgeInsets.only(right: 3),
-                child: Container(
-                  width: 18,
-                  height: 10,
-                  decoration: BoxDecoration(
-                    color: _color.withValues(alpha: i == 2 ? 0.4 : 1.0),
-                    borderRadius: BorderRadius.circular(3),
+              children: List.generate(
+                3,
+                (i) => Padding(
+                  padding: const EdgeInsets.only(right: 3),
+                  child: Container(
+                    width: 18,
+                    height: 10,
+                    decoration: BoxDecoration(
+                      color: _color.withValues(alpha: i == 2 ? 0.4 : 1.0),
+                      borderRadius: BorderRadius.circular(3),
+                    ),
                   ),
                 ),
-              )),
+              ),
             ),
         ],
       ),

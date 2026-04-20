@@ -323,6 +323,12 @@ class AppLocalizationsId extends AppLocalizations {
   String get statusSlHit => 'SL TERCAPAI';
 
   @override
+  String get statusWin => 'MENANG';
+
+  @override
+  String get statusLoss => 'KALAH';
+
+  @override
   String get statusClosed => 'DITUTUP';
 
   @override
@@ -432,6 +438,12 @@ class AppLocalizationsId extends AppLocalizations {
   String get filterSlHit => 'SL TERCAPAI';
 
   @override
+  String get filterWin => 'MENANG';
+
+  @override
+  String get filterLoss => 'KALAH';
+
+  @override
   String get profileTitle => 'TradeGenZ';
 
   @override
@@ -456,7 +468,16 @@ class AppLocalizationsId extends AppLocalizations {
   String get contactWhatsApp => 'Hubungi via WhatsApp';
 
   @override
+  String get contactEmail => 'Hubungi via Email';
+
+  @override
   String get helpFaq => 'Bantuan & FAQ';
+
+  @override
+  String get faqTitle => 'Bantuan & FAQ';
+
+  @override
+  String get termsTitle => 'Syarat & Ketentuan';
 
   @override
   String get aboutSection => 'TENTANG';

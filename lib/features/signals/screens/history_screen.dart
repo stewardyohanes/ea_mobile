@@ -25,7 +25,9 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
   void initState() {
     super.initState();
     Future.microtask(
-      () => ref.read(historySignalsProvider.notifier).fetchInitial(scope: 'history'),
+      () => ref
+          .read(historySignalsProvider.notifier)
+          .fetchInitial(scope: 'history'),
     );
     _scrollController.addListener(_onScroll);
   }
@@ -49,13 +51,16 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
   }
 
   List<Signal> _filtered(List<Signal> signals) {
+    final completed = signals.where((s) => s.isCompleted).toList();
     switch (_activeFilter) {
-      case 'TP HIT':
-        return signals.where((s) => s.isTpHit).toList();
-      case 'SL HIT':
-        return signals.where((s) => s.isSlHit).toList();
+      case 'WIN':
+        return completed.where((s) => s.isTpHit || s.isClosedWin).toList();
+      case 'LOSS':
+        return completed
+            .where((s) => s.isSlHit || (s.isClosed && !s.isClosedWin))
+            .toList();
       default:
-        return signals;
+        return completed;
     }
   }
 
@@ -63,7 +68,9 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final signalsState = ref.watch(historySignalsProvider);
-    final allCompleted = signalsState.signals;
+    final allCompleted = signalsState.signals
+        .where((s) => s.isCompleted)
+        .toList();
     final filtered = _filtered(signalsState.signals);
 
     return Scaffold(
@@ -99,7 +106,11 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
     );
   }
 
-  Widget _buildBody(BuildContext context, SignalsState state, List<Signal> filtered) {
+  Widget _buildBody(
+    BuildContext context,
+    SignalsState state,
+    List<Signal> filtered,
+  ) {
     final l10n = context.l10n;
     if (state.isLoading) {
       return ListView.builder(
@@ -131,8 +142,9 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
     return RefreshIndicator(
       color: AppColors.primary,
       backgroundColor: AppColors.surface,
-      onRefresh: () =>
-          ref.read(historySignalsProvider.notifier).fetchInitial(scope: 'history'),
+      onRefresh: () => ref
+          .read(historySignalsProvider.notifier)
+          .fetchInitial(scope: 'history'),
       child: ListView.builder(
         controller: _scrollController,
         itemCount: filtered.length + 1,
@@ -163,9 +175,14 @@ class _StatsGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final total = signals.length;
-    final win = signals.where((s) => s.isTpHit).length;
-    final loss = signals.where((s) => s.isSlHit).length;
+    final outcomes = signals
+        .where((s) => s.isTpHit || s.isSlHit || s.isClosed)
+        .toList();
+    final total = outcomes.length;
+    final win = outcomes.where((s) => s.isTpHit || s.isClosedWin).length;
+    final loss = outcomes
+        .where((s) => s.isSlHit || (s.isClosed && !s.isClosedWin))
+        .length;
     final winRate = total > 0 ? (win / total * 100) : 0.0;
 
     return Padding(
@@ -175,9 +192,17 @@ class _StatsGrid extends StatelessWidget {
           Expanded(
             child: Column(
               children: [
-                _StatTile(label: l10n.totalLabel, value: total.toString(), color: AppColors.primary),
+                _StatTile(
+                  label: l10n.totalLabel,
+                  value: total.toString(),
+                  color: AppColors.primary,
+                ),
                 const SizedBox(height: 8),
-                _StatTile(label: l10n.lossLabel, value: loss.toString(), color: AppColors.error),
+                _StatTile(
+                  label: l10n.lossLabel,
+                  value: loss.toString(),
+                  color: AppColors.error,
+                ),
               ],
             ),
           ),
@@ -185,7 +210,11 @@ class _StatsGrid extends StatelessWidget {
           Expanded(
             child: Column(
               children: [
-                _StatTile(label: l10n.winLabel, value: win.toString(), color: AppColors.secondaryContainer),
+                _StatTile(
+                  label: l10n.winLabel,
+                  value: win.toString(),
+                  color: AppColors.secondaryContainer,
+                ),
                 const SizedBox(height: 8),
                 _StatTile(
                   label: l10n.winRateLabel,

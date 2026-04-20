@@ -195,6 +195,10 @@
 
   "statusSlHit": "SL TERCAPAI",
 
+  "statusWin": "MENANG",
+
+  "statusLoss": "KALAH",
+
   "statusClosed": "DITUTUP",
 
   "entry1Label": "ENTRY 1",
@@ -261,6 +265,10 @@
 
   "filterSlHit": "SL TERCAPAI",
 
+  "filterWin": "MENANG",
+
+  "filterLoss": "KALAH",
+
   "profileTitle": "TradeGenZ",
 
   "winRateStat": "WIN RATE",
@@ -277,7 +285,13 @@
 
   "contactWhatsApp": "Hubungi via WhatsApp",
 
+  "contactEmail": "Hubungi via Email",
+
   "helpFaq": "Bantuan & FAQ",
+
+  "faqTitle": "Bantuan & FAQ",
+
+  "termsTitle": "Syarat & Ketentuan",
 
   "aboutSection": "TENTANG",
 

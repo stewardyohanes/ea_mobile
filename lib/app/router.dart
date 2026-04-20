@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tradegenz_app/features/auth/screens/disclaimer_screen.dart';
 import 'package:tradegenz_app/features/calculator/screens/calculator_screen.dart';
+import 'package:tradegenz_app/features/profile/screens/faq_screen.dart';
 import 'package:tradegenz_app/features/profile/screens/profile_screen.dart';
+import 'package:tradegenz_app/features/profile/screens/terms_screen.dart';
 import 'package:tradegenz_app/features/profile/screens/upgrade_screen.dart';
 import 'package:tradegenz_app/features/signals/screens/feed_screen.dart';
 import 'package:tradegenz_app/features/signals/screens/history_screen.dart';
@@ -136,6 +138,14 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/upgrade',
         builder: (context, state) => const UpgradeScreen(),
+      ),
+      GoRoute(
+        path: '/faq',
+        builder: (context, state) => const FaqScreen(),
+      ),
+      GoRoute(
+        path: '/terms',
+        builder: (context, state) => const TermsScreen(),
       ),
     ],
   );

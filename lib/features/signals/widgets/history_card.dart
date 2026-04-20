@@ -9,15 +9,44 @@ class HistoryCard extends StatelessWidget {
   final Signal signal;
   const HistoryCard({required this.signal, super.key});
 
-  bool get _isWin => signal.isTpHit;
-  Color get _statusColor => _isWin ? AppColors.secondaryContainer : AppColors.error;
+  bool get _isOutcome => signal.isTpHit || signal.isSlHit || signal.isClosed;
+  bool get _isWin => signal.isTpHit || signal.isClosedWin;
 
-  String _statusLabel(BuildContext context) =>
-      _isWin ? context.l10n.statusTpHit : context.l10n.statusSlHit;
+  Color get _statusColor {
+    if (signal.isTpHit || (signal.isClosed && signal.isClosedWin)) {
+      return AppColors.secondaryContainer;
+    }
+    if (signal.isSlHit || (signal.isClosed && !signal.isClosedWin)) {
+      return AppColors.error;
+    }
+    if (signal.isCancelled || signal.isReplaced) {
+      return AppColors.textMuted;
+    }
+    return AppColors.primary;
+  }
 
-  double get _exitPrice => _isWin ? (signal.tp ?? signal.sl) : signal.sl;
+  String _statusLabel(BuildContext context) {
+    if (signal.isClosed) {
+      return _isWin ? context.l10n.statusWin : context.l10n.statusLoss;
+    }
+    if (signal.isTpHit) return context.l10n.statusTpHit;
+    if (signal.isSlHit) return context.l10n.statusSlHit;
+    if (signal.isCancelled) return 'CANCELLED';
+    if (signal.isReplaced) return 'REPLACED';
+    return signal.status.toUpperCase();
+  }
 
-  double get _pipsDiff {
+  double get _exitPrice {
+    if (signal.isClosed) return signal.triggeredPrice ?? signal.entry1;
+    if (signal.isTpHit) return signal.tp ?? signal.entry2 ?? signal.entry1;
+    if (signal.isSlHit) return signal.sl;
+    return signal.entry2 ?? signal.entry1;
+  }
+
+  double? get _pipsDiff {
+    if (!_isOutcome) return null;
+    if (signal.pips != null && signal.pips != 0) return signal.pips!.abs();
+
     final diff = (_exitPrice - signal.entry1).abs();
     if (signal.symbol.contains('XAU') || signal.symbol.contains('XAG')) {
       return diff;
@@ -25,13 +54,31 @@ class HistoryCard extends StatelessWidget {
     return diff * 10000;
   }
 
+  String get _pipsLabelText {
+    final pips = _pipsDiff;
+    if (pips == null) return '—';
+    return '${_isWin ? '+' : '-'}${pips.toStringAsFixed(1)}';
+  }
+
   String get _formattedDate {
     try {
       final dt = DateTime.parse(signal.createdAt);
-      final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      final months = [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
+      ];
       return '${dt.year}.${months[dt.month - 1]}.${dt.day.toString().padLeft(2, '0')} · '
-             '${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
+          '${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
     } catch (_) {
       return signal.createdAt;
     }
@@ -48,9 +95,7 @@ class HistoryCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surfaceContainerLow,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-          color: _statusColor.withValues(alpha: 0.2),
-        ),
+        border: Border.all(color: _statusColor.withValues(alpha: 0.2)),
       ),
       child: Column(
         children: [
@@ -68,7 +113,9 @@ class HistoryCard extends StatelessWidget {
                   ),
                 ),
                 child: Icon(
-                  _isWin ? Icons.trending_up : Icons.trending_down,
+                  _isOutcome
+                      ? (_isWin ? Icons.trending_up : Icons.trending_down)
+                      : Icons.remove,
                   color: _statusColor,
                   size: 20,
                 ),
@@ -91,7 +138,10 @@ class HistoryCard extends StatelessWidget {
                               : AppColors.error,
                         ),
                         const SizedBox(width: 6),
-                        _StatusBadge(label: _statusLabel(context), color: _statusColor),
+                        _StatusBadge(
+                          label: _statusLabel(context),
+                          color: _statusColor,
+                        ),
                       ],
                     ),
                     const SizedBox(height: 3),
@@ -104,7 +154,7 @@ class HistoryCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    '${_isWin ? '+' : '-'}${_pipsDiff.toStringAsFixed(1)}',
+                    _pipsLabelText,
                     style: GoogleFonts.jetBrainsMono(
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
@@ -138,7 +188,11 @@ class HistoryCard extends StatelessWidget {
                   color: AppColors.onSurfaceVariant,
                 ),
               ),
-              Container(width: 1, height: 28, color: AppColors.outlineVariant.withValues(alpha: 0.2)),
+              Container(
+                width: 1,
+                height: 28,
+                color: AppColors.outlineVariant.withValues(alpha: 0.2),
+              ),
               Expanded(
                 child: _PriceCell(
                   label: l10n.exitLabel,
@@ -146,7 +200,11 @@ class HistoryCard extends StatelessWidget {
                   color: _statusColor,
                 ),
               ),
-              Container(width: 1, height: 28, color: AppColors.outlineVariant.withValues(alpha: 0.2)),
+              Container(
+                width: 1,
+                height: 28,
+                color: AppColors.outlineVariant.withValues(alpha: 0.2),
+              ),
               Expanded(
                 child: _PriceCell(
                   label: l10n.rrLabel,

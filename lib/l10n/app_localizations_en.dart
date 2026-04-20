@@ -322,6 +322,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get statusSlHit => 'SL HIT';
 
   @override
+  String get statusWin => 'WIN';
+
+  @override
+  String get statusLoss => 'LOSS';
+
+  @override
   String get statusClosed => 'CLOSED';
 
   @override
@@ -431,6 +437,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get filterSlHit => 'SL HIT';
 
   @override
+  String get filterWin => 'WIN';
+
+  @override
+  String get filterLoss => 'LOSS';
+
+  @override
   String get profileTitle => 'TradeGenZ';
 
   @override
@@ -455,7 +467,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get contactWhatsApp => 'Contact via WhatsApp';
 
   @override
+  String get contactEmail => 'Contact via Email';
+
+  @override
   String get helpFaq => 'Help & FAQ';
+
+  @override
+  String get faqTitle => 'Help & FAQ';
+
+  @override
+  String get termsTitle => 'Terms of Service';
 
   @override
   String get aboutSection => 'ABOUT';

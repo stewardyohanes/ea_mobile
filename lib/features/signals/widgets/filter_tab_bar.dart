@@ -18,8 +18,8 @@ class FilterTabBar extends StatelessWidget {
     final l10n = context.l10n;
     final filters = [
       ('ALL', l10n.filterAll),
-      ('TP HIT', l10n.filterTpHit),
-      ('SL HIT', l10n.filterSlHit),
+      ('WIN', l10n.filterWin),
+      ('LOSS', l10n.filterLoss),
     ];
 
     return Container(

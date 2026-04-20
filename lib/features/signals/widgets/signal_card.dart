@@ -18,13 +18,17 @@ class SignalCard extends ConsumerWidget {
   Color get _statusColor {
     if (signal.isTpHit) return AppColors.success;
     if (signal.isSlHit) return AppColors.error;
+    if (signal.isPending) return AppColors.tertiary;
     if (signal.isActive) return AppColors.primary;
     return AppColors.textMuted;
   }
 
   String _statusLabel(BuildContext context) {
     switch (signal.status) {
+      case 'pending':
+        return 'PENDING';
       case 'active':
+      case 'triggered':
         return context.l10n.statusActive;
       case 'tp_hit':
         return context.l10n.statusTpHit;
@@ -43,7 +47,9 @@ class SignalCard extends ConsumerWidget {
       final diff = DateTime.now().difference(created);
       if (diff.inDays > 0) return context.l10n.timeDaysAgo(diff.inDays);
       if (diff.inHours > 0) return context.l10n.timeHoursAgo(diff.inHours);
-      if (diff.inMinutes > 0) return context.l10n.timeMinutesAgo(diff.inMinutes);
+      if (diff.inMinutes > 0) {
+        return context.l10n.timeMinutesAgo(diff.inMinutes);
+      }
       return context.l10n.timeJustNow;
     } catch (_) {
       return signal.createdAt;
@@ -57,11 +63,12 @@ class SignalCard extends ConsumerWidget {
     );
 
     return GestureDetector(
-      onTap: () => {
-        if (isPremium)
-          {context.push('/signal/${signal.id}')}
-        else
-          {context.push('/upgrade')},
+      onTap: () {
+        if (isPremium) {
+          context.push('/signal/${signal.id}');
+        } else {
+          context.push('/upgrade');
+        }
       },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
@@ -94,10 +101,7 @@ class SignalCard extends ConsumerWidget {
 
             // Entry price area
             isPremium
-                ? _PremiumPriceBlock(
-                    signal: signal,
-                    timeAgo: _timeAgo(context),
-                  )
+                ? _PremiumPriceBlock(signal: signal, timeAgo: _timeAgo(context))
                 : _LockedPriceRow(onTap: () => context.push('/upgrade')),
           ],
         ),
@@ -115,13 +119,15 @@ class _PremiumPriceBlock extends StatelessWidget {
     final t = signal.trend.toUpperCase();
     return t.contains('BULL') || t.contains('UP');
   }
+
   int get _dec => signal.entry1 > 100 ? 2 : 5;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final trendColor =
-        _isBullish ? AppColors.secondaryContainer : AppColors.error;
+    final trendColor = _isBullish
+        ? AppColors.secondaryContainer
+        : AppColors.error;
     final trendIcon = _isBullish ? Icons.trending_up : Icons.trending_down;
 
     return Column(

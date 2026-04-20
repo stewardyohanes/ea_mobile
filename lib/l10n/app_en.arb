@@ -296,6 +296,12 @@
   "statusSlHit": "SL HIT",
   "@statusSlHit": {},
 
+  "statusWin": "WIN",
+  "@statusWin": {},
+
+  "statusLoss": "LOSS",
+  "@statusLoss": {},
+
   "statusClosed": "CLOSED",
   "@statusClosed": {},
 
@@ -415,6 +421,12 @@
   "filterSlHit": "SL HIT",
   "@filterSlHit": {},
 
+  "filterWin": "WIN",
+  "@filterWin": {},
+
+  "filterLoss": "LOSS",
+  "@filterLoss": {},
+
   "profileTitle": "TradeGenZ",
   "@profileTitle": {},
 
@@ -439,8 +451,17 @@
   "contactWhatsApp": "Contact via WhatsApp",
   "@contactWhatsApp": {},
 
+  "contactEmail": "Contact via Email",
+  "@contactEmail": {},
+
   "helpFaq": "Help & FAQ",
   "@helpFaq": {},
+
+  "faqTitle": "Help & FAQ",
+  "@faqTitle": {},
+
+  "termsTitle": "Terms of Service",
+  "@termsTitle": {},
 
   "aboutSection": "ABOUT",
   "@aboutSection": {},
