@@ -4,7 +4,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 
 class FilterTabBar extends StatelessWidget {
-  final String activeFilter; // 'ALL' | 'TP HIT' | 'SL HIT'
+  final String activeFilter; // 'ALL' | 'WIN' | 'LOSS' | 'SYSTEM'
   final ValueChanged<String> onFilterChanged;
 
   const FilterTabBar({
@@ -20,6 +20,7 @@ class FilterTabBar extends StatelessWidget {
       ('ALL', l10n.filterAll),
       ('WIN', l10n.filterWin),
       ('LOSS', l10n.filterLoss),
+      ('SYSTEM', 'SYSTEM'),
     ];
 
     return Container(
@@ -47,7 +48,9 @@ class FilterTabBar extends StatelessWidget {
                   label,
                   textAlign: TextAlign.center,
                   style: AppTextStyles.label.copyWith(
-                    color: isActive ? AppColors.textPrimary : AppColors.textMuted,
+                    color: isActive
+                        ? AppColors.textPrimary
+                        : AppColors.textMuted,
                     fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
                   ),
                 ),

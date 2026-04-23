@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:tradegenz_app/core/network/dio_client.dart';
+import 'package:tradegenz_app/core/notifications/in_app_notification.dart';
+import 'package:tradegenz_app/core/notifications/notification_store.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -38,14 +42,18 @@ class FcmService {
       onDidReceiveNotificationResponse: (details) {
         // Dipanggil saat user tap notifikasi foreground
         final signalId = details.payload;
-        if (signalId != null) onNotificationTap?.call(signalId);
+        if (signalId != null) {
+          unawaited(NotificationStore.markReadBySignalId(signalId));
+          onNotificationTap?.call(signalId);
+        }
       },
     );
 
     // Buat Android notification channel
     await _localNotif
         .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
+          AndroidFlutterLocalNotificationsPlugin
+        >()
         ?.createNotificationChannel(_androidChannel);
 
     // Minta izin notifikasi
@@ -63,22 +71,25 @@ class FcmService {
     }
 
     // Foreground: tampilkan sebagai local notification
-    FirebaseMessaging.onMessage.listen((message) {
+    FirebaseMessaging.onMessage.listen((message) async {
       debugPrint('=== Foreground message: ${message.notification?.title} ===');
+      await _persistMessage(message);
       _showLocalNotification(message);
     });
 
     // Background tap: app sudah berjalan, user tap notifikasi
-    FirebaseMessaging.onMessageOpenedApp.listen((message) {
-      final signalId = message.data['signal_id'];
-      if (signalId != null) onNotificationTap?.call(signalId as String);
+    FirebaseMessaging.onMessageOpenedApp.listen((message) async {
+      await _persistMessage(message, openedFromTap: true);
+      final signalId = _extractSignalId(message);
+      if (signalId != null) onNotificationTap?.call(signalId);
     });
 
     // Cold start: app dibuka pertama kali lewat tap notifikasi
     final initialMessage = await _messaging.getInitialMessage();
     if (initialMessage != null) {
-      final signalId = initialMessage.data['signal_id'];
-      if (signalId != null) onNotificationTap?.call(signalId as String);
+      await _persistMessage(initialMessage, openedFromTap: true);
+      final signalId = _extractSignalId(initialMessage);
+      if (signalId != null) onNotificationTap?.call(signalId);
     }
   }
 
@@ -105,7 +116,41 @@ class FcmService {
           presentSound: true,
         ),
       ),
-      payload: message.data['signal_id'] as String?,
+      payload: _extractSignalId(message),
+    );
+  }
+
+  static String? _extractSignalId(RemoteMessage message) {
+    final signalId = message.data['signal_id'];
+    if (signalId == null) return null;
+    final value = signalId.toString().trim();
+    if (value.isEmpty) return null;
+    return value;
+  }
+
+  static Future<void> _persistMessage(
+    RemoteMessage message, {
+    bool openedFromTap = false,
+  }) async {
+    final title = message.notification?.title?.trim() ?? '';
+    final body = message.notification?.body?.trim() ?? '';
+    if (title.isEmpty && body.isEmpty) return;
+
+    final signalId = _extractSignalId(message);
+    final sentAt = message.sentTime?.toLocal() ?? DateTime.now();
+    final messageId =
+        message.messageId ??
+        '${sentAt.millisecondsSinceEpoch}-${signalId ?? 'general'}-${title.hashCode}-${body.hashCode}';
+
+    await NotificationStore.upsert(
+      InAppNotification(
+        id: messageId,
+        title: title.isEmpty ? 'TradeGenZ' : title,
+        body: body,
+        signalId: signalId,
+        receivedAt: sentAt,
+        isRead: openedFromTap,
+      ),
     );
   }
 
@@ -118,7 +163,10 @@ class FcmService {
     try {
       await DioClient.instance.post(
         '/devices',
-        data: {'fcm_token': token, 'platform': defaultTargetPlatform.name.toLowerCase()},
+        data: {
+          'fcm_token': token,
+          'platform': defaultTargetPlatform.name.toLowerCase(),
+        },
       );
       debugPrint('=== FCM token registered ===');
     } catch (e) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tradegenz_app/core/extensions/l10n_extension.dart';
 import 'package:tradegenz_app/features/signals/providers/signal_provider.dart';
 import '../widgets/signal_card.dart';
@@ -22,7 +23,9 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() => ref.read(signalsProvider.notifier).fetchInitial(scope: 'feed'));
+    Future.microtask(
+      () => ref.read(signalsProvider.notifier).fetchInitial(scope: 'feed'),
+    );
     _scrollController.addListener(_onScroll);
   }
 
@@ -69,7 +72,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
           IconButton(
             icon: const Icon(Icons.notifications_outlined),
             color: AppColors.textMuted,
-            onPressed: () {},
+            onPressed: () => context.push('/notifications'),
           ),
         ],
       ),
@@ -83,8 +86,9 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
             child: RefreshIndicator(
               color: AppColors.primary,
               backgroundColor: AppColors.surface,
-              onRefresh: () =>
-                  ref.read(signalsProvider.notifier).fetchInitial(scope: 'feed'),
+              onRefresh: () => ref
+                  .read(signalsProvider.notifier)
+                  .fetchInitial(scope: 'feed'),
               child: _buildBody(context, signalsState),
             ),
           ),
@@ -97,9 +101,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
     final l10n = context.l10n;
     final filtered = _activeFilter == 'ALL'
         ? state.signals
-        : state.signals
-            .where((s) => s.symbol == _activeFilter)
-            .toList();
+        : state.signals.where((s) => s.symbol == _activeFilter).toList();
 
     if (state.isLoading) {
       return ListView.builder(

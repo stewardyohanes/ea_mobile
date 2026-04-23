@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tradegenz_app/features/auth/screens/disclaimer_screen.dart';
 import 'package:tradegenz_app/features/calculator/screens/calculator_screen.dart';
+import 'package:tradegenz_app/features/notifications/screens/notifications_screen.dart';
 import 'package:tradegenz_app/features/profile/screens/faq_screen.dart';
 import 'package:tradegenz_app/features/profile/screens/profile_screen.dart';
 import 'package:tradegenz_app/features/profile/screens/terms_screen.dart';
@@ -49,7 +50,13 @@ class RouterNotifier extends ChangeNotifier {
       return '/disclaimer';
     }
 
-    final protectedRoutes = ['/', '/history', '/calculator', '/profile'];
+    final protectedRoutes = [
+      '/',
+      '/history',
+      '/calculator',
+      '/profile',
+      '/notifications',
+    ];
     if (!isLoggedIn && protectedRoutes.contains(currentPath)) {
       return '/login';
     }
@@ -136,17 +143,15 @@ final routerProvider = Provider<GoRouter>((ref) {
         },
       ),
       GoRoute(
+        path: '/notifications',
+        builder: (context, state) => const NotificationsScreen(),
+      ),
+      GoRoute(
         path: '/upgrade',
         builder: (context, state) => const UpgradeScreen(),
       ),
-      GoRoute(
-        path: '/faq',
-        builder: (context, state) => const FaqScreen(),
-      ),
-      GoRoute(
-        path: '/terms',
-        builder: (context, state) => const TermsScreen(),
-      ),
+      GoRoute(path: '/faq', builder: (context, state) => const FaqScreen()),
+      GoRoute(path: '/terms', builder: (context, state) => const TermsScreen()),
     ],
   );
 });

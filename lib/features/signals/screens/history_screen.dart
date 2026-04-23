@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tradegenz_app/core/extensions/l10n_extension.dart';
 import 'package:tradegenz_app/features/signals/providers/signal_provider.dart';
@@ -50,17 +51,28 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
     setState(() => _activeFilter = filter);
   }
 
+  List<Signal> _outcomes(List<Signal> signals) {
+    return signals.where((s) => s.isTpHit || s.isSlHit || s.isClosed).toList();
+  }
+
+  List<Signal> _systemEvents(List<Signal> signals) {
+    return signals.where((s) => s.isReplaced || s.isCancelled).toList();
+  }
+
   List<Signal> _filtered(List<Signal> signals) {
-    final completed = signals.where((s) => s.isCompleted).toList();
+    final outcomes = _outcomes(signals);
+    final system = _systemEvents(signals);
     switch (_activeFilter) {
       case 'WIN':
-        return completed.where((s) => s.isTpHit || s.isClosedWin).toList();
+        return outcomes.where((s) => s.isTpHit || s.isClosedWin).toList();
       case 'LOSS':
-        return completed
+        return outcomes
             .where((s) => s.isSlHit || (s.isClosed && !s.isClosedWin))
             .toList();
+      case 'SYSTEM':
+        return system;
       default:
-        return completed;
+        return outcomes;
     }
   }
 
@@ -68,9 +80,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final signalsState = ref.watch(historySignalsProvider);
-    final allCompleted = signalsState.signals
-        .where((s) => s.isCompleted)
-        .toList();
+    final allOutcomes = _outcomes(signalsState.signals);
     final filtered = _filtered(signalsState.signals);
 
     return Scaffold(
@@ -86,14 +96,16 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.notifications_outlined),
-            onPressed: () {},
+            onPressed: () => context.push('/notifications'),
           ),
         ],
       ),
       body: Column(
         children: [
-          if (!signalsState.isLoading && allCompleted.isNotEmpty)
-            _StatsGrid(signals: allCompleted),
+          if (!signalsState.isLoading &&
+              allOutcomes.isNotEmpty &&
+              _activeFilter != 'SYSTEM')
+            _StatsGrid(signals: allOutcomes),
 
           FilterTabBar(
             activeFilter: _activeFilter,
@@ -175,12 +187,9 @@ class _StatsGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final outcomes = signals
-        .where((s) => s.isTpHit || s.isSlHit || s.isClosed)
-        .toList();
-    final total = outcomes.length;
-    final win = outcomes.where((s) => s.isTpHit || s.isClosedWin).length;
-    final loss = outcomes
+    final total = signals.length;
+    final win = signals.where((s) => s.isTpHit || s.isClosedWin).length;
+    final loss = signals
         .where((s) => s.isSlHit || (s.isClosed && !s.isClosedWin))
         .length;
     final winRate = total > 0 ? (win / total * 100) : 0.0;

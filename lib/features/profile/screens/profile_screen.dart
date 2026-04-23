@@ -59,7 +59,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.notifications_outlined),
-            onPressed: () {},
+            onPressed: () => context.push('/notifications'),
           ),
         ],
       ),
@@ -282,9 +282,7 @@ class _StatCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surfaceContainer,
         borderRadius: BorderRadius.circular(16),
-        border: Border(
-          left: BorderSide(color: accentColor, width: 4),
-        ),
+        border: Border(left: BorderSide(color: accentColor, width: 4)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -336,8 +334,7 @@ class _PlanCard extends StatelessWidget {
   final User user;
   const _PlanCard({required this.user});
 
-  Color get _color =>
-      user.isAffiliate ? AppColors.purple : AppColors.tertiary;
+  Color get _color => user.isAffiliate ? AppColors.purple : AppColors.tertiary;
 
   @override
   Widget build(BuildContext context) {
@@ -413,9 +410,7 @@ class _PlanCard extends StatelessWidget {
                     color: Color(0xFF47FFBB),
                   ),
                   const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(f, style: AppTextStyles.bodySmall),
-                  ),
+                  Expanded(child: Text(f, style: AppTextStyles.bodySmall)),
                 ],
               ),
             ),
@@ -439,9 +434,7 @@ class _FreePlanCard extends StatelessWidget {
           ],
         ),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: AppColors.primary.withValues(alpha: 0.25),
-        ),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.25)),
       ),
       child: Row(
         children: [
@@ -557,9 +550,7 @@ class _SettingsRow extends StatelessWidget {
               color: iconColor ?? AppColors.onSurfaceVariant,
             ),
             const SizedBox(width: 16),
-            Expanded(
-              child: Text(label, style: AppTextStyles.bodyMedium),
-            ),
+            Expanded(child: Text(label, style: AppTextStyles.bodyMedium)),
             ?trailing,
             if (trailing == null && showChevron)
               const Icon(
