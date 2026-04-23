@@ -277,8 +277,6 @@ class _DetailContent extends StatelessWidget {
           ),
         ),
 
-        // EXECUTE SIGNAL sticky button di bottom
-        if (isPremium && signal.isActive) _ExecuteSignalButton(signal: signal),
       ],
     );
   }
@@ -465,68 +463,6 @@ class _TrendStrengthCell extends StatelessWidget {
               ),
             ),
         ],
-      ),
-    );
-  }
-}
-
-// ─── Execute Signal Button ────────────────────────────────────────────────────
-
-class _ExecuteSignalButton extends StatelessWidget {
-  final Signal signal;
-  const _ExecuteSignalButton({required this.signal});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
-      decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLow,
-        border: Border(
-          top: BorderSide(
-            color: AppColors.outlineVariant.withValues(alpha: 0.15),
-          ),
-        ),
-      ),
-      child: Container(
-        width: double.infinity,
-        height: 56,
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [AppColors.primary, AppColors.primaryContainer],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(14),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.primary.withValues(alpha: 0.3),
-              blurRadius: 16,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: ElevatedButton.icon(
-          onPressed: () {},
-          icon: const Icon(Icons.bolt, color: AppColors.onPrimary, size: 20),
-          label: Text(
-            context.l10n.executeSignal,
-            style: GoogleFonts.inter(
-              fontSize: 13,
-              fontWeight: FontWeight.w700,
-              color: AppColors.onPrimary,
-              letterSpacing: 1.5,
-            ),
-          ),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.transparent,
-            shadowColor: Colors.transparent,
-            disabledBackgroundColor: Colors.transparent,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14),
-            ),
-          ),
-        ),
       ),
     );
   }
