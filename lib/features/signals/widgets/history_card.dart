@@ -37,7 +37,10 @@ class HistoryCard extends StatelessWidget {
   }
 
   double get _exitPrice {
-    if (signal.isClosed) return signal.triggeredPrice ?? signal.entry1;
+    if (signal.isClosed) {
+      final tp = signal.triggeredPrice;
+      return (tp != null && tp > 0) ? tp : signal.entry1;
+    }
     if (signal.isTpHit) return signal.tp ?? signal.entry2 ?? signal.entry1;
     if (signal.isSlHit) return signal.sl;
     return signal.entry2 ?? signal.entry1;
@@ -50,6 +53,9 @@ class HistoryCard extends StatelessWidget {
     final diff = (_exitPrice - signal.entry1).abs();
     if (signal.symbol.contains('XAU') || signal.symbol.contains('XAG')) {
       return diff;
+    }
+    if (signal.symbol.contains('JPY')) {
+      return diff * 100;
     }
     return diff * 10000;
   }

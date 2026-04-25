@@ -73,7 +73,7 @@ class Signal {
 
   // For closed signals: BUY wins if exit > entry1, SELL wins if exit < entry1
   bool get isClosedWin {
-    if (!isClosed || triggeredPrice == null) return false;
+    if (!isClosed || triggeredPrice == null || triggeredPrice! <= 0) return false;
     return isBuy ? triggeredPrice! > entry1 : triggeredPrice! < entry1;
   }
 }

@@ -176,7 +176,19 @@ class _FilterChipsRow extends StatelessWidget {
   final String activeFilter;
   final ValueChanged<String> onFilterChanged;
 
-  static const _filters = ['ALL', 'XAUUSD', 'XAGUSD', 'EURUSD', 'USDJPY'];
+  static const _filters = [
+    'ALL',
+    'XAUUSD',
+    'BTCUSD',
+    'ETHUSD',
+    'USDJPY',
+    'EURUSD',
+    'GBPUSD',
+    'AUDUSD',
+    'USDCHF',
+    'USDCAD',
+    'NAS100',
+  ];
 
   const _FilterChipsRow({
     required this.activeFilter,
