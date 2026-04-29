@@ -26,6 +26,24 @@ class SignalsApi {
     return data.map((json) => Signal.fromJson(json)).toList();
   }
 
+  static Future<List<Signal>> getHistory({
+    int page = 1,
+    int limit = 20,
+    String? status,
+  }) async {
+    final response = await _dio.get(
+      '/history',
+      queryParameters: {
+        'page': page,
+        'limit': limit,
+        if (status case String status) 'status': status,
+      },
+    );
+
+    final List data = response.data['data'] as List? ?? [];
+    return data.map((json) => Signal.fromJson(json)).toList();
+  }
+
   static Future<Signal> getSignalById(String id) async {
     final response = await _dio.get('signals/$id');
     return Signal.fromJson(response.data as Map<String, dynamic>);

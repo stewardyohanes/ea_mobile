@@ -42,14 +42,20 @@ class SignalNotifier extends Notifier<SignalsState> {
   @override
   SignalsState build() => const SignalsState();
 
-  Future<void> fetchInitial({String? direction, String? scope}) async {
+  Future<void> fetchInitial({
+    String? direction,
+    String? scope,
+    String? historyStatus,
+  }) async {
     state = state.copyWith(isLoading: true, error: null, signals: []);
     try {
-      final signals = await SignalsApi.getSignals(
-        page: 1,
-        direction: direction,
-        scope: scope,
-      );
+      final signals = scope == 'history'
+          ? await SignalsApi.getHistory(page: 1, status: historyStatus)
+          : await SignalsApi.getSignals(
+              page: 1,
+              direction: direction,
+              scope: scope,
+            );
 
       state = state.copyWith(
         signals: signals,
@@ -65,18 +71,24 @@ class SignalNotifier extends Notifier<SignalsState> {
     }
   }
 
-  Future<void> fetchMore({String? direction, String? scope}) async {
+  Future<void> fetchMore({
+    String? direction,
+    String? scope,
+    String? historyStatus,
+  }) async {
     if (!state.hasMore || state.isLoadingMore) return;
 
     state = state.copyWith(isLoadingMore: true, error: null);
 
     try {
       final nextPage = state.currentPage + 1;
-      final newSignals = await SignalsApi.getSignals(
-        page: nextPage,
-        direction: direction,
-        scope: scope,
-      );
+      final newSignals = scope == 'history'
+          ? await SignalsApi.getHistory(page: nextPage, status: historyStatus)
+          : await SignalsApi.getSignals(
+              page: nextPage,
+              direction: direction,
+              scope: scope,
+            );
 
       state = state.copyWith(
         signals: [...state.signals, ...newSignals],

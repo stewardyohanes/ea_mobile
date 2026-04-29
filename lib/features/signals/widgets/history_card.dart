@@ -27,7 +27,7 @@ class HistoryCard extends StatelessWidget {
 
   String _statusLabel(BuildContext context) {
     if (signal.isClosed) {
-      return _isWin ? context.l10n.statusWin : context.l10n.statusLoss;
+      return context.l10n.statusClosed;
     }
     if (signal.isTpHit) return context.l10n.statusTpHit;
     if (signal.isSlHit) return context.l10n.statusSlHit;

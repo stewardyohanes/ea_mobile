@@ -25,11 +25,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(
-      () => ref
-          .read(historySignalsProvider.notifier)
-          .fetchInitial(scope: 'history'),
-    );
+    Future.microtask(_fetchInitial);
     _scrollController.addListener(_onScroll);
   }
 
@@ -43,36 +39,58 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
     final maxScroll = _scrollController.position.maxScrollExtent;
     final currentScroll = _scrollController.position.pixels;
     if (currentScroll >= maxScroll - 200) {
-      ref.read(historySignalsProvider.notifier).fetchMore(scope: 'history');
+      ref
+          .read(historySignalsProvider.notifier)
+          .fetchMore(
+            scope: 'history',
+            historyStatus: _historyStatusFor(_activeFilter),
+          );
     }
   }
 
   void _onFilterChanged(String filter) {
+    if (filter == _activeFilter) return;
     setState(() => _activeFilter = filter);
+    ref
+        .read(historySignalsProvider.notifier)
+        .fetchInitial(
+          scope: 'history',
+          historyStatus: _historyStatusFor(filter),
+        );
   }
 
-  List<Signal> _outcomes(List<Signal> signals) {
+  Future<void> _fetchInitial() {
+    return ref
+        .read(historySignalsProvider.notifier)
+        .fetchInitial(
+          scope: 'history',
+          historyStatus: _historyStatusFor(_activeFilter),
+        );
+  }
+
+  String? _historyStatusFor(String filter) {
+    switch (filter) {
+      case 'WIN':
+        return 'tp_hit';
+      case 'LOSS':
+        return 'sl_hit';
+      default:
+        return null;
+    }
+  }
+
+  List<Signal> _historyOutcomes(List<Signal> signals) {
     return signals.where((s) => s.isTpHit || s.isSlHit || s.isClosed).toList();
   }
 
-  List<Signal> _systemEvents(List<Signal> signals) {
-    return signals.where((s) => s.isReplaced || s.isCancelled).toList();
-  }
-
   List<Signal> _filtered(List<Signal> signals) {
-    final outcomes = _outcomes(signals);
-    final system = _systemEvents(signals);
     switch (_activeFilter) {
       case 'WIN':
-        return outcomes.where((s) => s.isTpHit || s.isClosedWin).toList();
+        return signals.where((s) => s.isTpHit).toList();
       case 'LOSS':
-        return outcomes
-            .where((s) => s.isSlHit || (s.isClosed && !s.isClosedWin))
-            .toList();
-      case 'SYSTEM':
-        return system;
+        return signals.where((s) => s.isSlHit).toList();
       default:
-        return outcomes;
+        return _historyOutcomes(signals);
     }
   }
 
@@ -80,7 +98,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final signalsState = ref.watch(historySignalsProvider);
-    final allOutcomes = _outcomes(signalsState.signals);
+    final allOutcomes = _historyOutcomes(signalsState.signals);
     final filtered = _filtered(signalsState.signals);
 
     return Scaffold(
@@ -102,9 +120,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
       ),
       body: Column(
         children: [
-          if (!signalsState.isLoading &&
-              allOutcomes.isNotEmpty &&
-              _activeFilter != 'SYSTEM')
+          if (!signalsState.isLoading && allOutcomes.isNotEmpty)
             _StatsGrid(signals: allOutcomes),
 
           FilterTabBar(
@@ -154,9 +170,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
     return RefreshIndicator(
       color: AppColors.primary,
       backgroundColor: AppColors.surface,
-      onRefresh: () => ref
-          .read(historySignalsProvider.notifier)
-          .fetchInitial(scope: 'history'),
+      onRefresh: _fetchInitial,
       child: ListView.builder(
         controller: _scrollController,
         itemCount: filtered.length + 1,
@@ -188,11 +202,10 @@ class _StatsGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final total = signals.length;
-    final win = signals.where((s) => s.isTpHit || s.isClosedWin).length;
-    final loss = signals
-        .where((s) => s.isSlHit || (s.isClosed && !s.isClosedWin))
-        .length;
-    final winRate = total > 0 ? (win / total * 100) : 0.0;
+    final win = signals.where((s) => s.isTpHit).length;
+    final loss = signals.where((s) => s.isSlHit).length;
+    final decided = win + loss;
+    final winRate = decided > 0 ? (win / decided * 100) : 0.0;
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
